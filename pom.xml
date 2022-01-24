@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.6.3</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.cse545</groupId>
+	<artifactId>hospitalSystem</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>hospitalSystem</name>
+	<description>This provide hospital system services.</description>
+	<properties>
+		<java.version>11</java.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- These are important for generting the controllers and Model using api.yaml file 
+			https://joehonour.medium.com/java-developing-a-spring-service-using-an-openapi-contract-first-approach-37dfd6422a9c
+		-->
+		<!-- https://mvnrepository.com/artifact/io.swagger.parser.v3/swagger-parser -->
+		<dependency>
+		    <groupId>io.swagger.parser.v3</groupId>
+		    <artifactId>swagger-parser</artifactId>
+		    <version>2.0.20</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.openapitools/jackson-databind-nullable -->
+		<dependency>
+		    <groupId>org.openapitools</groupId>
+		    <artifactId>jackson-databind-nullable</artifactId>
+		    <version>0.2.1</version>
+		</dependency>
+		<!-- For creating the documentation of APIs -->
+		<dependency>
+		      <groupId>org.springdoc</groupId>
+		      <artifactId>springdoc-openapi-ui</artifactId>
+		      <version>1.6.4</version>
+		   </dependency>
+
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+			    <groupId>org.openapitools</groupId>
+			    <artifactId>openapi-generator-maven-plugin</artifactId>
+			    <version>5.3.0</version>
+			    <!-- /RELEASE_VERSION -->
+			    <executions>
+			        <execution>
+			            <goals>
+			                <goal>generate</goal>
+			            </goals>
+			            <configuration>
+			                <inputSpec>${project.basedir}/src/main/resources/api.yaml</inputSpec>
+			                <generatorName>spring</generatorName>
+			                <configOptions>
+			                   <sourceFolder>src/gen/java/main</sourceFolder>
+							   <interfaceOnly>true</interfaceOnly>
+			                </configOptions>
+			
+			                <output>${project.build.directory}/generated-sources</output>
+			                <apiPackage>com.cse545.hospitalSystem.handler</apiPackage>
+			                <modelPackage>com.cse545.hospitalSystem.model</modelPackage>
+			                <invokerPackage>com.cse545.hospitalSystem.handler</invokerPackage>
+			            </configuration>
+			        </execution>
+			    </executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

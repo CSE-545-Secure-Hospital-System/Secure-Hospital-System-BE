@@ -1,0 +1,40 @@
+openapi: "3.0.0"
+info:
+  description: "This project back the Hospital Systems with the required API and backend services."
+  version: "1.0.0"
+  title: "Secure Hospital System"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "spapani@asu.edu"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+paths:
+  /user/get:
+    get:
+      summary: "get a specific user"
+      operationId: users
+      tags:
+        - user
+      responses:
+        '200':
+          description: "User object"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+components:
+  schemas:
+    User:
+      type: object
+      required:
+         - firstName
+         - lastName
+         - emailId
+      properties:
+         firstName:
+           type: string
+         lastName:
+           type: string
+         emailId:
+           type: string
