@@ -10,27 +10,62 @@ info:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 paths:
-  /user/get:
-    get:
-      summary: "get a specific user"
-      operationId: users
+  /user/signUp:
+    post:
+      summary: "Create a user and return associated JWT"
+      operationId: signUp
       tags:
         - user
+      requestBody:
+        required: true
+        description: "User object signup related fields"
+        content:
+          application/json:
+            schema:
+              type: "object"
+              $ref: '#/components/schemas/User'
       responses:
         '200':
-          description: "User object"
+          description: "User registration successful!"
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
+                type: object
+                $ref: '#/components/schemas/UserJwt'
+  /user/login:
+    post:
+      summary: "Login user"
+      operationId: login
+      tags:
+        - user
+      requestBody:
+        required: true
+        description: "User Object login related fields"
+        content:
+          application/json:
+            schema:
+              type: "object"
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: "User registration successful!"
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/UserJwt'
 components:
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     User:
       type: object
       required:
-         - firstName
-         - lastName
          - emailId
+         - password
       properties:
          firstName:
            type: string
@@ -38,3 +73,23 @@ components:
            type: string
          emailId:
            type: string
+         password:
+           type: string
+         phone:
+           type: string
+    UserJwt:
+      type: object
+      properties:
+        jwtToken:
+          type: string
+    Appointment:
+      type: object
+      properties:
+        user:
+          type: User
+    
+    
+# 2) Apply the security globally to all operations
+security:
+  - bearerAuth: []         # use the same name as above
+           
