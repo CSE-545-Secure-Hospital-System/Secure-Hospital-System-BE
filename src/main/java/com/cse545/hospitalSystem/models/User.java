@@ -32,6 +32,10 @@ public class User {
 
     @Column
     private String businessTitle;
+    
+    //TODO handle password encryption and constraints later
+    @Column
+    private String password;
 
     @ManyToOne(targetEntity = Role.class)
     private Role role;
