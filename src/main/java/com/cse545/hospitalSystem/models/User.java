@@ -33,13 +33,51 @@ public class User {
     @Column
     private String businessTitle;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "USER_ROLES",
-            joinColumns = {
-            @JoinColumn(name = "USER_ID")
-            },
-            inverseJoinColumns = {
-            @JoinColumn(name = "ROLE_ID") })
-    private Set<Role> roles;
+    @ManyToOne(targetEntity = Role.class)
+    private Role role;
+    
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmailId() {
+        return emailId;
+    }
+
+    public void setEmailId(String emailId) {
+        this.emailId = emailId;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getBusinessTitle() {
+        return businessTitle;
+    }
+
+    public Role getRole() {
+        return role;
+    }
 
 }
