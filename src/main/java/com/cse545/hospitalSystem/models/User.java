@@ -25,7 +25,7 @@ public class User {
     private String sessionId;
 
     @Column
-    private String emailId;
+    private String email;
 
     @Column
     private String phone;
@@ -57,11 +57,11 @@ public class User {
     }
 
     public String getEmailId() {
-        return emailId;
+        return email;
     }
 
-    public void setEmailId(String emailId) {
-        this.emailId = emailId;
+    public void setEmailId(String email) {
+        this.email = email;
     }
 
     public String getPhone() {

@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -28,7 +29,8 @@ public class LabResults {
     
     //TODO check on the diagnosis side of the bidrection,
     //need to implement this appropriately on both sides
-    @ManyToMany(targetEntity = Diagnosis.class)
+    @ManyToOne(targetEntity = Diagnosis.class)
+    @JoinColumn(name="diagnosis_id", nullable=false)
     private Diagnosis diagnosis;
     
     @OneToOne(targetEntity = User.class)
