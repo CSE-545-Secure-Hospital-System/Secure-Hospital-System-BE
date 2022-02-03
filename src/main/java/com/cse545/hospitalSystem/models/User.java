@@ -29,16 +29,10 @@ public class User {
 
     @Column
     private String phone;
-
-    @Column
-    private String businessTitle;
     
     //TODO handle password encryption and constraints later
     @Column
     private String password;
-
-    @ManyToOne(targetEntity = Role.class)
-    private Role role;
     
     public String getFirstName() {
         return firstName;
@@ -56,11 +50,11 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String getEmailId() {
+    public String getEmail() {
         return email;
     }
 
-    public void setEmailId(String email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
@@ -74,14 +68,6 @@ public class User {
 
     public long getId() {
         return id;
-    }
-
-    public String getBusinessTitle() {
-        return businessTitle;
-    }
-
-    public Role getRole() {
-        return role;
     }
 
 }
