@@ -1,8 +1,12 @@
 package com.cse545.hospitalSystem.services;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +23,6 @@ public class UserService extends LoggerConfig {
     private UserRepository userRepo;
    
     public User createUser(User user){    
-        logger.info("user email is {}", user.getEmail());
         return userRepo.save(user);
     }
     
@@ -29,5 +32,6 @@ public class UserService extends LoggerConfig {
         
         return user;
     }
+  
     
 }
