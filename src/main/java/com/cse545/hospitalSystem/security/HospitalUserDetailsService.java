@@ -1,4 +1,4 @@
-package com.cse545.hospitalSystem.config;
+package com.cse545.hospitalSystem.security;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -22,12 +22,12 @@ public class HospitalUserDetailsService implements UserDetailsService{
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 	    
 	    Optional<User> user = userRepository.findByEmail(email);
-	    if(!user.isPresent()) {
+	    if(user == null || !user.isPresent()) {
 	        throw new UsernameNotFoundException("User was not found");
 	    }
 		// TODO Auto-generated method stub
 		// return a static userName and password, but we need to fetch them from DB in real time
-	    return null;
+	    return new HospitalUserDetails(user.get());
 	}
 
 }

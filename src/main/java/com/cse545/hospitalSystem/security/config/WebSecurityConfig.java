@@ -1,4 +1,4 @@
-package com.cse545.hospitalSystem.config;
+package com.cse545.hospitalSystem.security.config;
 
 import javax.annotation.Resource;
 
@@ -20,27 +20,32 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.cse545.hospitalSystem.security.UserService;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
-	
+
     @Autowired
-    private UserDetailsService userDetailsService;
+    private UserService userService;
+    
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Bean
-    AuthenticationProvider authenticationProvider() {
+    DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider provider
                  = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(new BCryptPasswordEncoder());
+        provider.setUserDetailsService(userService);
+        provider.setPasswordEncoder(bCryptPasswordEncoder);
         return  provider;
     }
 
     // This is for Authentication
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService);
+        auth.authenticationProvider(daoAuthenticationProvider());
     }
     
     
@@ -49,23 +54,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().and().csrf().disable() 
                 .authorizeRequests()
-                .antMatchers("/api/users/create").permitAll()
-                .anyRequest().authenticated();
+                .antMatchers("/api/registration/**").permitAll()
+                .anyRequest().authenticated().and()
+                .formLogin();
 
         // before going into controller enter to Filter
 //        http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
     }
 
-    @Bean
-    public BCryptPasswordEncoder encoder(){
-        return new BCryptPasswordEncoder();
-    }
     
-    @SuppressWarnings("deprecation")
-	@Bean
-    public PasswordEncoder passwordEncoder() {
-    	return NoOpPasswordEncoder.getInstance();
-    }
+//    @SuppressWarnings("deprecation")
+//	@Bean
+//    public PasswordEncoder passwordEncoder() {
+//    	return NoOpPasswordEncoder.getInstance();
+//    }
     
     // The AuthenticationManager we just configured is added to the Spring Application Context and is added 
     // as a bean by overriding the authecationManagerBean method.

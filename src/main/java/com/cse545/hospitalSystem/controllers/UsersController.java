@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cse545.hospitalSystem.models.User;
 import com.cse545.hospitalSystem.services.AuthenticationService;
-import com.cse545.hospitalSystem.services.UserService;
 
 
 
@@ -25,25 +24,7 @@ public class UsersController{
 //	Logger logger = LoggerFactory.getLogger(UsersController.class);
 	// default application level logger is info  
 	
-	@Autowired
-	private AuthenticationService authenticationService;
-	
-	@Autowired
-	private UserService userService;
-	
-	
-	@PostMapping(value = "/create")
-	public ResponseEntity<Long> create(@RequestBody User user){
-	    User createdUser = userService.createUser(user);
-	    return new ResponseEntity<Long> (createdUser.getId(), HttpStatus.OK);
-	    
-	}
-	
-	@PostMapping(value = "/sign-in")
-    public ResponseEntity<Long> signIn(@RequestBody User user){
-	    User signedInUser = userService.signIn(user);
-	    return new ResponseEntity<Long> (signedInUser.getId(), HttpStatus.OK); 
-    }
+
 	
 	
 

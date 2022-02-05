@@ -1,4 +1,4 @@
-package com.cse545.hospitalSystem.config;
+package com.cse545.hospitalSystem.security;
 
 import java.io.IOException;
 

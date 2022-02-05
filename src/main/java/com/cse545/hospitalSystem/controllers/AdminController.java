@@ -5,7 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.cse545.hospitalSystem.services.AuthenticationService;
-import com.cse545.hospitalSystem.services.UserService;
 
 @Controller
 @RequestMapping("/api/admin")
@@ -13,9 +12,6 @@ public class AdminController {
     
     @Autowired
     AuthenticationService authenticationService;
-    
-    @Autowired
-    UserService userService;
     
 
 }
