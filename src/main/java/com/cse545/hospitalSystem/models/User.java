@@ -17,6 +17,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "users")
 public class User implements UserDetails {
     
+    public User() {}
+    
     public User(String firstName,
             String lastName,
             String email,
@@ -54,7 +56,14 @@ public class User implements UserDetails {
     
     @ManyToOne(targetEntity = Role.class)
     @JoinColumn(name="Role_ID")
+    @JsonIgnore
     private Role role;
+    
+    @Column
+    private Boolean locked = false;
+    
+    @Column
+    private Boolean enabled = false;
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
@@ -128,7 +137,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !locked;
     }
 
     @Override
@@ -138,7 +147,11 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
+    }
+    
+    public void setEnabled(boolean enabled) {
+        this.enabled=enabled;
     }
 
 

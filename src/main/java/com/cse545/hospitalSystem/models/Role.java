@@ -10,8 +10,7 @@ import lombok.Data;
 public class Role {
     @Id
     @Column(name = "role_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
      
     private String role;
 
@@ -23,7 +22,7 @@ public class Role {
         this.role = role;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 }

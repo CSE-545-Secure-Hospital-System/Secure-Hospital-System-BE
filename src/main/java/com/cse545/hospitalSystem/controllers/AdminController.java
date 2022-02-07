@@ -10,8 +10,8 @@ import com.cse545.hospitalSystem.services.AuthenticationService;
 @RequestMapping("/api/admin")
 public class AdminController {
     
-    @Autowired
-    AuthenticationService authenticationService;
+//    @Autowired
+//    AuthenticationService authenticationService;
     
 
 }

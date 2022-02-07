@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Bill {
     
@@ -17,9 +19,11 @@ public class Bill {
     private long id;
     
     @ManyToOne(targetEntity = User.class)
+    @JsonIgnore
     private User user;
     
     @OneToOne(targetEntity = Appointment.class)
+    @JsonIgnore
     private Appointment appointment;
     
     private Double cost;

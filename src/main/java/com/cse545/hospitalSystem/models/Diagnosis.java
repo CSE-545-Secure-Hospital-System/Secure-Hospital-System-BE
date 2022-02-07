@@ -13,6 +13,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "diagnosis")
 public class Diagnosis {
@@ -25,14 +27,17 @@ public class Diagnosis {
     private String description;
     
     @OneToOne(targetEntity = Appointment.class)
+    @JsonIgnore
     private Appointment appointment;
     
     //TODO
     //has a many to one with labtests
     @ManyToOne(targetEntity = LabTests.class)
+    @JsonIgnore
     private List<LabTests> labTests;
     
     @OneToMany(targetEntity = LabResults.class, mappedBy="diagnosis")
+    @JsonIgnore
     private List<LabResults> labResults;
     
     private String prescription;

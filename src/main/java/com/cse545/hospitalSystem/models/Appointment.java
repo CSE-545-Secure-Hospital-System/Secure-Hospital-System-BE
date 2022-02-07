@@ -12,6 +12,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "appointment")
 public class Appointment {
@@ -25,10 +27,12 @@ public class Appointment {
     private User patient;
     
     @ManyToOne(targetEntity = User.class)
+    @JsonIgnore
     private User doctor;
     
     //staff who decides
     @ManyToOne(targetEntity = User.class)
+    @JsonIgnore
     private User staff;
     
     @Column(name = "startTime")
@@ -40,6 +44,7 @@ public class Appointment {
     private Date endTime;
     
     @OneToOne(targetEntity=Diagnosis.class)
+    @JsonIgnore
     private Diagnosis diagnosis;
     
     //enum

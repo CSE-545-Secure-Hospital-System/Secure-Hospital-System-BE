@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "labresults")
 public class LabResults {
@@ -22,18 +24,22 @@ public class LabResults {
     private long id;
     
     @ManyToOne(targetEntity = LabTests.class)
+    @JsonIgnore
     private LabTests labTest;
     
     @ManyToOne(targetEntity = User.class)
+    @JsonIgnore
     private User patient;
     
     //TODO check on the diagnosis side of the bidrection,
     //need to implement this appropriately on both sides
     @ManyToOne(targetEntity = Diagnosis.class)
     @JoinColumn(name="diagnosis_id", nullable=false)
+    @JsonIgnore
     private Diagnosis diagnosis;
     
     @OneToOne(targetEntity = User.class)
+    @JsonIgnore
     private User approvedBy;
     
     
