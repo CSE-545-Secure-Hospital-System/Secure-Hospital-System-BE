@@ -13,13 +13,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.cse545.hospitalSystem.config.LoggerConfig;
 import com.cse545.hospitalSystem.enums.RoleMapping;
 import com.cse545.hospitalSystem.models.ConfirmationToken;
 import com.cse545.hospitalSystem.models.Role;
 import com.cse545.hospitalSystem.models.User;
 import com.cse545.hospitalSystem.repositories.RoleRepository;
 import com.cse545.hospitalSystem.repositories.UserRepository;
-import com.cse545.hospitalSystem.security.LoggerConfig;
 
 @Service
 public class UserService implements UserDetailsService {

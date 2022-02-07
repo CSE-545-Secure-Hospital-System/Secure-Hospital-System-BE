@@ -1,4 +1,4 @@
-package com.cse545.hospitalSystem.security.config;
+package com.cse545.hospitalSystem.config.security;
 
 import javax.annotation.Resource;
 
@@ -31,7 +31,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
     private UserService userService;
     
     @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    BCryptPasswordEncoder bCryptPasswordEncoder;
+    
 
     @Bean
     DaoAuthenticationProvider daoAuthenticationProvider() {
@@ -62,12 +63,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
 //        http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
     }
 
-    
-//    @SuppressWarnings("deprecation")
-//	@Bean
-//    public PasswordEncoder passwordEncoder() {
-//    	return NoOpPasswordEncoder.getInstance();
-//    }
     
     // The AuthenticationManager we just configured is added to the Spring Application Context and is added 
     // as a bean by overriding the authecationManagerBean method.

@@ -9,9 +9,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.cse545.hospitalSystem.config.LoggerConfig;
 import com.cse545.hospitalSystem.models.User;
 import com.cse545.hospitalSystem.repositories.UserRepository;
-import com.cse545.hospitalSystem.security.LoggerConfig;
 
 @Service
 public class AuthenticationService extends LoggerConfig{

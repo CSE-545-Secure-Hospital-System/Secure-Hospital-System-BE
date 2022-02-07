@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cse545.hospitalSystem.config.LoggerConfig;
 import com.cse545.hospitalSystem.enums.RoleMapping;
 import com.cse545.hospitalSystem.forms.RegistrationRequest;
 import com.cse545.hospitalSystem.models.ConfirmationToken;
 import com.cse545.hospitalSystem.models.User;
-import com.cse545.hospitalSystem.security.LoggerConfig;
 
 @Service
 public class RegistrationService {

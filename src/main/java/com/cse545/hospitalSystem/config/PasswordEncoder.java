@@ -1,4 +1,4 @@
-package com.cse545.hospitalSystem.security;
+package com.cse545.hospitalSystem.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
