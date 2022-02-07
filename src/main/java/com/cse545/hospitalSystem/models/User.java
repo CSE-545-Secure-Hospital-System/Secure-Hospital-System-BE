@@ -1,19 +1,34 @@
 package com.cse545.hospitalSystem.models;
 
-import java.util.HashSet;
+
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
 
 import javax.persistence.*;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+
 @Entity
-@Table(name = "users",
-uniqueConstraints = { 
-		@UniqueConstraint(columnNames = "phone"),
-		@UniqueConstraint(columnNames = "emailId") 
-	})
-public class User {
+@Table(name = "users")
+public class User implements UserDetails {
+    
+    public User() {}
+    
+    public User(String firstName,
+            String lastName,
+            String email,
+            String password) {
+                 this.firstName = firstName;
+                 this.lastName = lastName;
+                 this.email = email;
+                 this.password = password;
+                }
 
     @Id
     @Column(name = "user_id")
@@ -30,116 +45,113 @@ public class User {
     private String sessionId;
 
     @Column
-    private String emailId;
+    private String email;
 
     @Column
     private String phone;
     
-    @Column
-    private String userName;
-
+    //TODO handle password encryption and constraints later
     @Column
     private String password;
     
-    @ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(	name = "user_roles", 
-				joinColumns = @JoinColumn(name = "user_id"), 
-				inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private Set<Role> roles = new HashSet<>();
-
-	public User(long id, String firstName, String lastName, String sessionId, String emailId, String phone,
-			String userName, String password, Set<Role> roles) {
-		super();
-		this.id = id;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.sessionId = sessionId;
-		this.emailId = emailId;
-		this.phone = phone;
-		this.userName = userName;
-		this.password = password;
-		this.roles = roles;
-	}
-
-	public User() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public String getSessionId() {
-		return sessionId;
-	}
-
-	public void setSessionId(String sessionId) {
-		this.sessionId = sessionId;
-	}
-
-	public String getEmailId() {
-		return emailId;
-	}
-
-	public void setEmailId(String emailId) {
-		this.emailId = emailId;
-	}
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public Set<Role> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(Set<Role> roles) {
-		this.roles = roles;
-	}
-
-	
-	
+    @ManyToOne(targetEntity = Role.class)
+    @JoinColumn(name="Role_ID")
+    @JsonIgnore
+    private Role role;
     
+    @Column
+    private Boolean locked = false;
+    
+    @Column
+    private Boolean enabled = false;
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public long getId() {
+        return id;
+    }
+    
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        SimpleGrantedAuthority authority =
+                new SimpleGrantedAuthority(role.getRole());
+        return Collections.singletonList(authority);
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return !locked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+    
+    public void setEnabled(boolean enabled) {
+        this.enabled=enabled;
+    }
 
 }
