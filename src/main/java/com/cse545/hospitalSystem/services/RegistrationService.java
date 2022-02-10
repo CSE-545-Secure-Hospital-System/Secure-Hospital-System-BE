@@ -48,17 +48,20 @@ public class RegistrationService {
             throw new IllegalStateException("email already confirmed");
         }
 
-        LocalDateTime expiredAt = confirmationToken.getExpiresAt();
-
-        if (expiredAt.isBefore(LocalDateTime.now())) {
-            throw new IllegalStateException("token expired");
-        }
+        // We are not expiring the token for simplicity
+        
+        
+//        LocalDateTime expiredAt = confirmationToken.getExpiresAt();
+//
+//        if (expiredAt.isBefore(LocalDateTime.now())) {
+//            throw new IllegalStateException("token expired");
+//        }
 
         confirmationTokenService.setConfirmedAt(token);
         logger.info("user is {}",  confirmationToken.getUser().getEmail());
         userService.enableUser(
                 confirmationToken.getUser().getEmail());
-        long roleMapping = 2;
+        long roleMapping = 3;
         userService.updateRole(confirmationToken.getUser().getEmail(), roleMapping);
         return "confirmed";
     }
