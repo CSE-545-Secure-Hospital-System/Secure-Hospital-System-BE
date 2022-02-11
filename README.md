@@ -1,6 +1,14 @@
 # Secure-Hospital-System-BE
 This is the backend project for the secure hospital system.
 
+#### Run below in MySQL after starting the application
+
+```
+use cse545;
+INSERT INTO roles(role_id, role) VALUES(1, 'PATIENT');
+INSERT INTO roles(role_id, role) VALUES(2, 'ADMIN');
+INSERT INTO roles(role_id, role) VALUES(3, 'HOSPITAL_STAFF');
+```
 
 Useful Links:
 - https://swagger.io/specification/
