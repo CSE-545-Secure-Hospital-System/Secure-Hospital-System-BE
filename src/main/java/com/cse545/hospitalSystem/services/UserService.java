@@ -58,28 +58,28 @@ public class UserService implements UserDetailsService {
     }
     
     public String signUpUser(User user) {
-        logger.info("email is {}", user.getEmail());
-        boolean userExists = userRepo.findByEmail(user.getEmail())
-                .isPresent();
+    	// DB - email existence check
         
-        logger.info("user exists? {}", userExists);
-        
-        if(userExists) {
+        if(isUserAlreadyExist(user.getEmail()).isPresent()) {
             throw new IllegalStateException("Email already exists");
         }
         
+        // encrypting the password
         String encodedPassword = bCryptPasswordEncoder
                 .encode(user.getPassword());     
         user.setPassword(encodedPassword);
         
         userRepo.save(user);
         
+        // Creating a Token
         String token = UUID.randomUUID().toString();
         ConfirmationToken confirmationToken = new ConfirmationToken(
                 token,
                 LocalDateTime.now(),
                 LocalDateTime.now().plusMinutes(5),
                 user);
+        
+        // Saving token in DB
         confirmationTokenService.saveConfirmationToken(confirmationToken);
         
         //TODO send email
@@ -87,7 +87,7 @@ public class UserService implements UserDetailsService {
     }
     
     public void enableUser(String email) {
-        Optional<User> optionalUser = userRepo.findByEmail(email);
+        Optional<User> optionalUser = isUserAlreadyExist(email);
         if(!optionalUser.isPresent()) {
             throw new IllegalStateException("User does not exist");
         }
@@ -98,7 +98,7 @@ public class UserService implements UserDetailsService {
     }
 
     public void updateRole(String email, Long userRole) {
-        Optional<User> userOptional = userRepo.findByEmail(email);
+        Optional<User> userOptional = isUserAlreadyExist(email);
         if(!userOptional.isPresent()) {
             throw new IllegalStateException("User does not exist, "
                     + "cannot update role");
@@ -112,6 +112,14 @@ public class UserService implements UserDetailsService {
         userRepo.save(user);
         return;  
         
+    }
+    
+    public Optional<User> isUserAlreadyExist(String email){
+    	// DB - email existence check
+    	logger.info("email is {}", email);
+    	Optional<User> user = userRepo.findByEmail(email);
+        logger.info("user exists? - {}", user.isPresent());
+    	return user;
     }
   
     
