@@ -24,7 +24,7 @@ public class AdminController {
 	private UserService userService;
     
 	@PreAuthorize("hasRole('PATIENT')")
-	@RequestMapping(value="/users", method = RequestMethod.GET)
+	@RequestMapping(value="/getAllUsers", method = RequestMethod.GET)
 	public List<User> getAllUsers(){
 		return userService.getAllUser();
 	}
