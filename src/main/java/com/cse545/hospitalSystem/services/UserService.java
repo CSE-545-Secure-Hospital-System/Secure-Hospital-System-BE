@@ -61,9 +61,12 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         // TODO Auto-generated method stub
-        return userRepo.findByEmail(email)
-                .orElseThrow(()->
-                new UsernameNotFoundException(String.format(USER_NOT_FOUND, email)));
+        User user = userRepo.findByEmail(email).get();
+        if(user == null) {
+        	throw new UsernameNotFoundException("Invalid username or password.");
+        }
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getAuthorities());
+             
     }
     
     private Set<SimpleGrantedAuthority> getAuthority(User user) {
