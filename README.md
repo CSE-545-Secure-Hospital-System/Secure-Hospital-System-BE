@@ -11,6 +11,7 @@ INSERT INTO roles(role_id, role) VALUES(3, 'HOSPITAL_STAFF');
 ```
 
 APIs:
+
 NoAuth APIs (No Authentication is required) :
 - /api/auth/register 
 - /api/auth/confirm
