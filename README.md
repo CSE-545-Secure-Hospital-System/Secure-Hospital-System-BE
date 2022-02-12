@@ -5,10 +5,59 @@ This is the backend project for the secure hospital system.
 
 ```
 use cse545;
-INSERT INTO roles(role_id, role) VALUES(1, 'PATIENT');
-INSERT INTO roles(role_id, role) VALUES(2, 'ADMIN');
+INSERT INTO roles(role_id, role) VALUES(2, 'PATIENT');
+INSERT INTO roles(role_id, role) VALUES(1, 'ADMIN');
+-- Always keep admin id as 1
 INSERT INTO roles(role_id, role) VALUES(3, 'HOSPITAL_STAFF');
 ```
+
+Need to setUp admin account manually and all other remaining account types are created from UI based on requirements.
+
+Admin account creation Process:
+
+```
+INSERT INTO `cse545`.`users`
+(`user_id`,
+`email`,
+`enabled`,
+`first_name`,
+`last_name`,
+`locked`,
+`password`,
+`phone`,
+`session_id`)
+VALUES
+(1,
+"spapani@asu.edu",
+1,
+"Saicharan",
+"Papani",
+0,
+"Password",
+"+14808031954",
+null);
+-- use Bcrypt password above
+
+select * from cse545.users;
+```
+
+- https://bcrypt-generator.com/
+
+
+Add the role as ADMIN for the above user:
+
+```
+INSERT INTO `cse545`.`user_roles`
+(`user_id`,
+`role_id`)
+VALUES
+(1,
+1);
+SELECT * FROM cse545.user_roles;
+```
+
+Temporarily admin is created manually. Later on it will be an automated process.
+
 
 APIs:
 

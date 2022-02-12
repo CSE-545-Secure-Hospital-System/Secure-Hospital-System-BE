@@ -23,7 +23,7 @@ public class AdminController {
 	@Autowired
 	private UserService userService;
     
-	@PreAuthorize("hasRole('PATIENT')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@RequestMapping(value="/getAllUsers", method = RequestMethod.GET)
 	public List<User> getAllUsers(){
 		return userService.getAllUser();

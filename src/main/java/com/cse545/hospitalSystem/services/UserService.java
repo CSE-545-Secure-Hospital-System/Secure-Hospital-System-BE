@@ -127,6 +127,17 @@ public class UserService implements UserDetailsService {
 		logger.info(users.get(0).getFirstName());
 		return users;
 	}
+
+	public User getUserById(Long userId) {
+		Optional<User> user = userRepo.findById(userId);
+		if(user.isPresent()) {
+			logger.info("Fetching the user - {}", user.get().getEmail());
+			user.get().setPassword(null);
+		}else {
+			throw new IllegalStateException("User does not exist");
+		}
+		return user.get();
+	}
   
     
 }
