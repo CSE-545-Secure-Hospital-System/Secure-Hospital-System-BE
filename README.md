@@ -10,6 +10,16 @@ INSERT INTO roles(role_id, role) VALUES(2, 'ADMIN');
 INSERT INTO roles(role_id, role) VALUES(3, 'HOSPITAL_STAFF');
 ```
 
+APIs:
+NoAuth APIs (No Authentication is required) :
+- /api/auth/register 
+- /api/auth/confirm
+- /api/auth/login
+
+Auth APIs (Authentication is required):
+- Admin APIs
+  - /api/admin/getAllUsers
+
 Useful Links:
 - https://swagger.io/specification/
 - https://springdoc.org/#Introduction
