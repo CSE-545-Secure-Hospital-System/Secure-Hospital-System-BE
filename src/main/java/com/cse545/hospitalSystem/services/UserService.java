@@ -33,7 +33,7 @@ public class UserService implements UserDetailsService {
     @Autowired
     private RoleRepository roleRepo;
     
-    public static Logger logger = LoggerFactory.getLogger(LoggerConfig.class);
+    public static Logger logger = LoggerFactory.getLogger(UserService.class);
     
     @Autowired
     ConfirmationTokenService confirmationTokenService;
