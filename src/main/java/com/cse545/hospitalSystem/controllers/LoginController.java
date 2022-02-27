@@ -7,6 +7,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,8 +35,10 @@ public class LoginController {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
     
+    @CrossOrigin
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequestDTO) {
+    	
     	final Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                 		loginRequestDTO.getEmail(),
@@ -44,6 +47,7 @@ public class LoginController {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final String token = jwtTokenProvider.generateToken(authentication);
+        System.out.println(new AuthToken(token).toString());
         return ResponseEntity.ok(new AuthToken(token));
     }
     

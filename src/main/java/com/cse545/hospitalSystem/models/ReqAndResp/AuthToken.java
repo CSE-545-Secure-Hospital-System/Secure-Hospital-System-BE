@@ -5,6 +5,8 @@ import java.util.List;
 public class AuthToken {
 	
 	private String token;
+	private String firstName;
+	private String lastName;
 
     public AuthToken(){
 

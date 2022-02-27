@@ -63,6 +63,8 @@ public class User implements UserDetails {
             @JoinColumn(name = "ROLE_ID") })
     private Set<Role> roles;
     
+    
+    
     @Column
     private Boolean locked = false;
     

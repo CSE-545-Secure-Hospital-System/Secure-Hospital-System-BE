@@ -23,8 +23,14 @@ import com.cse545.hospitalSystem.services.UserService;
 @RequestMapping("/api/users")
 public class UsersController{
 	
+
 	@Autowired
 	private UserService userService;
+	// never add logger here
+	// this added just for testing
+//	Logger logger = LoggerFactory.getLogger(UsersController.class);
+	// default application level logger is info  
+
 	
 	@RequestMapping(value="/getUserById", method = RequestMethod.GET)
 	@PreAuthorize("hasRole('ADMIN')")
