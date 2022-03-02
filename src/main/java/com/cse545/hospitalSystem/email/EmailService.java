@@ -38,7 +38,7 @@ public class EmailService {
     }
 
     @Async
-    public void send(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
+    public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
         logger.info("inside emailservice send email");
         JavaMailSender javaMailsender = getJavaMailSender();
         MimeMessage mimeMessage = javaMailsender.createMimeMessage();
@@ -75,6 +75,12 @@ public class EmailService {
         props.put("mail.smtp.ssl.protocols", "TLSv1.2");
 
         return mailSender;
+    }
+    
+    public void sendOtpEmail(String email, String otp) {
+        String subject = "Your OTP for Secure Hospital System";
+        String body = "<html><body>" + otp + "</body></html>";
+        sendEmail(email, subject, body, false, true);
     }
 
 }
