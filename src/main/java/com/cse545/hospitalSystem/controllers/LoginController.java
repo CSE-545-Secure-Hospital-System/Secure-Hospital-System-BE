@@ -20,7 +20,11 @@ import com.cse545.hospitalSystem.models.ReqAndResp.AuthToken;
 import com.cse545.hospitalSystem.models.ReqAndResp.LoginRequestDTO;
 import com.cse545.hospitalSystem.services.UserService;
 
-
+/*
+ * 
+ * Should be used only for Login and related functionalities
+ * 
+ */
 
 @RestController
 @RequestMapping(path="api/auth")

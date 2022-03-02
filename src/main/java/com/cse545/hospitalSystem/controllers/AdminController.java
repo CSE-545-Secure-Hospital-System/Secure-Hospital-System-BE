@@ -1,5 +1,12 @@
 package com.cse545.hospitalSystem.controllers;
 
+/*
+ * 
+ * Admin related APIs goes here.
+ * Directly keep preAuthorize on Contoller
+ * 
+ */
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;

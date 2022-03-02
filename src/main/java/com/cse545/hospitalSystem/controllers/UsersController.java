@@ -1,5 +1,13 @@
 package com.cse545.hospitalSystem.controllers;
 
+/*
+ * 
+ * General APIs goes here.
+ * keep preAuthorize based on requirements.
+ * 
+ */
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
@@ -38,5 +46,9 @@ public class UsersController{
 		return userService.getUserById(userId);
 	}
 	
+	@RequestMapping(value="/getUserByEmailId", method = RequestMethod.GET)
+	public ResponseEntity<User> getUserByEmailId(@RequestParam(name = "emailId") String emailId) {
+		return userService.getUserByEmailId(emailId);
+	}
 
 }

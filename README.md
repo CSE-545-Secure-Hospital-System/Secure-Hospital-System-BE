@@ -69,6 +69,9 @@ NoAuth APIs (No Authentication is required) :
 Auth APIs (Authentication is required):
 - Admin APIs
   - /api/admin/getAllUsers
+- General APIs (Can be used by any role)
+  - /api/users/getUserByEmailId
+  - /api/users/getUserById
 
 Useful Links:
 - https://swagger.io/specification/
