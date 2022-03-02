@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.cse545.hospitalSystem.config.LoggerConfig;
+import com.cse545.hospitalSystem.config.security.JwtTokenProvider;
 import com.cse545.hospitalSystem.models.User;
 import com.cse545.hospitalSystem.repositories.UserRepository;
 
@@ -21,7 +22,7 @@ public class AuthenticationService extends LoggerConfig{
 	
 	
 	@Autowired
-	private JwtTokenService jwtTokenService;
+	private JwtTokenProvider jwtTokenService;
 	
 	@Autowired
 	private UserRepository userRepo;

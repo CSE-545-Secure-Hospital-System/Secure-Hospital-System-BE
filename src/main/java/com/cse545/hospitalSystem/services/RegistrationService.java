@@ -1,6 +1,9 @@
 package com.cse545.hospitalSystem.services;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +16,7 @@ import com.cse545.hospitalSystem.email.EmailService;
 import com.cse545.hospitalSystem.enums.RoleMapping;
 import com.cse545.hospitalSystem.forms.RegistrationRequest;
 import com.cse545.hospitalSystem.models.ConfirmationToken;
+import com.cse545.hospitalSystem.models.Role;
 import com.cse545.hospitalSystem.models.User;
 
 @Service
@@ -26,8 +30,9 @@ public class RegistrationService {
     
     @Autowired
     private EmailService emailService;
+    private RoleService roleService;
     
-    public static Logger logger = LoggerFactory.getLogger(RegistrationService.class);
+    public static Logger logger = LoggerFactory.getLogger(LoggerConfig.class);
     
     @Autowired
     private ConfirmationTokenService confirmationTokenService;
@@ -40,7 +45,15 @@ public class RegistrationService {
         if(!isValidEmail) {
             throw new IllegalStateException("Email is not valid");
         }
-        logger.info("email is valid");
+        Set<Role> roles = new HashSet<>();
+        request.getRoles().forEach(role -> {
+        	Optional<Role> r = roleService.findByName(role);
+        	if(r.isPresent()) {
+        		roles.add(r.get());
+        	}else {
+        		throw new IllegalStateException("Role is not valid");
+        	}
+        });
         String token = userService.signUpUser(new User(request.getFirstName(), request.getLastName(),
                 request.getEmail(), request.getPassword()));
         String link = "http://localhost:8080/api/registration/confirm?token=" + token;
@@ -56,6 +69,7 @@ public class RegistrationService {
     
     @Transactional
     public String confirmToken(String token) {
+    	
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getToken(token)
                 .orElseThrow(() ->
@@ -78,8 +92,6 @@ public class RegistrationService {
         logger.info("user is {}",  confirmationToken.getUser().getEmail());
         userService.enableUser(
                 confirmationToken.getUser().getEmail());
-        long roleMapping = 3;
-        userService.updateRole(confirmationToken.getUser().getEmail(), roleMapping);
         return "confirmed";
     }
     

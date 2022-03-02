@@ -33,49 +33,62 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
     
-
-    @Bean
-    DaoAuthenticationProvider daoAuthenticationProvider() {
-        DaoAuthenticationProvider provider
-                 = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userService);
-        provider.setPasswordEncoder(bCryptPasswordEncoder);
-        return  provider;
-    }
+    @Autowired
+    private UnauthorizedEntryPoint unauthorizedEntryPoint;
+    
+    private static final String[] AUTH_WHITELIST = {
+            // -- Swagger UI v2
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**",
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/api/auth/**",
+            "/api/auth/login",
+            "/api/auth/register",
+            "/api/auth/confirm"
+            // other public endpoints of your API may be appended to this array
+    };
 
     // This is for Authentication
+    // Below is the configuration setting stating where to look for the userDetails by AuthenticationBuilder
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(daoAuthenticationProvider());
+        auth.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder);
     }
     
     
     // This is for Authorization
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().and().csrf().disable() 
-                .authorizeRequests()
-                .antMatchers("/api/registration/**").permitAll()
-                .anyRequest().authenticated().and()
-                .formLogin();
 
-        // before going into controller enter to Filter
-//        http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+        http.cors().and().csrf().disable() 
+        .authorizeRequests()
+        .antMatchers(AUTH_WHITELIST).permitAll()
+        .anyRequest().authenticated()
+        .and()
+        .exceptionHandling().authenticationEntryPoint(unauthorizedEntryPoint).and()
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        
+        http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
     }
 
     
     // The AuthenticationManager we just configured is added to the Spring Application Context and is added 
     // as a bean by overriding the authecationManagerBean method.
-
     @Override
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
 
-//    @Bean
-//    public JwtAuthenticationFilter authenticationTokenFilterBean() throws Exception {
-//        return new JwtAuthenticationFilter();
-//    }
+    @Bean
+    public JwtAuthenticationFilter authenticationTokenFilterBean() throws Exception {
+        return new JwtAuthenticationFilter();
+    }
 
 }
