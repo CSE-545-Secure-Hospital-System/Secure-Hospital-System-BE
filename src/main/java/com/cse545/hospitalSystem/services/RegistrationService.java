@@ -30,6 +30,8 @@ public class RegistrationService {
     
     @Autowired
     private EmailService emailService;
+    
+    @Autowired
     private RoleService roleService;
     
     public static Logger logger = LoggerFactory.getLogger(LoggerConfig.class);
@@ -46,6 +48,7 @@ public class RegistrationService {
             throw new IllegalStateException("Email is not valid");
         }
         Set<Role> roles = new HashSet<>();
+        logger.info("request has : {}", request.getRoles().toString());
         request.getRoles().forEach(role -> {
         	Optional<Role> r = roleService.findByName(role);
         	if(r.isPresent()) {
@@ -55,8 +58,8 @@ public class RegistrationService {
         	}
         });
         String token = userService.signUpUser(new User(request.getFirstName(), request.getLastName(),
-                request.getEmail(), request.getPassword()));
-        String link = "http://localhost:8080/api/registration/confirm?token=" + token;
+                request.getEmail(), request.getPassword(), roles));
+        String link = "http://localhost:8080/api/auth/confirm?token=" + token;
         String subject = "Confirmation Email";
         emailService.sendEmail(request.getEmail(),
                 subject,

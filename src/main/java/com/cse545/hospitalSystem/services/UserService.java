@@ -59,13 +59,16 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException{
         // TODO Auto-generated method stub
-        User user = userRepo.findByEmail(email).get();
-        if(user == null) {
+        Optional<User> user = userRepo.findByEmail(email);
+        if(!user.isPresent()) {
         	throw new UsernameNotFoundException("Invalid username or password.");
         }
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getAuthorities());
+        if(!user.get().isEnabled()) {
+            throw new UsernameNotFoundException("Username has not been enabled");
+        }
+        return new org.springframework.security.core.userdetails.User(user.get().getUsername(), user.get().getPassword(), user.get().getAuthorities());
              
     }
     
