@@ -73,9 +73,5 @@ public class OTPService {
         return true;
         
     }
-    
-    public void clearOtp(String email) {
-        cacheForOTP.invalidate(email);
-    }
 
 }
