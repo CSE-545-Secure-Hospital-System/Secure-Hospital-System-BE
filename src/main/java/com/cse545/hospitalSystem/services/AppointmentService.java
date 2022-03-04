@@ -11,6 +11,7 @@ import com.cse545.hospitalSystem.models.AppointmentStatus;
 import com.cse545.hospitalSystem.models.User;
 import com.cse545.hospitalSystem.models.ReqAndResp.GeneralAppointmentRequestDTO;
 import com.cse545.hospitalSystem.models.ReqAndResp.SpecificAppointmentRequestDTO;
+import com.cse545.hospitalSystem.models.ReqAndResp.UpdateAppointmentRequestDTO;
 import com.cse545.hospitalSystem.repositories.AppointmentRepository;
 import com.cse545.hospitalSystem.repositories.UserRepository;
 
@@ -81,6 +82,59 @@ public class AppointmentService {
         appointment.setStartTime(appointmentRequest.getStartTime());
         appointment.setEndTime(appointmentRequest.getEndTime());
         appointment.setStatus(AppointmentStatus.REQUESTED);
+        return appointmentRepo.save(appointment);
+    }
+
+    public Appointment updateGeneralAppointmentStatus(UpdateAppointmentRequestDTO request, String username) {
+        Appointment appointment = null;
+        if(request.getAppointmentId() == null ||
+           request.getDoctorId() == null||
+           request.getStatus() == null) {
+            return null;
+        }
+        Optional<Appointment> appointmentOptional = appointmentRepo.findById(request.getAppointmentId());
+        if(!appointmentOptional.isPresent()) {
+            return null;
+        }
+        appointment = appointmentOptional.get();
+        Optional<User> doctorOptional = userRepo.findById(request.getDoctorId());
+        if(!doctorOptional.isPresent()) {
+            return null;
+        }
+        appointment.setDoctor(doctorOptional.get());
+        Optional<User> staffOptional = userRepo.findByEmail(username);
+        if(!staffOptional.isPresent()) {
+            return null;
+        }
+        appointment.setStaff(staffOptional.get());
+        if(appointment.getStatus() != AppointmentStatus.REQUESTED) {
+            return null;
+        }
+        appointment.setStatus(request.getStatus());
+        return appointmentRepo.save(appointment);
+    }
+    
+    //Doctor is already request and is present in patient.getDoctor()
+    public Appointment updateSpecificAppointmentStatus(UpdateAppointmentRequestDTO request, String username) {
+        Appointment appointment = null;
+        if(request.getAppointmentId() == null ||
+           request.getStatus() == null) {
+            return null;
+        }
+        Optional<Appointment> appointmentOptional = appointmentRepo.findById(request.getAppointmentId());
+        if(!appointmentOptional.isPresent()) {
+            return null;
+        }
+        appointment = appointmentOptional.get();
+        Optional<User> staffOptional = userRepo.findByEmail(username);
+        if(!staffOptional.isPresent()) {
+            return null;
+        }
+        appointment.setStaff(staffOptional.get());
+        if(appointment.getStatus() != AppointmentStatus.REQUESTED) {
+            return null;
+        }
+        appointment.setStatus(request.getStatus());
         return appointmentRepo.save(appointment);
     }
 
