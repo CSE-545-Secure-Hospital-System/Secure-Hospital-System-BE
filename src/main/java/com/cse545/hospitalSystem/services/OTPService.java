@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.google.common.cache.LoadingCache;
+import com.cse545.hospitalSystem.constants.HospitalSystemConstants;
 import com.cse545.hospitalSystem.controllers.OTPController;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -18,9 +19,10 @@ import com.google.common.cache.CacheLoader;
 public class OTPService {
     
     public static Logger logger = LoggerFactory.getLogger(OTPService.class);
-    private static final Integer EXPIRE_MINS = 2;
-  //Key-> user id, Val->Integer that stores a 6 digit number
-    private LoadingCache<String,Integer> cacheForOTP;
+    private static final Integer EXPIRE_MINS = HospitalSystemConstants.OTP_EXPIRES_IN;
+    // Key-> user id, Val -> Integer that stores a 6 digit number
+    private LoadingCache<String, Integer> cacheForOTP;
+    
     public OTPService(){
         super();
         cacheForOTP = CacheBuilder.newBuilder().
@@ -32,6 +34,7 @@ public class OTPService {
     }
     
     public int generateOTP(String key){
+    	// generate OTP and store in Cache
         Random random = new Random();
         int otp = 100000 + random.nextInt(900000);
         cacheForOTP.put(key, otp);
@@ -39,6 +42,7 @@ public class OTPService {
     }
     
     public int getOtp(String key){
+    	// check cache with key(email) to get the respective OTP
         try{
             return cacheForOTP.get(key);
         }catch (Exception e){
