@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cse545.hospitalSystem.config.LoggerConfig;
+import com.cse545.hospitalSystem.constants.HospitalSystemConstants;
 import com.cse545.hospitalSystem.email.EmailService;
 import com.cse545.hospitalSystem.enums.RoleMapping;
 import com.cse545.hospitalSystem.forms.RegistrationRequest;
@@ -41,12 +42,15 @@ public class RegistrationService {
     
     @Transactional
     public String register(RegistrationRequest request) {
-        //TODO convert http to https when going into prod
+    	
         logger.info("inside registration service, register method");
+        
         boolean isValidEmail = emailValidator.test(request.getEmail());
+        
         if(!isValidEmail) {
             throw new IllegalStateException("Email is not valid");
         }
+        // getting the roles
         Set<Role> roles = new HashSet<>();
         logger.info("request has : {}", request.getRoles().toString());
         request.getRoles().forEach(role -> {
@@ -57,16 +61,21 @@ public class RegistrationService {
         		throw new IllegalStateException("Role is not valid");
         	}
         });
+        
+        // keep in DB
         String token = userService.signUpUser(new User(request.getFirstName(), request.getLastName(),
                 request.getEmail(), request.getPassword(), roles));
-        String link = "http://localhost:8080/api/auth/confirm?token=" + token;
-        String subject = "Confirmation Email";
+        
+        String link = HospitalSystemConstants.URL + token;
+        
+        // sending Email
         emailService.sendEmail(request.getEmail(),
-                subject,
+        		HospitalSystemConstants.subject,
                 buildEmail(request.getFirstName(), link),
                 false,
                 true);
         
+        // returning token
         return token;
     }
     
