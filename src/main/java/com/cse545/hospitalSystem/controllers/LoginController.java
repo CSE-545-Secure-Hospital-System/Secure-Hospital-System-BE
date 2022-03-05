@@ -7,11 +7,13 @@ import java.time.ZoneId;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,11 +56,13 @@ public class LoginController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequestDTO) {
     	
+        try {
     	final Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                 		loginRequestDTO.getEmail(),
                 		loginRequestDTO.getPassword()
                 )
+                
         );
     	
     	Logger logger = LogManager.getLogger(LoginController.class);
@@ -73,8 +77,11 @@ public class LoginController {
     	
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final String token = jwtTokenProvider.generateToken(authentication);
-        System.out.println(new AuthToken(token).toString());
         return ResponseEntity.ok(new AuthToken(token));
+        } catch(UsernameNotFoundException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+            
+        }
     }
     
     
