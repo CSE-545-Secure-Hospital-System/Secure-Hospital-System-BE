@@ -1,5 +1,11 @@
 package com.cse545.hospitalSystem.controllers;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +23,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cse545.hospitalSystem.config.security.JwtTokenProvider;
+import com.cse545.hospitalSystem.models.Logs;
 import com.cse545.hospitalSystem.models.User;
 import com.cse545.hospitalSystem.models.ReqAndResp.AuthToken;
 import com.cse545.hospitalSystem.models.ReqAndResp.LoginRequestDTO;
+import com.cse545.hospitalSystem.repositories.LogsRepository;
 import com.cse545.hospitalSystem.services.UserService;
 
 /*
@@ -34,6 +42,9 @@ public class LoginController {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private LogsRepository logsRepo;
 	
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -53,9 +64,19 @@ public class LoginController {
                 )
                 
         );
-    	SecurityContextHolder.getContext().setAuthentication(authentication);
+    	
+    	Logger logger = LogManager.getLogger(LoginController.class);
+    	ZoneId zoneId = ZoneId.of("America/Phoenix");
+        LocalTime localTime=LocalTime.now(zoneId);
+        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        //String formattedTime=localTime.format(formatter);
+        LocalDate localDate = LocalDate.now();
+    	//logger.info("logged in user " + loginRequestDTO.getEmail() + " at time " + formattedTime + " on date "+localDate);
+    	Logs loginLog = new Logs(loginRequestDTO.getEmail(), localDate, localTime);
+    	logsRepo.save(loginLog);
+    	
+        SecurityContextHolder.getContext().setAuthentication(authentication);
         final String token = jwtTokenProvider.generateToken(authentication);
-        System.out.println(new AuthToken(token).toString());
         return ResponseEntity.ok(new AuthToken(token));
         } catch(UsernameNotFoundException e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
