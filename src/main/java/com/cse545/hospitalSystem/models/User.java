@@ -63,6 +63,11 @@ public class User implements UserDetails {
             @JoinColumn(name = "ROLE_ID") })
     private Set<Role> roles;
     
+    @Column
+    @OneToOne
+    @JoinColumn(name = "patient_record_id", referencedColumnName = "patient_record_id")
+    private PatientRecord patientRecord;
+    
     
     
     @Column

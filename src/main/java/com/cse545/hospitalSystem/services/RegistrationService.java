@@ -1,6 +1,5 @@
 package com.cse545.hospitalSystem.services;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -13,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cse545.hospitalSystem.config.LoggerConfig;
 import com.cse545.hospitalSystem.email.EmailService;
-import com.cse545.hospitalSystem.enums.RoleMapping;
 import com.cse545.hospitalSystem.forms.RegistrationRequest;
 import com.cse545.hospitalSystem.models.ConfirmationToken;
 import com.cse545.hospitalSystem.models.Role;
