@@ -62,7 +62,6 @@ public class LoginController {
                 		loginRequestDTO.getEmail(),
                 		loginRequestDTO.getPassword()
                 )
-                
         );
     	
     	Logger logger = LogManager.getLogger(LoginController.class);
