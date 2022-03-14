@@ -63,12 +63,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 logger.info("authenticated user " + email + ", setting security context");
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-        	}
-        	
+        	}	
         }
-        
+ 
 		filterChain.doFilter(request, response);
-		
 	}
     
     
