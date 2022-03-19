@@ -23,6 +23,7 @@ public class Appointment {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
     
+    @JsonIgnore
     @ManyToOne(targetEntity = User.class)
     private User patient;
     
