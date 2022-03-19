@@ -126,10 +126,9 @@ public class UserService implements UserDetailsService {
     	return user;
     }
 
-	public List<User> getAllUser() {
+	public List<User> getAllUser(String searchTerm) {
 		logger.info("Admin accessing all users");
-		List<User> users = userRepo.findAll();
-		logger.info(users.get(0).getFirstName());
+		List<User> users = userRepo.searchByTerm(searchTerm);
 		return users;
 	}
 

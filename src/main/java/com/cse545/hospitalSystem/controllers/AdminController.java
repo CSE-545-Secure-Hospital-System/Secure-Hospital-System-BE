@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cse545.hospitalSystem.models.User;
@@ -34,8 +35,8 @@ public class AdminController {
 	@CrossOrigin
 	@PreAuthorize("hasRole('ADMIN')")
 	@RequestMapping(value="/getAllUsers", method = RequestMethod.GET)
-	public List<User> getAllUsers(){
-		return userService.getAllUser();
+	public List<User> getAllUsers(@RequestParam String searchTerm){
+		return userService.getAllUser(searchTerm);
 	}
 
 }
