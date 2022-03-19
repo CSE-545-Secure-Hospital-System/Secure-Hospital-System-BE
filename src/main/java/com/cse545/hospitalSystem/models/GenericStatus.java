@@ -1,6 +1,6 @@
 package com.cse545.hospitalSystem.models;
 
-public enum AppointmentStatus {
+public enum GenericStatus {
     REQUESTED,
     APPROVED,
     COMPLETED

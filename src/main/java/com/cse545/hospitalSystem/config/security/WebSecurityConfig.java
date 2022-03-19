@@ -51,7 +51,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
             "/api/auth/**",
             "/api/auth/login",
             "/api/auth/register",
-            "/api/auth/confirm"
+            "/api/auth/confirm",
+            "/api/admin/getAllUsers"
             // other public endpoints of your API may be appended to this array
     };
 

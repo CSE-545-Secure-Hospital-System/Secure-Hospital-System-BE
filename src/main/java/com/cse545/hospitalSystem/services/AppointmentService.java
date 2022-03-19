@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cse545.hospitalSystem.models.Appointment;
-import com.cse545.hospitalSystem.models.AppointmentStatus;
+import com.cse545.hospitalSystem.models.GenericStatus;
 import com.cse545.hospitalSystem.models.User;
 import com.cse545.hospitalSystem.models.ReqAndResp.GeneralAppointmentRequestDTO;
 import com.cse545.hospitalSystem.models.ReqAndResp.SpecificAppointmentRequestDTO;
@@ -32,7 +32,7 @@ public class AppointmentService {
         return appointmentRepo.findAllByPatientId(patientId);
     }
     
-    public List<Appointment> getAllAppointmentsForPatientWithStatus(String patientId, AppointmentStatus status){
+    public List<Appointment> getAllAppointmentsForPatientWithStatus(String patientId, GenericStatus status){
         return appointmentRepo.findAllByPatientIdAndStatus(patientId, status);
     }
     
@@ -65,7 +65,7 @@ public class AppointmentService {
         }
         appointment.setStartTime(appointmentRequest.getStartTime());
         appointment.setEndTime(appointmentRequest.getEndTime());
-        appointment.setStatus(AppointmentStatus.REQUESTED);
+        appointment.setStatus(GenericStatus.REQUESTED);
         return appointmentRepo.save(appointment);
     }
     
@@ -81,7 +81,7 @@ public class AppointmentService {
         }
         appointment.setStartTime(appointmentRequest.getStartTime());
         appointment.setEndTime(appointmentRequest.getEndTime());
-        appointment.setStatus(AppointmentStatus.REQUESTED);
+        appointment.setStatus(GenericStatus.REQUESTED);
         return appointmentRepo.save(appointment);
     }
 
@@ -107,7 +107,7 @@ public class AppointmentService {
             return null;
         }
         appointment.setStaff(staffOptional.get());
-        if(appointment.getStatus() != AppointmentStatus.REQUESTED) {
+        if(appointment.getStatus() != GenericStatus.REQUESTED) {
             return null;
         }
         appointment.setStatus(request.getStatus());
@@ -131,7 +131,7 @@ public class AppointmentService {
             return null;
         }
         appointment.setStaff(staffOptional.get());
-        if(appointment.getStatus() != AppointmentStatus.REQUESTED) {
+        if(appointment.getStatus() != GenericStatus.REQUESTED) {
             return null;
         }
         appointment.setStatus(request.getStatus());

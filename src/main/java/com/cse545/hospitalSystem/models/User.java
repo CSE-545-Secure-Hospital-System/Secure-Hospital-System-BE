@@ -29,7 +29,6 @@ public class User implements UserDetails {
                  this.roles = roles;
                 }
 
-
 	@Id
     @Column(name = "user_id")
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -63,9 +62,26 @@ public class User implements UserDetails {
             @JoinColumn(name = "ROLE_ID") })
     private Set<Role> roles;
     
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "USER_POLICIES",
+    joinColumns = {
+    @JoinColumn(name = "USER_ID")
+    },
+    inverseJoinColumns = {
+    @JoinColumn(name = "POLICY_ID") })
+    private Set<Insurance_Policiies> policies;
     
     
-    @Column
+    public Set<Insurance_Policiies> getPolicies() {
+		return policies;
+	}
+
+	public void setPolicies(Set<Insurance_Policiies> policies) {
+		this.policies = policies;
+	}
+
+
+	@Column
     private Boolean locked = false;
     
     @Column

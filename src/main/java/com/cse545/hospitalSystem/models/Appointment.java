@@ -49,7 +49,7 @@ public class Appointment {
     private Diagnosis diagnosis;
     
     //enum
-    private AppointmentStatus status;
+    private GenericStatus status;
     
     private Double fees;
 
@@ -93,11 +93,11 @@ public class Appointment {
         this.endTime = endTime;
     }
 
-    public AppointmentStatus getStatus() {
+    public GenericStatus getStatus() {
         return status;
     }
 
-    public void setStatus(AppointmentStatus status) {
+    public void setStatus(GenericStatus status) {
         this.status = status;
     }
 

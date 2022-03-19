@@ -1,13 +1,13 @@
 package com.cse545.hospitalSystem.models.ReqAndResp;
 
-import com.cse545.hospitalSystem.models.AppointmentStatus;
+import com.cse545.hospitalSystem.models.GenericStatus;
 
 public class UpdateAppointmentRequestDTO {
     
     Long doctorId;
     Long appointmentId;
     Long staffId;
-    AppointmentStatus status;
+    GenericStatus status;
     public Long getDoctorId() {
         return doctorId;
     }
@@ -17,7 +17,7 @@ public class UpdateAppointmentRequestDTO {
     public Long getStaffId() {
         return staffId;
     }
-    public AppointmentStatus getStatus() {
+    public GenericStatus getStatus() {
         return status;
     }
     
