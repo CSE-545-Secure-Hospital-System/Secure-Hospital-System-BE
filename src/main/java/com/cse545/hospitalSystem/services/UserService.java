@@ -127,6 +127,10 @@ public class UserService implements UserDetailsService {
     }
 
 	public List<User> getAllUser(String searchTerm) {
+		if((searchTerm == null) || (searchTerm != null && searchTerm.length() == 0)) {
+			List<User> users = userRepo.findAll();
+			return users;
+		}
 		logger.info("Admin accessing all users");
 		List<User> users = userRepo.searchByTerm(searchTerm);
 		return users;
@@ -178,6 +182,36 @@ public class UserService implements UserDetailsService {
 		}
 		userRepo.save(existinguser.get());
 		return ResponseEntity.ok("Success");
+	}
+
+	public ResponseEntity<String> deleteUser(String emailId) {
+		try {
+			Optional<User> user = userRepo.findByEmail(emailId);
+			if(user.isPresent()) {
+				user.get().setEnabled(false);
+//				userRepo.deleteById(user.get().getId());
+				userRepo.save(user.get());
+				return ResponseEntity.ok("Successfully blocked the account");
+			}
+		}catch (Exception e) {
+			logger.error("Error in deleting the user!");
+		}
+		return new ResponseEntity<String>("Error in block the account!", HttpStatus.BAD_REQUEST);
+	}
+
+	public ResponseEntity<String> activateAccount(String emailId) {
+		try {
+			Optional<User> user = userRepo.findByEmail(emailId);
+			if(user.isPresent()) {
+				user.get().setEnabled(true);
+//				userRepo.deleteById(user.get().getId());
+				userRepo.save(user.get());
+				return ResponseEntity.ok("Successfully activated the account");
+			}
+		}catch (Exception e) {
+			logger.error("Error in deleting the user!");
+		}
+		return new ResponseEntity<String>("Error in activating the account!", HttpStatus.BAD_REQUEST);
 	}
   
     

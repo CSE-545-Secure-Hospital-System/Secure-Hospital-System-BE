@@ -47,7 +47,7 @@ public class Insurance_Policiies {
             },
             inverseJoinColumns = {
             @JoinColumn(name = "COVERAGE_ID") })
-	private Set<Coverages> coverages;
+	private Set<Coverage> coverages;
 	
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "POLICIY_CLAIMS",
@@ -58,9 +58,16 @@ public class Insurance_Policiies {
     @JoinColumn(name = "CLAIM_ID") })
 	private Set<PolicyClaims> claims;
 	
+	
+	
+
+	public Insurance_Policiies() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	public Insurance_Policiies(String policyName, PolicyTypes policyType, Long policyClaimMaximumAmt,
-			int coPayPercentage, String insuranceProviderName, Set<Coverages> coverages) {
+			int coPayPercentage, String insuranceProviderName, Set<Coverage> coverages) {
 		super();
 		this.policyName = policyName;
 		this.policyType = policyType;
@@ -70,11 +77,11 @@ public class Insurance_Policiies {
 		this.coverages = coverages;
 	}
 
-	public Set<Coverages> getCoverages() {
+	public Set<Coverage> getCoverages() {
 		return coverages;
 	}
 
-	public void setCoverages(Set<Coverages> coverages) {
+	public void setCoverages(Set<Coverage> coverages) {
 		this.coverages = coverages;
 	}
 

@@ -1,5 +1,7 @@
 package com.cse545.hospitalSystem.controllers;
 
+import java.util.List;
+
 /*
  * 
  * General APIs goes here.
@@ -55,6 +57,24 @@ public class UsersController{
 	@PostMapping(value="/updateUserByEmailId")
 	public ResponseEntity<String> updateUserByEmailId(@RequestBody UserReq user){
 		return userService.updateUserByEmailId(user);
+	}
+	
+	@CrossOrigin
+	@PostMapping(value = "/BlockAccountByEmailId")
+	public ResponseEntity<String> deleteuser(@RequestParam(name = "emailId") String emailId){
+		return userService.deleteUser(emailId);
+	}
+	
+	@CrossOrigin
+	@PostMapping(value = "/activateAccountByEmailId")
+	public ResponseEntity<String> activiteAccount(@RequestParam(name = "emailId") String emailId){
+		return userService.activateAccount(emailId);
+	}
+	
+	@CrossOrigin
+	@RequestMapping(value="/getAllUsers", method = RequestMethod.GET)
+	public List<User> getAllUsers(@RequestParam(required = false) String searchTerm){
+		return userService.getAllUser(searchTerm);
 	}
 
 	 
