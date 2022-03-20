@@ -60,7 +60,7 @@ public class UsersController{
 	}
 	
 	@CrossOrigin
-	@PostMapping(value = "/BlockAccountByEmailId")
+	@PostMapping(value = "/blockAccountByEmailId")
 	public ResponseEntity<String> deleteuser(@RequestParam(name = "emailId") String emailId){
 		return userService.deleteUser(emailId);
 	}
