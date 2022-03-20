@@ -32,11 +32,5 @@ public class AdminController {
 	@Autowired
 	private UserService userService;
     
-	@CrossOrigin
-//	@PreAuthorize("hasRole('ADMIN')")
-	@RequestMapping(value="/getAllUsers", method = RequestMethod.GET)
-	public List<User> getAllUsers(@RequestParam String searchTerm){
-		return userService.getAllUser(searchTerm);
-	}
 
 }
