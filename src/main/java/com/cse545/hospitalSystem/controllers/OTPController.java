@@ -29,7 +29,7 @@ public class OTPController {
     
     @GetMapping("/getotp")
     public ResponseEntity<String> getOtp(@RequestParam("email") String email){
-        // TODO check if email is retrieved from security context vs request param
+        
         int generatedOtp = otpService.generateOTP(email);
         logger.info("Generated OTP is: " + generatedOtp);
         try {
@@ -42,7 +42,7 @@ public class OTPController {
     
     @PostMapping("/confirmotp")
     public ResponseEntity<String> confirmOtp(@RequestParam("email")String email, @RequestParam("otp") String otp) {
-       // TODO check if email is retrieved from security context vs request param 
+       
        logger.info("inside confirm otp controller");
        boolean otpConfirmed = otpService.verifyOtp(email, otp);
        logger.info("is otp confirmed? {}", otpConfirmed);

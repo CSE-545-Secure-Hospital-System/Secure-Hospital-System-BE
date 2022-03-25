@@ -10,6 +10,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,6 +29,7 @@ import com.cse545.hospitalSystem.models.ConfirmationToken;
 import com.cse545.hospitalSystem.models.Role;
 import com.cse545.hospitalSystem.models.User;
 import com.cse545.hospitalSystem.models.ReqAndResp.AuthToken;
+import com.cse545.hospitalSystem.models.ReqAndResp.UserReq;
 import com.cse545.hospitalSystem.repositories.RoleRepository;
 import com.cse545.hospitalSystem.repositories.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -124,10 +126,13 @@ public class UserService implements UserDetailsService {
     	return user;
     }
 
-	public List<User> getAllUser() {
+	public List<User> getAllUser(String searchTerm) {
+		if((searchTerm == null) || (searchTerm != null && searchTerm.length() == 0)) {
+			List<User> users = userRepo.findAll();
+			return users;
+		}
 		logger.info("Admin accessing all users");
-		List<User> users = userRepo.findAll();
-		logger.info(users.get(0).getFirstName());
+		List<User> users = userRepo.searchByTerm(searchTerm);
 		return users;
 	}
 
@@ -151,6 +156,62 @@ public class UserService implements UserDetailsService {
 			throw new IllegalStateException("User does not exist");
 		}
 		return ResponseEntity.ok(user.get());
+	}
+
+	public ResponseEntity<String> updateUserByEmailId(UserReq user) {
+		Optional<User> existinguser = this.isUserAlreadyExist(user.getEmail());
+		if(existinguser == null) {
+			return new ResponseEntity<String>("User is not Present in Database!", HttpStatus.NOT_FOUND);
+		}
+		if(user.getEmail() != null)
+			existinguser.get().setEmail(user.getEmail());
+		if(user.getFirstName() != null)
+			existinguser.get().setFirstName(user.getFirstName());
+		if(user.getLastName() != null)
+			existinguser.get().setLastName(user.getLastName());
+		if(user.getPassword() != null) {
+			// encrypting the password
+	        String encodedPassword = bCryptPasswordEncoder
+	                .encode(user.getPassword());  
+	        existinguser.get().setPassword(encodedPassword);
+		}
+		if(user.getPhone() != null)
+			existinguser.get().setPhone(user.getPhone());
+		if(user.getRoles() != null && user.getRoles().size() != 0) {
+			existinguser.get().setRoles(user.getRoles());
+		}
+		userRepo.save(existinguser.get());
+		return ResponseEntity.ok("Success");
+	}
+
+	public ResponseEntity<String> deleteUser(String emailId) {
+		try {
+			Optional<User> user = userRepo.findByEmail(emailId);
+			if(user.isPresent()) {
+				user.get().setEnabled(false);
+//				userRepo.deleteById(user.get().getId());
+				userRepo.save(user.get());
+				return ResponseEntity.ok("Successfully blocked the account");
+			}
+		}catch (Exception e) {
+			logger.error("Error in deleting the user!");
+		}
+		return new ResponseEntity<String>("Error in block the account!", HttpStatus.BAD_REQUEST);
+	}
+
+	public ResponseEntity<String> activateAccount(String emailId) {
+		try {
+			Optional<User> user = userRepo.findByEmail(emailId);
+			if(user.isPresent()) {
+				user.get().setEnabled(true);
+//				userRepo.deleteById(user.get().getId());
+				userRepo.save(user.get());
+				return ResponseEntity.ok("Successfully activated the account");
+			}
+		}catch (Exception e) {
+			logger.error("Error in deleting the user!");
+		}
+		return new ResponseEntity<String>("Error in activating the account!", HttpStatus.BAD_REQUEST);
 	}
   
     

@@ -24,7 +24,6 @@ public class EmailService {
     
     private final static Logger logger = LoggerFactory.getLogger(EmailService.class);
     
-
     private final JavaMailSender mailSender;
     
     @Value("${spring.mail.username}")
@@ -39,15 +38,15 @@ public class EmailService {
 
     @Async
     public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
-        logger.info("inside emailservice send email");
+        logger.info("Inside emailservice send email");
         JavaMailSender javaMailsender = getJavaMailSender();
         MimeMessage mimeMessage = javaMailsender.createMimeMessage();
         try {
             MimeMessageHelper message = new MimeMessageHelper(mimeMessage,
                     isMultipart,
                     StandardCharsets.UTF_8.name());
-            //message.setTo(to);
-            message.setTo("glendsouza1702@gmail.com");// need to change to message.setTo
+            // to sender
+            message.setTo(to);
             message.setFrom(fromMail);
             message.setSubject(subject);
             message.setText(content, isHtml);
