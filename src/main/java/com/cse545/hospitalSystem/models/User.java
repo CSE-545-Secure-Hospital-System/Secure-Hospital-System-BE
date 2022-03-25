@@ -10,6 +10,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 @Table(name = "users")
@@ -51,6 +53,7 @@ public class User implements UserDetails {
     
     //TODO handle password encryption and constraints later
     @Column
+    @JsonIgnore
     private String password;
     
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -60,8 +63,13 @@ public class User implements UserDetails {
             },
             inverseJoinColumns = {
             @JoinColumn(name = "ROLE_ID") })
+    @JsonIgnore
     private Set<Role> roles;
     
+    @OneToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "patient_record_id", referencedColumnName = "patient_record_id")
+    private PatientRecord patientRecord;
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "USER_POLICIES",
     joinColumns = {
@@ -70,15 +78,6 @@ public class User implements UserDetails {
     inverseJoinColumns = {
     @JoinColumn(name = "POLICY_ID") })
     private Set<Insurance_Policiies> policies;
-    
-    
-    public Set<Insurance_Policiies> getPolicies() {
-		return policies;
-	}
-
-	public void setPolicies(Set<Insurance_Policiies> policies) {
-		this.policies = policies;
-	}
 
 
 	@Column
@@ -202,7 +201,21 @@ public class User implements UserDetails {
 		this.password = password;
 	}
     
+	public PatientRecord getPatientRecord() {
+        return patientRecord;
+    }
+
+    public void setPatientRecord(PatientRecord patientRecord) {
+        this.patientRecord = patientRecord;
+    }
     
-    
+    public Set<Insurance_Policiies> getPolicies() {
+        return policies;
+    }
+
+    public void setPolicies(Set<Insurance_Policiies> policies) {
+        this.policies = policies;
+    }
+
 
 }

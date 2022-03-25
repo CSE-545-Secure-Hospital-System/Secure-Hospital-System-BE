@@ -4,10 +4,11 @@ import com.cse545.hospitalSystem.models.GenericStatus;
 
 public class UpdateAppointmentRequestDTO {
     
-    Long doctorId;
-    Long appointmentId;
-    Long staffId;
-    GenericStatus status;
+    private Long doctorId;
+    private Long appointmentId;
+    private Long staffId;
+    private GenericStatus status;
+    
     public Long getDoctorId() {
         return doctorId;
     }
