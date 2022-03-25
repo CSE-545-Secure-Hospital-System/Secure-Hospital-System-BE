@@ -78,7 +78,9 @@ public class User implements UserDetails {
     inverseJoinColumns = {
     @JoinColumn(name = "POLICY_ID") })
     private Set<Insurance_Policiies> policies;
-    
+
+
+	@Column
     private Boolean locked = false;
     
     @Column
