@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -24,7 +25,7 @@ public class PatientRecordController {
 
     @RequestMapping(value="/createRecord", method = RequestMethod.POST)
     @PreAuthorize("hasRole('HOSPITAL_STAFF')")
-    public ResponseEntity<PatientRecord> createPatientRecord(PatientRecordRequestDTO patientRecordRequest) {
+    public ResponseEntity<PatientRecord> createPatientRecord(@RequestBody PatientRecordRequestDTO patientRecordRequest) {
         PatientRecord patientRecord = patientRecordService.createPatientRecord(patientRecordRequest);
         if(patientRecord == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(patientRecord);
@@ -33,7 +34,7 @@ public class PatientRecordController {
                 .body(patientRecord);
     }
     
-    @RequestMapping(value="/getRecord/{patientId}", method = RequestMethod.POST)
+    @RequestMapping(value="/getRecord/{patientId}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('HOSPITAL_STAFF')")
     public ResponseEntity<PatientRecord> getPatientRecord(@PathVariable long patientId) {
         PatientRecord patientRecord = patientRecordService.getPatientRecord(patientId);
@@ -44,10 +45,10 @@ public class PatientRecordController {
         .body(patientRecord); 
     }
     
-    @RequestMapping(value="/updateRecord/{patientId}", method = RequestMethod.POST)
+    @RequestMapping(value="/updateRecord", method = RequestMethod.POST)
     @PreAuthorize("hasRole('HOSPITAL_STAFF')")
-    public ResponseEntity<PatientRecord> updatePatientRecord(@PathVariable long patientId, PatientRecordRequestDTO patientRecordRequest) {
-        PatientRecord patientRecord = patientRecordService.updatePatientRecord(patientId, patientRecordRequest);
+    public ResponseEntity<PatientRecord> updatePatientRecord(@RequestBody PatientRecordRequestDTO patientRecordRequest) {
+        PatientRecord patientRecord = patientRecordService.updatePatientRecord(patientRecordRequest);
         if(patientRecord == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(patientRecord);
         }

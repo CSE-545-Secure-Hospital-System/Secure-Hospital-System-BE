@@ -10,6 +10,6 @@ import com.cse545.hospitalSystem.models.PatientRecord;
 @Repository
 public interface PatientRecordRepository extends JpaRepository<PatientRecord, Long> {
 
-    Optional<PatientRecord> findByUserId(long id);
+    Optional<PatientRecord> findByPatientId(long id);
 
 }

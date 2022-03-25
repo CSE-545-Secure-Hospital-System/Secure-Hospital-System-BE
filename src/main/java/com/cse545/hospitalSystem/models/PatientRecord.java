@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="patient_record")
 public class PatientRecord {
@@ -21,8 +23,9 @@ public class PatientRecord {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @JoinColumn
     @OneToOne(mappedBy = "patientRecord")
+    @JsonIgnore
     private User patient;
     
     @Column

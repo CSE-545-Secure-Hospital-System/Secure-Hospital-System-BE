@@ -10,6 +10,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 @Table(name = "users")
@@ -52,6 +54,7 @@ public class User implements UserDetails {
     
     //TODO handle password encryption and constraints later
     @Column
+    @JsonIgnore
     private String password;
     
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -61,15 +64,13 @@ public class User implements UserDetails {
             },
             inverseJoinColumns = {
             @JoinColumn(name = "ROLE_ID") })
+    @JsonIgnore
     private Set<Role> roles;
     
-    @Column
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "patient_record_id", referencedColumnName = "patient_record_id")
     private PatientRecord patientRecord;
-    
-    
-    
+
     @Column
     private Boolean locked = false;
     
@@ -191,7 +192,13 @@ public class User implements UserDetails {
 		this.password = password;
 	}
     
-    
+	public PatientRecord getPatientRecord() {
+        return patientRecord;
+    }
+
+    public void setPatientRecord(PatientRecord patientRecord) {
+        this.patientRecord = patientRecord;
+    }
     
 
 }

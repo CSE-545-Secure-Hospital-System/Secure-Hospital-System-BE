@@ -35,34 +35,34 @@ public class PatientRecordService {
         if(!isUserPatient(user)) {
             return null;
         }
-        Optional<PatientRecord> optional = patientRecordRepo.findByUserId(user.getId());
-        if(optional.isPresent()) {
-            return optional.get();
+        if(user.getPatientRecord() != null) {
+            //ideally send patient record already exists
+            return user.getPatientRecord();
         }
         patientRecord = new PatientRecord();
         patientRecord.setAge(patientRecordRequest.getAge());
         patientRecord.setDateOfBirth(patientRecordRequest.getDateOfBirth());
         patientRecord.setDiseaseHistory(patientRecordRequest.getDiseaseHistory());
         //TODO//patientRecord.setInsuranceProvider(patientRecordRequest.getInsuranceProviderId());
-        patientRecord.setPatient(user);
-        return patientRecord;
+        user.setPatientRecord(patientRecord);
+        User savedUser = userRepo.save(user);
+        return savedUser.getPatientRecord(); 
     }
 
     public PatientRecord getPatientRecord(long patientId) {
-        User user = null;
         Optional<PatientRecord> patientRecord = null;
         Optional<User> patientOptional = userRepo.findById(patientId);
         if(!patientOptional.isPresent()) {
             return null;
         }
+        User user = patientOptional.get();
         if(!isUserPatient(user)) {
             return null;
         }
-        patientRecord = patientRecordRepo.findByUserId(patientId); 
-        return patientRecord.get();
+        return user.getPatientRecord();
     }
 
-    public PatientRecord updatePatientRecord(long patientId, PatientRecordRequestDTO patientRecordRequest) {
+    public PatientRecord updatePatientRecord(PatientRecordRequestDTO patientRecordRequest) {
         User user = null;
         PatientRecord patientRecord = null;
         Optional<User> patientOptional = userRepo.findById(patientRecordRequest.getPatientId()); 
@@ -72,19 +72,20 @@ public class PatientRecordService {
         user = patientOptional.get();
         boolean isPatient = user.getRoles().stream().anyMatch(role->role.getRole().equals(SecureHospitalSystemConstants.PATIENT_ROLE));
         if(!isUserPatient(user)) {
+            //return user is not patient
             return null;
         }
-        Optional<PatientRecord> optional = patientRecordRepo.findByUserId(user.getId());
-        if(optional.isPresent()) {
-            return optional.get();
+        PatientRecord record = user.getPatientRecord();
+        if(record == null) {
+            return null;
         }
-        patientRecord = new PatientRecord();
-        patientRecord.setAge(patientRecordRequest.getAge());
-        patientRecord.setDateOfBirth(patientRecordRequest.getDateOfBirth());
-        patientRecord.setDiseaseHistory(patientRecordRequest.getDiseaseHistory());
+        record.setAge(patientRecordRequest.getAge());
+        record.setDateOfBirth(patientRecordRequest.getDateOfBirth());
+        record.setDiseaseHistory(patientRecordRequest.getDiseaseHistory());
         //TODO//patientRecord.setInsuranceProvider(patientRecordRequest.getInsuranceProviderId());
-        patientRecord.setPatient(user);
-        return patientRecord;
+        user.setPatientRecord(record);
+        User savedUser = userRepo.save(user);
+        return savedUser.getPatientRecord();
     }
     
     private boolean isUserPatient(User user) {
