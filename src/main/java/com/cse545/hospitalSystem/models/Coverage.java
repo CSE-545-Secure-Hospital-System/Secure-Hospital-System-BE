@@ -8,24 +8,17 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import ch.qos.logback.classic.db.names.ColumnName;
-import lombok.Data;
-
-
 @Entity
 @Table(name = "coverages", uniqueConstraints = @UniqueConstraint( columnNames = { "coverageName" }))
-@Data
 public class Coverage {
 	
 	@Id
-    @Column(name = "coverage_id")
+	@Column(name = "coverage_id")
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
 	
-	@Column(name = "coverageName")
 	private String coverageName;
 	
-	@Column
 	private String description;
 
 	public String getDescription() {
@@ -35,21 +28,15 @@ public class Coverage {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
+	
 
 	public Coverage() {
-		super();
 	}
 
-	public Coverage(Long id, String coverageName, String description) {
-		super();
-		this.id = id;
+	public Coverage(String coverageName, String description) {
 		this.coverageName = coverageName;
 		this.description = description;
-	}
-
-	public Coverage(String coverageName) {
-		super();
-		this.coverageName = coverageName;
 	}
 
 	public String getCoverageName() {

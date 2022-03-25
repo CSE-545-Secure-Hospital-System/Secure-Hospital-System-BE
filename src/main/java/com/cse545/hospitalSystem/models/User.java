@@ -69,14 +69,14 @@ public class User implements UserDetails {
     },
     inverseJoinColumns = {
     @JoinColumn(name = "POLICY_ID") })
-    private Set<Insurance_Policiies> policies;
+    private Set<Insurance_Policies> policies;
     
     
-    public Set<Insurance_Policiies> getPolicies() {
+    public Set<Insurance_Policies> getPolicies() {
 		return policies;
 	}
 
-	public void setPolicies(Set<Insurance_Policiies> policies) {
+	public void setPolicies(Set<Insurance_Policies> policies) {
 		this.policies = policies;
 	}
 

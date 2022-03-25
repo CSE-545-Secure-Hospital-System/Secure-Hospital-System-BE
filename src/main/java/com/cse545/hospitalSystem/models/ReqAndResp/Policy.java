@@ -1,6 +1,7 @@
 package com.cse545.hospitalSystem.models.ReqAndResp;
 
 import java.util.List;
+import java.util.Set;
 
 import com.cse545.hospitalSystem.enums.PolicyTypes;
 
@@ -10,17 +11,15 @@ public class Policy {
 	private PolicyTypes policyType;
 	private int policyClaimMaximumAmt;
 	
-	private int coPayPercentage;
-	private List<String> coverages;
+	private Set<String> coverages;
 	private String insuranceProviderName;
 	
-	public Policy(String policyName, PolicyTypes policyType, int policyClaimMaximumAmt, int coPayPercentage,
-			List<String> coverages, String insuranceProviderName) {
+	public Policy(String policyName, PolicyTypes policyType, int policyClaimMaximumAmt,
+			Set<String> coverages, String insuranceProviderName) {
 		super();
 		this.policyName = policyName;
 		this.policyType = policyType;
 		this.policyClaimMaximumAmt = policyClaimMaximumAmt;
-		this.coPayPercentage = coPayPercentage;
 		this.coverages = coverages;
 		this.insuranceProviderName = insuranceProviderName;
 	}
@@ -43,16 +42,10 @@ public class Policy {
 	public void setPolicyClaimMaximumAmt(int policyClaimMaximumAmt) {
 		this.policyClaimMaximumAmt = policyClaimMaximumAmt;
 	}
-	public int getCoPayPercentage() {
-		return coPayPercentage;
-	}
-	public void setCoPayPercentage(int coPayPercentage) {
-		this.coPayPercentage = coPayPercentage;
-	}
-	public List<String> getCoverages() {
+	public Set<String> getCoverages() {
 		return coverages;
 	}
-	public void setCoverages(List<String> coverages) {
+	public void setCoverages(Set<String> coverages) {
 		this.coverages = coverages;
 	}
 	public String getInsuranceProviderName() {

@@ -4,12 +4,16 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
 import java.util.Set;
 
 import com.cse545.hospitalSystem.enums.PolicyTypes;
@@ -17,12 +21,13 @@ import com.cse545.hospitalSystem.enums.PolicyTypes;
 import lombok.Data;
 
 @Entity
-@Table(name = "insurance_policies")
+@Table(name = "insurance_policies", uniqueConstraints = @UniqueConstraint( columnNames = { "policyName" }))
 @Data
-public class Insurance_Policiies {
+public class Insurance_Policies {
 	
 	@Id
     @Column(name = "policy_id")
+	@GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 	
 	@Column
@@ -32,10 +37,7 @@ public class Insurance_Policiies {
 	private PolicyTypes policyType;
 	
 	@Column
-	private Long policyClaimMaximumAmt;
-	
-	@Column
-	private int coPayPercentage;
+	private int policyClaimMaximumAmt;
 	
 	@Column
 	private String InsuranceProviderName;
@@ -48,31 +50,18 @@ public class Insurance_Policiies {
             inverseJoinColumns = {
             @JoinColumn(name = "COVERAGE_ID") })
 	private Set<Coverage> coverages;
-	
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "POLICIY_CLAIMS",
-    joinColumns = {
-    @JoinColumn(name = "POLICY_ID")
-    },
-    inverseJoinColumns = {
-    @JoinColumn(name = "CLAIM_ID") })
-	private Set<PolicyClaims> claims;
-	
-	
-	
 
-	public Insurance_Policiies() {
+	public Insurance_Policies() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Insurance_Policiies(String policyName, PolicyTypes policyType, Long policyClaimMaximumAmt,
-			int coPayPercentage, String insuranceProviderName, Set<Coverage> coverages) {
+	public Insurance_Policies(String policyName, PolicyTypes policyType, int policyClaimMaximumAmt,
+			 String insuranceProviderName, Set<Coverage> coverages) {
 		super();
 		this.policyName = policyName;
 		this.policyType = policyType;
 		this.policyClaimMaximumAmt = policyClaimMaximumAmt;
-		this.coPayPercentage = coPayPercentage;
 		InsuranceProviderName = insuranceProviderName;
 		this.coverages = coverages;
 	}
@@ -109,21 +98,14 @@ public class Insurance_Policiies {
 		this.policyType = policyType;
 	}
 
-	public Long getPolicyClaimMaximumAmt() {
+	public int getPolicyClaimMaximumAmt() {
 		return policyClaimMaximumAmt;
 	}
 
-	public void setPolicyClaimMaximumAmt(Long policyClaimMaximumAmt) {
+	public void setPolicyClaimMaximumAmt(int policyClaimMaximumAmt) {
 		this.policyClaimMaximumAmt = policyClaimMaximumAmt;
 	}
 
-	public int getCoPayPercentage() {
-		return coPayPercentage;
-	}
-
-	public void setCoPayPercentage(int coPayPercentage) {
-		this.coPayPercentage = coPayPercentage;
-	}
 
 	public String getInsuranceProviderName() {
 		return InsuranceProviderName;

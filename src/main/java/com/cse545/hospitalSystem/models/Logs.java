@@ -39,7 +39,49 @@ public class Logs{
     private LocalDate date;
     
     @Column(name = "time")
-    private LocalTime localTime;  
+    private LocalTime localTime;
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public Long getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(Long user_id) {
+		this.user_id = user_id;
+	}
+
+	public String getUser_email() {
+		return user_email;
+	}
+
+	public void setUser_email(String user_email) {
+		this.user_email = user_email;
+	}
+
+	public LocalDate getDate() {
+		return date;
+	}
+
+	public void setDate(LocalDate date) {
+		this.date = date;
+	}
+
+	public LocalTime getLocalTime() {
+		return localTime;
+	}
+
+	public void setLocalTime(LocalTime localTime) {
+		this.localTime = localTime;
+	} 
+    
+    
     
 
 }

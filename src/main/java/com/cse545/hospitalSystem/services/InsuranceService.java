@@ -13,8 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.cse545.hospitalSystem.config.LoggerConfig;
+import com.cse545.hospitalSystem.enums.PolicyTypes;
 import com.cse545.hospitalSystem.models.Coverage;
-import com.cse545.hospitalSystem.models.Insurance_Policiies;
+import com.cse545.hospitalSystem.models.Insurance_Policies;
+import com.cse545.hospitalSystem.models.PolicyClaims;
 import com.cse545.hospitalSystem.models.ReqAndResp.Policy;
 import com.cse545.hospitalSystem.repositories.CoveragesRepository;
 import com.cse545.hospitalSystem.repositories.InsuranacePoliciesRepo;import net.bytebuddy.implementation.bind.annotation.Super.Instantiation;
@@ -34,8 +36,7 @@ public class InsuranceService {
 	
 	public ResponseEntity<String> createPolicy(Policy insurancePolicy) {
 		try {
-			Insurance_Policiies policy = new Insurance_Policiies();
-			policy.setCoPayPercentage(insurancePolicy.getCoPayPercentage());
+			Insurance_Policies policy = new Insurance_Policies();
 			Set<Coverage> coverages = new HashSet<Coverage>();
 			insurancePolicy.getCoverages().forEach((coverage) -> {
 				Optional<Coverage> c = coveragesRepository.findByCoverageName(coverage);
@@ -46,12 +47,28 @@ public class InsuranceService {
 			policy.setInsuranceProviderName(insurancePolicy.getInsuranceProviderName());
 			policy.setPolicyName(insurancePolicy.getPolicyName());
 			policy.setPolicyType(insurancePolicy.getPolicyType());
+			policy.setPolicyClaimMaximumAmt(insurancePolicy.getPolicyClaimMaximumAmt());
 			insurancePoliciesRepo.save(policy);
 			return ResponseEntity.ok("Success");
 		}catch (Exception e) {
-			logger.error("Error occured while creating a Policy");
+			logger.error("Error occured while creating a Policy" + e.getMessage());
 		}
-		return new ResponseEntity<String>("Error while creating the Policy", HttpStatus.NOT_FOUND);
+		return new ResponseEntity<String>("Error while creating the Policy", HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	public ResponseEntity<List<String>> getPolicyTypes() {
+		 PolicyTypes[] policyTypes = PolicyTypes.values();
+		logger.info(policyTypes.toString());
+		List<String> p = new ArrayList<>();
+		for(int i = 0; i < policyTypes.length; i++) {
+			p.add(policyTypes[i].toString());
+		}
+		return new ResponseEntity<List<String>>(p, HttpStatus.ACCEPTED);
+	}
+
+	public ResponseEntity<List<Insurance_Policies>> getAllPolicies() {
+		List<Insurance_Policies> policies = insurancePoliciesRepo.findAll();
+		return new ResponseEntity<List<Insurance_Policies>>(policies, HttpStatus.OK);
 	}
 
 
