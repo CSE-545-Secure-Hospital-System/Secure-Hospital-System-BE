@@ -28,11 +28,13 @@ public class PoliciesController {
 		return insuranceService.createPolicy(insurancePolicy);
 	}
 	
+	@CrossOrigin
 	@GetMapping("/getPolicyTypes")
 	public ResponseEntity<List<String>> getPolicyTypes(){
 		return insuranceService.getPolicyTypes();
 	}
 	
+	@CrossOrigin
 	@GetMapping("/getAllPolicies")
 	public ResponseEntity<List<Insurance_Policies>> getAllPolicies(){
 		return insuranceService.getAllPolicies();

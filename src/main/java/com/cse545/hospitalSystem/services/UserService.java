@@ -26,6 +26,7 @@ import com.cse545.hospitalSystem.config.LoggerConfig;
 import com.cse545.hospitalSystem.config.security.JwtTokenProvider;
 import com.cse545.hospitalSystem.enums.RoleMapping;
 import com.cse545.hospitalSystem.models.ConfirmationToken;
+import com.cse545.hospitalSystem.models.PolicyClaim;
 import com.cse545.hospitalSystem.models.Role;
 import com.cse545.hospitalSystem.models.User;
 import com.cse545.hospitalSystem.models.ReqAndResp.AuthToken;
@@ -212,6 +213,10 @@ public class UserService implements UserDetailsService {
 			logger.error("Error in deleting the user!");
 		}
 		return new ResponseEntity<String>("Error in activating the account!", HttpStatus.BAD_REQUEST);
+	}
+
+	public ResponseEntity<String> createClaim(PolicyClaim policyClaim) {
+		return null;
 	}
   
     

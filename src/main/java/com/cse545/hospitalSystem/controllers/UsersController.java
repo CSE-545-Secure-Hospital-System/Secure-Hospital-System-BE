@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cse545.hospitalSystem.models.PolicyClaim;
 import com.cse545.hospitalSystem.models.User;
 import com.cse545.hospitalSystem.models.ReqAndResp.UserReq;
 import com.cse545.hospitalSystem.services.AuthenticationService;
@@ -75,6 +76,12 @@ public class UsersController{
 	@RequestMapping(value="/getAllUsers", method = RequestMethod.GET)
 	public List<User> getAllUsers(@RequestParam(required = false) String searchTerm){
 		return userService.getAllUser(searchTerm);
+	}
+	
+	@CrossOrigin
+	@PostMapping(value="/createClaim")
+	public ResponseEntity<String> createClaim(@RequestBody PolicyClaim policyClaim){
+		return userService.createClaim(policyClaim);
 	}
 
 	 

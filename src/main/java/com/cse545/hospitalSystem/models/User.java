@@ -72,6 +72,25 @@ public class User implements UserDetails {
     private Set<Insurance_Policies> policies;
     
     
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "USER_CLAIMS",
+    joinColumns = {
+    @JoinColumn(name = "USER_ID")
+    },
+    inverseJoinColumns = {
+    @JoinColumn(name = "CLAIM_ID") })
+    private Set<PolicyClaim> claims;
+    
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "USER_CLAIMS",
+    joinColumns = {
+    @JoinColumn(name = "USER_ID")
+    },
+    inverseJoinColumns = {
+    @JoinColumn(name = "APPOINTMENT_ID") })
+    private Set<Appointment> appointments;
+    
+    
     public Set<Insurance_Policies> getPolicies() {
 		return policies;
 	}

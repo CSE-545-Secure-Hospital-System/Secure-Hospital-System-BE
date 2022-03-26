@@ -44,10 +44,6 @@ public class Appointment {
     @NotNull
     private Date endTime;
     
-    @OneToOne(targetEntity=Diagnosis.class)
-    @JsonIgnore
-    private Diagnosis diagnosis;
-    
     //enum
     private GenericStatus status;
     
