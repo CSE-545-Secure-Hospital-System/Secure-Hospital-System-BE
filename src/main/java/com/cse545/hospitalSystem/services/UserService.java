@@ -158,6 +158,11 @@ public class UserService implements UserDetailsService {
 		}
 		return ResponseEntity.ok(user.get());
 	}
+	
+	public User getUseEntityrByEmailId(String emailId) {
+        Optional<User> user = userRepo.findByEmail(emailId);
+        return user.get();
+    }
 
 	public ResponseEntity<String> updateUserByEmailId(UserReq user) {
 		Optional<User> existinguser = this.isUserAlreadyExist(user.getEmail());

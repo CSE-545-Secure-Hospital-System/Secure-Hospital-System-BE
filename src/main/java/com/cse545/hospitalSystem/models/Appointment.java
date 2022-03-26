@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -38,11 +40,13 @@ public class Appointment {
     
     @Column(name = "startTime")
     @NotNull
+    @Temporal(TemporalType.TIME)
     private Date startTime;
     
-    @Column(name = "endTime")
+    @Column(name = "date")
     @NotNull
-    private Date endTime;
+    @Temporal(TemporalType.DATE)
+    private Date date;
     
     //enum
     private GenericStatus status;
@@ -81,12 +85,12 @@ public class Appointment {
         this.startTime = startTime;
     }
 
-    public Date getEndTime() {
-        return endTime;
+    public Date getDate() {
+        return date;
     }
 
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public GenericStatus getStatus() {
