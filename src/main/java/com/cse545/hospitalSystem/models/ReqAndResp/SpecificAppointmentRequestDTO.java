@@ -6,8 +6,8 @@ public class SpecificAppointmentRequestDTO {
     
     private Long patientId;
     private Long doctorId;
-    private Date startTime;
-    private Date endTime;
+    private String startTime;
+    private String date;
     
     public Long getPatientId() {
         return patientId;
@@ -15,11 +15,11 @@ public class SpecificAppointmentRequestDTO {
     public Long getDoctorId() {
         return doctorId;
     }
-    public Date getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
-    public Date getEndTime() {
-        return endTime;
+    public String getDate() {
+        return date;
     }
     
 

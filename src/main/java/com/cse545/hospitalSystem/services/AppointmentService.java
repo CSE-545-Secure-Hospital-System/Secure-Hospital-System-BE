@@ -1,5 +1,8 @@
 package com.cse545.hospitalSystem.services;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.cse545.hospitalSystem.models.Appointment;
 import com.cse545.hospitalSystem.models.GenericStatus;
 import com.cse545.hospitalSystem.models.User;
+import com.cse545.hospitalSystem.models.ReqAndResp.AppointmentSearchRequest;
 import com.cse545.hospitalSystem.models.ReqAndResp.GeneralAppointmentRequestDTO;
 import com.cse545.hospitalSystem.models.ReqAndResp.SpecificAppointmentRequestDTO;
 import com.cse545.hospitalSystem.models.ReqAndResp.UpdateAppointmentRequestDTO;
@@ -28,19 +32,16 @@ public class AppointmentService {
         return appointmentRepo.findAll();
     }
     
-    public List<Appointment> getAllAppointmentsForPatient(String patientId) {
+    public List<Appointment> getAllAppointmentsForPatient(long patientId) {
         return appointmentRepo.findAllByPatientId(patientId);
     }
     
-    public List<Appointment> getAllAppointmentsForPatientWithStatus(String patientId, GenericStatus status){
+    public List<Appointment> getAllAppointmentsForPatientWithStatus(long patientId, GenericStatus status){
         return appointmentRepo.findAllByPatientIdAndStatus(patientId, status);
     }
     
-    public List<Appointment> getAllAppointmentForDoctor(String doctorId){
-        return appointmentRepo.findAllByDoctorId(doctorId);
-    }
     
-    public Appointment getAppointmentById(Long appointmentId) {
+    public Appointment getAppointmentById(long appointmentId) {
         Optional<Appointment> appointmentOptional = appointmentRepo.findById(appointmentId);
         if(!appointmentOptional.isPresent()) {
             return null;
@@ -48,39 +49,51 @@ public class AppointmentService {
         return appointmentOptional.get();
     }
     
-    public Appointment createSpecificAppointment(SpecificAppointmentRequestDTO appointmentRequest) {
+    public Appointment createSpecificAppointment(User patient, SpecificAppointmentRequestDTO appointmentRequest) {
         Appointment appointment = new Appointment();
         Optional<User> doctor = userRepo.findById(appointmentRequest.getDoctorId());
         if(!doctor.isPresent()) {
             return null;
         }
         appointment.setDoctor(doctor.get());
-        Optional<User> patient = userRepo.findById(appointmentRequest.getPatientId());
-        if(!patient.isPresent()) {
+        appointment.setPatient(patient);
+        if(appointmentRequest.getStartTime() == null || appointmentRequest.getDate() == null) {
             return null;
         }
-        appointment.setPatient(patient.get());
-        if(appointmentRequest.getStartTime() == null || appointmentRequest.getEndTime() == null) {
-            return null;
+        Date startDate=null;
+        Date startTimeDate=null;
+        try {
+            startDate = new SimpleDateFormat("yy-MM-dd").parse(appointmentRequest.getDate());
+            startTimeDate = new SimpleDateFormat("HH:mm:ss").parse(appointmentRequest.getStartTime());
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
-        appointment.setStartTime(appointmentRequest.getStartTime());
-        appointment.setEndTime(appointmentRequest.getEndTime());
+        
+        appointment.setStartTime(startTimeDate);
+        appointment.setDate(startDate);
         appointment.setStatus(GenericStatus.REQUESTED);
         return appointmentRepo.save(appointment);
     }
     
-    public Appointment createGeneralAppointment(GeneralAppointmentRequestDTO appointmentRequest) {
+    public Appointment createGeneralAppointment(User patient, GeneralAppointmentRequestDTO appointmentRequest) {
         Appointment appointment = new Appointment();
-        Optional<User> patient = userRepo.findById(appointmentRequest.getPatientId());
-        if(!patient.isPresent()) {
+        appointment.setPatient(patient);
+        if(appointmentRequest.getStartTime() == null || appointmentRequest.getDate() == null) {
             return null;
         }
-        appointment.setPatient(patient.get());
-        if(appointmentRequest.getStartTime() == null || appointmentRequest.getEndTime() == null) {
-            return null;
+        Date startDate=null;
+        Date startTimeDate=null;
+        try {
+            startDate = new SimpleDateFormat("yy-MM-dd").parse(appointmentRequest.getDate());
+            startTimeDate = new SimpleDateFormat("HH:mm:ss").parse(appointmentRequest.getStartTime());
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
-        appointment.setStartTime(appointmentRequest.getStartTime());
-        appointment.setEndTime(appointmentRequest.getEndTime());
+        
+        appointment.setStartTime(startTimeDate);
+        appointment.setDate(startDate);
         appointment.setStatus(GenericStatus.REQUESTED);
         return appointmentRepo.save(appointment);
     }
@@ -136,6 +149,45 @@ public class AppointmentService {
         }
         appointment.setStatus(request.getStatus());
         return appointmentRepo.save(appointment);
+    }
+
+    public List<Appointment> getAllAppointmentsForDoctor(User user, AppointmentSearchRequest request) {
+        List<Appointment> appointments = null;
+        if(request.getDate() == null && request.getStatus() == null) {
+            appointments = appointmentRepo.findAllByDoctorIds(user.getId());
+        }
+        else if(request.getDate() == null) {
+            appointments = appointmentRepo.findAllByDoctorIdAndStatus(user.getId(), request.getStatus());
+        }
+        else if(request.getStatus() == null) {
+            appointments = appointmentRepo.findAllByDoctorIdAndDate(user.getId(), request.getDate());
+        }
+        else {
+            appointments = appointmentRepo.findAllByDoctorIdAndDateAndStatus(user.getId(), request.getDate(), request.getStatus());
+        }
+        return appointments;
+    }
+
+    public List<Appointment> getAllAppointmentsForStaff(User user, AppointmentSearchRequest request) {
+        List<Appointment> appointments = null;
+        if(request.getDate() == null && request.getStatus() == null) {
+            appointments = appointmentRepo.findAllByStaffId(user.getId());
+        }
+        else if(request.getDate() == null) {
+            appointments = appointmentRepo.findAllByStaffIdAndStatus(user.getId(), request.getStatus());
+        }
+        else if(request.getStatus() == null) {
+            appointments = appointmentRepo.findAllByStaffIdAndDate(user.getId(), request.getDate());
+        }
+        else {
+            appointments = appointmentRepo.findAllByStaffIdAndDateAndStatus(user.getId(), request.getDate(), request.getStatus());
+        }
+        return appointments;
+    }
+
+    public List<Appointment> getAllAppointmentsForPatient(User user, AppointmentSearchRequest request) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }
