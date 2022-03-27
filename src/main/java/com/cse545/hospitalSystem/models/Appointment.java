@@ -48,6 +48,7 @@ public class Appointment {
     @Temporal(TemporalType.DATE)
     private Date date;
     
+
     //enum
     private GenericStatus status;
     
@@ -109,7 +110,13 @@ public class Appointment {
         this.fees = fees;
     }
     
-    
+    public Diagnosis getDiagnosis() {
+        return diagnosis;
+    }
+
+    public void setDiagnosis(Diagnosis diagnosis) {
+        this.diagnosis = diagnosis;
+    }
     
 
 }
