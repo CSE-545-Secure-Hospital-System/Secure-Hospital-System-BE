@@ -40,8 +40,7 @@ public class Appointment {
     
     @Column(name = "startTime")
     @NotNull
-    @Temporal(TemporalType.TIME)
-    private Date startTime;
+    private String startTime;
     
     @Column(name = "date")
     @NotNull
@@ -77,11 +76,11 @@ public class Appointment {
         this.staff = staff;
     }
 
-    public Date getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Date startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 

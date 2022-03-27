@@ -24,8 +24,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     int enableUser(String email);
     
     
-    @Query("SELECT Distinct u FROM User u WHERE u.email LIKE %?1% or u.firstName LIKE %?1% or u.lastName LIKE %?1%")
+    @Query("SELECT u FROM User u JOIN u.roles r WHERE u.lastName LIKE %?1% OR u.firstName LIKE %?1% OR u.email LIKE %?1% or u.id LIKE %?1% OR r.role LIKE %?1%")
     List<User> searchByTerm(String searchTerm);
-
 
 }

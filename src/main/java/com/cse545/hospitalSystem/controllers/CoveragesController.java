@@ -25,7 +25,7 @@ public class CoveragesController {
 	private CoveragesRepository coveragesRepository;
 	
 	@CrossOrigin
-	//@PreAuthorize("hasAnyRole('ADMIN', 'INSURANCE_STAFF')")
+	@PreAuthorize("hasAnyRole('ADMIN', 'INSURANCE_STAFF')")
 	@PostMapping("/createCoverage")
 	public ResponseEntity<String> createCoverage(@RequestBody Coverage coverage){
 		try {
@@ -39,7 +39,7 @@ public class CoveragesController {
 	}
 	
 	@CrossOrigin
-	//@PreAuthorize("hasAnyRole('ADMIN', 'INSURANCE_STAFF')")
+	@PreAuthorize("hasAnyRole('ADMIN', 'INSURANCE_STAFF')")
 	@GetMapping("/getCoverages")
 	public ResponseEntity<List<Coverage>> getCoverages(){
 		try {

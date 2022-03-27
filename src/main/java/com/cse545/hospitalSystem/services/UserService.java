@@ -2,6 +2,7 @@ package com.cse545.hospitalSystem.services;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -127,14 +128,21 @@ public class UserService implements UserDetailsService {
     	return user;
     }
 
-	public List<User> getAllUser(String searchTerm) {
+	public ResponseEntity<Set<User>> getAllUser(String searchTerm) {
+		Set<User> users = new HashSet<>();
 		if((searchTerm == null) || (searchTerm != null && searchTerm.length() == 0)) {
-			List<User> users = userRepo.findAll();
-			return users;
+			List<User> allUsers = userRepo.findAll();
+			for (User x : allUsers)
+	            users.add(x);
+			return ResponseEntity.ok(users);
 		}
-		logger.info("Admin accessing all users");
-		List<User> users = userRepo.searchByTerm(searchTerm);
-		return users;
+		String[] terms = searchTerm.split(" ");
+		for(int i = 0; i < terms.length; i++) {
+			userRepo.searchByTerm(terms[i]).forEach((user) -> {
+				users.add(user);
+			});
+		}
+		return ResponseEntity.ok(users);
 	}
 
 	public User getUserById(Long userId) {

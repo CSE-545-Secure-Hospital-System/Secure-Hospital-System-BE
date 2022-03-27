@@ -1,6 +1,7 @@
 package com.cse545.hospitalSystem.controllers;
 
 import java.util.List;
+import java.util.Set;
 
 /*
  * 
@@ -73,8 +74,8 @@ public class UsersController{
 	}
 	
 	@CrossOrigin
-	@RequestMapping(value="/getAllUsers", method = RequestMethod.GET)
-	public List<User> getAllUsers(@RequestParam(required = false) String searchTerm){
+	@RequestMapping(value="/getAllUsersBysearchTerm", method = RequestMethod.GET)
+	public ResponseEntity<Set<User>> getAllUsers(@RequestParam(required = false) String searchTerm){
 		return userService.getAllUser(searchTerm);
 	}
 	

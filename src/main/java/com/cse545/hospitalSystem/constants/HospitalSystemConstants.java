@@ -1,5 +1,7 @@
 package com.cse545.hospitalSystem.constants;
 
+import java.util.Map;
+
 public class HospitalSystemConstants {
 	
 	public static final Integer OTP_EXPIRES_IN = 2;

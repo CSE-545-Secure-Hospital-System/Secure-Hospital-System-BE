@@ -42,4 +42,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     @Query(value = "SELECT u FROM Appointment u WHERE u.doctor_user_id = ?1 and u.date == %?2% and u.status LIKE %?3%", nativeQuery = true)
     public List<Appointment> findAllByStaffIdAndDateAndStatus(Long id, Date date, AppointmentStatus status);
 
+    @Query(value = "SELECT u.start_time FROM Appointment u WHERE u.doctor_user_id = ?1 and u.date = ?2", nativeQuery = true)
+	public List<String> findAllTimesOfDoctor(long doctorId, String date);
+
 }

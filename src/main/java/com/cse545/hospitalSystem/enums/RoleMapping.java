@@ -5,5 +5,6 @@ public enum RoleMapping {
     PATIENT,
     INSURANCE_STAFF,
     HOSPITAL_STAFF,
-    LAB_STAFF
+    LAB_STAFF,
+    DOCTOR
 }

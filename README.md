@@ -82,3 +82,5 @@ Useful Links:
 - https://docs.spring.io/spring-boot/docs/2.1.13.RELEASE/reference/html/boot-features-logging.html
 - https://spring.io/guides/gs/accessing-data-mysql/
 - https://www.codejava.net/frameworks/spring-boot/spring-boot-security-role-based-authorization-tutorial
+- https://www.youtube.com/watch?v=1MYOsH38fds
+- https://facingissuesonit.com/2019/05/10/java-generate-15-minute-time-interval-am-pm/
