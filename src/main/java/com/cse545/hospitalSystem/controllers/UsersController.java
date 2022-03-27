@@ -80,6 +80,12 @@ public class UsersController{
 	}
 	
 	@CrossOrigin
+	@RequestMapping(value="/getAllUsersByRole", method = RequestMethod.GET)
+	public ResponseEntity<List<User>> getAllUsersByRole(@RequestParam(required = false) String role){
+		return userService.getAllUserByRole(role);
+	}
+	
+	@CrossOrigin
 	@PostMapping(value="/createClaim")
 	public ResponseEntity<String> createClaim(@RequestBody PolicyClaim policyClaim){
 		return userService.createClaim(policyClaim);

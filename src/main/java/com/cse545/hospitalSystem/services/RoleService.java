@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import com.cse545.hospitalSystem.enums.RoleMapping;
 import com.cse545.hospitalSystem.models.Role;
 import com.cse545.hospitalSystem.models.User;
 import com.cse545.hospitalSystem.repositories.RoleRepository;
@@ -22,9 +23,9 @@ public class RoleService {
         return role;
     }
     
-    public boolean findUserRole(User user, String role) {
-        boolean verifiedRole =user.getRoles().stream().anyMatch(r -> 
-            r.equals(role)
+    public boolean findUserRole(User user, RoleMapping role) {
+        boolean verifiedRole = user.getRoles().stream().anyMatch(r -> 
+            r.getRole().equals(role.name())
         );
         return verifiedRole;
     }

@@ -1,5 +1,6 @@
 package com.cse545.hospitalSystem.services;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,7 @@ import com.cse545.hospitalSystem.models.Appointment;
 import com.cse545.hospitalSystem.models.GenericStatus;
 import com.cse545.hospitalSystem.models.User;
 import com.cse545.hospitalSystem.models.ReqAndResp.AppointmentRequestDTO;
+import com.cse545.hospitalSystem.models.ReqAndResp.AppointmentResponseDTO;
 import com.cse545.hospitalSystem.models.ReqAndResp.AppointmentSearchRequest;
 import com.cse545.hospitalSystem.repositories.AppointmentRepository;
 import com.cse545.hospitalSystem.repositories.UserRepository;
@@ -89,8 +92,27 @@ public class AppointmentService {
         return appointmentRepo.findAll();
     }
     
-    public List<Appointment> getAllAppointmentsForPatient(long patientId) {
-        return appointmentRepo.findAllByPatientId(patientId);
+    public List<AppointmentResponseDTO> getAllFutureAppointmentsForPatient(User user) {
+    	System.out.println(DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH));
+    	List<AppointmentResponseDTO> appointmentResponseDTOs = new ArrayList<>();
+    	appointmentRepo.findAllFutureAppointmentsByuserId(user.getId(), DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH)).forEach(appointment -> {
+    		AppointmentResponseDTO appointmentResponseDTO = new AppointmentResponseDTO();
+    		appointmentResponseDTO.setAppointment(appointment);
+    		if(appointment.getDoctor() != null) {
+    			appointmentResponseDTO.setDoctorFirstName(appointment.getDoctor().getFirstName());
+    			appointmentResponseDTO.setDoctorLastName(appointment.getDoctor().getLastName());
+    		}
+    		if(appointment.getStaff() != null) {
+    			appointmentResponseDTO.setStaffFirstName(appointment.getStaff().getFirstName());
+    			appointmentResponseDTO.setStaffLastName(appointment.getStaff().getLastName());
+    		}
+    		if(appointment.getPatient() != null) {
+    			appointmentResponseDTO.setPatientFirstName(appointment.getPatient().getFirstName());
+    			appointmentResponseDTO.setPatientLastName(appointment.getPatient().getLastName());
+    		}
+    		appointmentResponseDTOs.add(appointmentResponseDTO);   		
+    	});
+    	return appointmentResponseDTOs;
     }
     
     public List<Appointment> getAllAppointmentsForPatientWithStatus(long patientId, GenericStatus status){
@@ -108,8 +130,10 @@ public class AppointmentService {
     
     public ResponseEntity<String> createAppointment(User patient, AppointmentRequestDTO appointmentRequest) {
         Appointment appointment = new Appointment();
+        appointment.setAppointmentType(appointmentRequest.getAppointmentType());
+        Optional<User> doctor = null;
         if(appointmentRequest.getAppointmentType().equals(AppointmentType.SPECIFIC) && appointmentRequest.getDoctorId() != null) {
-        	Optional<User> doctor = userRepo.findById(appointmentRequest.getDoctorId());
+        	doctor = userRepo.findById(appointmentRequest.getDoctorId());
             if(!doctor.isPresent()) {
                 return null;
             }
@@ -127,7 +151,16 @@ public class AppointmentService {
             appointment.setDate(startDate);
             appointment.setStatus(GenericStatus.REQUESTED);
             appointment.setFees(100.0);
-            appointmentRepo.save(appointment);
+            
+            Appointment appointmt = appointmentRepo.save(appointment);
+            if(appointmentRequest.getAppointmentType().equals(AppointmentType.SPECIFIC) && appointmentRequest.getDoctorId() != null) {
+            	doctor.get().addAppointment(appointmt);
+                userRepo.save(doctor.get());
+            }
+            User p = userRepo.findById(patient.getId()).get();
+            p.addAppointment(appointmt);
+            userRepo.save(patient);
+            
             return ResponseEntity.ok("Success");
         } catch (ParseException e) {
             e.printStackTrace();
@@ -245,10 +278,10 @@ public class AppointmentService {
 //        return appointments;
 //    }
 
-    public List<Appointment> getAllAppointmentsForPatient(User user, AppointmentSearchRequest request) {
-        // TODO Auto-generated method stub
-        return null;
-    }
+//    public List<Appointment> getAllAppointmentsForPatient(User user, String searchTerm) {
+//    	userRepo.searchByTermWithAppointments(user.getId(),searchTerm);
+//        return null;
+//    }
 
 	public ResponseEntity<List<String>> getDoctorsAvailability(Long doctorId, String date, AppointmentType type) {
 		List<String> availableTimes = create30minSlots(date, type);
@@ -261,16 +294,6 @@ public class AppointmentService {
 		}
 			
 		return ResponseEntity.ok(availableTimes);
-	}
-
-	public ResponseEntity<String> bookAppointment(User user, AppointmentRequestDTO request) {
-		
-		if(request.getAppointmentType().equals(AppointmentType.GENERAL)) {
-			
-		}else {
-			
-		}
-		return null;
 	}
 
 }

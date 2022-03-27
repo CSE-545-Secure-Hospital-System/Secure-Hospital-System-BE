@@ -231,6 +231,11 @@ public class UserService implements UserDetailsService {
 	public ResponseEntity<String> createClaim(PolicyClaim policyClaim) {
 		return null;
 	}
+
+	public ResponseEntity<List<User>> getAllUserByRole(String role) {
+		List<User> users = userRepo.searchByRole(role);
+		return new ResponseEntity(users, HttpStatus.OK);
+	}
   
     
 }

@@ -81,8 +81,8 @@ public class User implements UserDetails {
     @JoinColumn(name = "CLAIM_ID") })
     private Set<PolicyClaim> claims;
     
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "USER_CLAIMS",
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "USER_APPOINTMENTS",
     joinColumns = {
     @JoinColumn(name = "USER_ID")
     },
@@ -91,7 +91,32 @@ public class User implements UserDetails {
     private Set<Appointment> appointments;
     
     
-    public Set<Insurance_Policies> getPolicies() {
+    public void addAppointment(Appointment a) {
+    	appointments.add(a);
+    }
+    
+    public void addPolicy(Insurance_Policies e) {
+    	policies.add(e);
+    }
+    
+    
+    public Set<PolicyClaim> getClaims() {
+		return claims;
+	}
+
+	public void setClaims(Set<PolicyClaim> claims) {
+		this.claims = claims;
+	}
+
+	public Set<Appointment> getAppointments() {
+		return appointments;
+	}
+
+	public void setAppointments(Set<Appointment> appointments) {
+		this.appointments = appointments;
+	}
+
+	public Set<Insurance_Policies> getPolicies() {
 		return policies;
 	}
 

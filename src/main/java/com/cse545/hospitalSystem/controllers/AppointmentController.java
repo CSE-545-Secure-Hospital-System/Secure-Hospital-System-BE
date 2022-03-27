@@ -17,11 +17,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cse545.hospitalSystem.enums.RoleMapping;
+import com.cse545.hospitalSystem.models.Appointment;
 import com.cse545.hospitalSystem.models.TimingsRequestDTO;
 import com.cse545.hospitalSystem.models.User;
 import com.cse545.hospitalSystem.models.ReqAndResp.AppointmentRequestDTO;
+import com.cse545.hospitalSystem.models.ReqAndResp.AppointmentResponseDTO;
 import com.cse545.hospitalSystem.services.AppointmentService;
 import com.cse545.hospitalSystem.services.RoleService;
 import com.cse545.hospitalSystem.services.UserService;
@@ -49,25 +53,28 @@ public class AppointmentController {
    
     
     // this method should only be allowed with role as staff or doctor
-//    @RequestMapping(value="/getAllAppointments", method = RequestMethod.GET)
-//    public ResponseEntity<?>  getAllAppointments(Authentication authentication, AppointmentSearchRequest request) {
-//        //need to change role to constant values
-//        User user = (User) authentication.getPrincipal();
-//        List<Appointment> appointments = null;
+    @CrossOrigin
+    @RequestMapping(value="/getAllFutureAppointments", method = RequestMethod.GET)
+    public ResponseEntity<?>  getAllAppointments(Authentication authentication, @RequestParam String searchTerm) {
+        //need to change role to constant values
+    	UserDetails userDetails = (UserDetails)authentication.getPrincipal();
+        User user = userService.getUseEntityrByEmailId(userDetails.getUsername());
+        List<?> appointments = null;
 //        if(roleService.findUserRole(user, "ROLE_DOCTOR")) {
-//            appointments = appointmentService.getAllAppointmentsForDoctor(user, request);
+//            appointments = appointmentService.getAllAppointmentsForDoctor(user, searchTerm);
 //        } else if(roleService.findUserRole(user, "ROLE_STAFF")) {
 //            //hospital staff
-//            appointments = appointmentService.getAllAppointmentsForStaff(user, request);
-//        } else if(roleService.findUserRole(user, "ROLE_PATIENT")) {
-//            appointments = appointmentService.getAllAppointmentsForPatient(user, request);
-//        } else {
-//            ResponseEntity.status(HttpStatus.FORBIDDEN).body("User is not privileged for this access");
-//        }
-//       
-//        
-//        return ResponseEntity.ok().body(appointments);
-//    }
+//            appointments = appointmentService.getAllAppointmentsForStaff(user, searchTerm);
+//        } else 
+        if(roleService.findUserRole(user, RoleMapping.PATIENT)) {
+            appointments = appointmentService.getAllFutureAppointmentsForPatient(user);
+        } else {
+            ResponseEntity.status(HttpStatus.FORBIDDEN).body("User is not privileged for this access");
+        }
+       
+        
+        return ResponseEntity.ok().body(appointments);
+    }
     
     //this method should only be allowed with role as patient
 //    @RequestMapping(value="/createSpecificAppointment", method = RequestMethod.POST)
@@ -85,7 +92,7 @@ public class AppointmentController {
     @CrossOrigin
     @RequestMapping(value="/bookAppointment", method = RequestMethod.POST)
     @PreAuthorize("hasRole('PATIENT')")
-    public ResponseEntity<String> bookAppointment(Authentication authentication,@RequestBody AppointmentRequestDTO request) {
+    public ResponseEntity<String> bookAppointment(Authentication authentication, @RequestBody AppointmentRequestDTO request) {
     	UserDetails userDetails = (UserDetails)authentication.getPrincipal();
       User user = userService.getUseEntityrByEmailId(userDetails.getUsername());
     	return appointmentService.createAppointment(user, request);

@@ -14,6 +14,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
+import com.cse545.hospitalSystem.enums.AppointmentType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -24,6 +25,9 @@ public class Appointment {
     @Column(name = "appointment_id")
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
+    
+    
+    private AppointmentType appointmentType;
     
     @JsonIgnore
     @ManyToOne(targetEntity = User.class)
@@ -107,6 +111,22 @@ public class Appointment {
     public void setFees(Double fees) {
         this.fees = fees;
     }
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public AppointmentType getAppointmentType() {
+		return appointmentType;
+	}
+
+	public void setAppointmentType(AppointmentType appointmentType) {
+		this.appointmentType = appointmentType;
+	}
     
     
     
