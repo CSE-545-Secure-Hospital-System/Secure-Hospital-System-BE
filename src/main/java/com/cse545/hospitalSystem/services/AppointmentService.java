@@ -92,10 +92,34 @@ public class AppointmentService {
         return appointmentRepo.findAll();
     }
     
-    public List<AppointmentResponseDTO> getAllFutureAppointmentsForPatient(User user) {
+    public List<AppointmentResponseDTO> getAllFutureAppointmentsForPatientAndDoctor(User user) {
     	System.out.println(DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH));
     	List<AppointmentResponseDTO> appointmentResponseDTOs = new ArrayList<>();
     	appointmentRepo.findAllFutureAppointmentsByuserId(user.getId(), DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH)).forEach(appointment -> {
+    		AppointmentResponseDTO appointmentResponseDTO = new AppointmentResponseDTO();
+    		appointmentResponseDTO.setAppointment(appointment);
+    		if(appointment.getDoctor() != null) {
+    			appointmentResponseDTO.setDoctorFirstName(appointment.getDoctor().getFirstName());
+    			appointmentResponseDTO.setDoctorLastName(appointment.getDoctor().getLastName());
+    		}
+    		if(appointment.getStaff() != null) {
+    			appointmentResponseDTO.setStaffFirstName(appointment.getStaff().getFirstName());
+    			appointmentResponseDTO.setStaffLastName(appointment.getStaff().getLastName());
+    		}
+    		if(appointment.getPatient() != null) {
+    			appointmentResponseDTO.setPatientFirstName(appointment.getPatient().getFirstName());
+    			appointmentResponseDTO.setPatientLastName(appointment.getPatient().getLastName());
+    		}
+    		appointmentResponseDTOs.add(appointmentResponseDTO);   		
+    	});
+    	return appointmentResponseDTOs;
+    }
+    
+    
+    public List<AppointmentResponseDTO> getAllPastAppointmentsForPatientAndDoctor(User user) {
+    	System.out.println(DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH));
+    	List<AppointmentResponseDTO> appointmentResponseDTOs = new ArrayList<>();
+    	appointmentRepo.findAllPastAppointmentsByuserId(user.getId(), DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH)).forEach(appointment -> {
     		AppointmentResponseDTO appointmentResponseDTO = new AppointmentResponseDTO();
     		appointmentResponseDTO.setAppointment(appointment);
     		if(appointment.getDoctor() != null) {
@@ -131,6 +155,7 @@ public class AppointmentService {
     public ResponseEntity<String> createAppointment(User patient, AppointmentRequestDTO appointmentRequest) {
         Appointment appointment = new Appointment();
         appointment.setAppointmentType(appointmentRequest.getAppointmentType());
+        appointment.setStatus(GenericStatus.REQUESTED);
         Optional<User> doctor = null;
         if(appointmentRequest.getAppointmentType().equals(AppointmentType.SPECIFIC) && appointmentRequest.getDoctorId() != null) {
         	doctor = userRepo.findById(appointmentRequest.getDoctorId());
@@ -167,6 +192,14 @@ public class AppointmentService {
         }
         
         return new ResponseEntity<String>("Error in booking!", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    
+    public ResponseEntity<String> cancelAppointment(long appointmentId){
+    	Optional<Appointment> appointment = appointmentRepo.findById(appointmentId);
+    	appointment.get().setStatus(GenericStatus.CANCELED);
+    	appointmentRepo.save(appointment.get());
+    	
+    	return ResponseEntity.ok("Sucess!");
     }
     
 //    public Appointment createGeneralAppointment(User patient, GeneralAppointmentRequestDTO appointmentRequest) {

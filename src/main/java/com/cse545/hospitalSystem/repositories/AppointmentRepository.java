@@ -43,15 +43,18 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     @Query(value = "SELECT u FROM Appointment u WHERE u.doctor_user_id = ?1 and u.date == %?2% and u.status LIKE %?3%", nativeQuery = true)
     public List<Appointment> findAllByStaffIdAndDateAndStatus(Long id, Date date, AppointmentStatus status);
 
-    @Query(value = "SELECT u.start_time FROM Appointment u WHERE u.doctor_user_id = ?1 and u.date = ?2", nativeQuery = true)
+    // doctors availability
+    @Query(value = "SELECT u.start_time FROM Appointment u WHERE u.doctor_user_id = ?1 and u.date = ?2 and u.status != 3", nativeQuery = true)
 	public List<String> findAllTimesOfDoctor(long doctorId, String date);
 
     // these two will be used for Doctors and patients.
     @Query(value = "SELECT * FROM Appointment u WHERE ((u.doctor_user_id = ?1 OR u.patient_user_id = ?1 OR u.staff_user_id = ?1) AND u.date >= ?2) ORDER BY u.date DESC", nativeQuery = true)
 	public List<Appointment> findAllFutureAppointmentsByuserId(long id, Date date);
     
-    @Query(value = "SELECT * FROM Appointment u WHERE ((u.doctor_user_id = ?1 OR u.patient_user_id = ?1 OR u.staff_user_id = ?1) AND u.date <= ?2) ORDER BY u.date DESC", nativeQuery = true)
+    @Query(value = "SELECT * FROM Appointment u WHERE ((u.doctor_user_id = ?1 OR u.patient_user_id = ?1 OR u.staff_user_id = ?1) AND u.date < ?2) ORDER BY u.date DESC", nativeQuery = true)
 	public List<Appointment> findAllPastAppointmentsByuserId(long id, Date date);
+    
+    
 
 
 

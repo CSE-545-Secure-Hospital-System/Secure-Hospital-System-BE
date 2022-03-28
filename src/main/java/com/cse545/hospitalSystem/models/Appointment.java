@@ -26,7 +26,6 @@ public class Appointment {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
     
-    
     private AppointmentType appointmentType;
     
     @JsonIgnore
