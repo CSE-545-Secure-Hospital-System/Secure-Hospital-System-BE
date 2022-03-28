@@ -1,6 +1,7 @@
 package com.cse545.hospitalSystem.controllers;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -24,8 +25,11 @@ import com.cse545.hospitalSystem.enums.RoleMapping;
 import com.cse545.hospitalSystem.models.Appointment;
 import com.cse545.hospitalSystem.models.TimingsRequestDTO;
 import com.cse545.hospitalSystem.models.User;
+import com.cse545.hospitalSystem.models.ReqAndResp.AllDoctorsTimingRequest;
 import com.cse545.hospitalSystem.models.ReqAndResp.AppointmentRequestDTO;
 import com.cse545.hospitalSystem.models.ReqAndResp.AppointmentResponseDTO;
+import com.cse545.hospitalSystem.models.ReqAndResp.AvailableDoctorsPerGivenTimeRquestDTO;
+import com.cse545.hospitalSystem.models.ReqAndResp.UpdateAppointmentRequestDTO;
 import com.cse545.hospitalSystem.services.AppointmentService;
 import com.cse545.hospitalSystem.services.RoleService;
 import com.cse545.hospitalSystem.services.UserService;
@@ -46,11 +50,24 @@ public class AppointmentController {
     private UserService userService;
     
     @CrossOrigin
-    @PostMapping(value = "/getAvailableSlotOfDoctors")
-    public ResponseEntity<List<String>> getDoctorsAvailability(@RequestBody TimingsRequestDTO timingRequestDTO){
-    	return appointmentService.getDoctorsAvailability(timingRequestDTO.getDoctorId(), timingRequestDTO.getDate(), timingRequestDTO.getAppointmentType());
+    @PostMapping(value = "/getAvailableSlotsOfDoctor")
+    public ResponseEntity<List<String>> getAvailableSlotsOfDoctor(@RequestBody TimingsRequestDTO timingRequestDTO){
+    	return ResponseEntity.ok(appointmentService.getDoctorAvailability(timingRequestDTO.getDoctorId(), timingRequestDTO.getDate(), timingRequestDTO.getAppointmentType()));
+    }
+    
+    @CrossOrigin
+    @PostMapping(value = "/getAllAvailableSlotOfDoctors")
+    public ResponseEntity<Map<String, List<String>>> getDoctorsAvailability(@RequestBody AllDoctorsTimingRequest allDoctorsTimingRequest){
+    	if(allDoctorsTimingRequest.getStartTime() == null)
+    		return ResponseEntity.ok(appointmentService.getAllDoctorsAvailability(allDoctorsTimingRequest.getDate(), allDoctorsTimingRequest.getAppointmentType()));
+    	return new ResponseEntity("Bad Request", HttpStatus.BAD_REQUEST);
     }
    
+    @CrossOrigin
+    @PostMapping(value = "/getAllAvailableDoctorsForaTimeSlot")
+    public ResponseEntity<Map<Long, String>> getAllAvailableDoctorsForaTimeSlot(@RequestBody AllDoctorsTimingRequest allDoctorsTimingRequest){
+    	return ResponseEntity.ok(appointmentService.getAllAvailableDoctorsForaTimeSlot(allDoctorsTimingRequest.getDate(), allDoctorsTimingRequest.getAppointmentType(), allDoctorsTimingRequest.getStartTime()));
+    }
     
     // this method should only be allowed with role as staff or doctor
     @CrossOrigin
@@ -60,14 +77,13 @@ public class AppointmentController {
     	UserDetails userDetails = (UserDetails)authentication.getPrincipal();
         User user = userService.getUseEntityrByEmailId(userDetails.getUsername());
         List<?> appointments = null;
-//        if(roleService.findUserRole(user, "ROLE_DOCTOR")) {
-//            appointments = appointmentService.getAllAppointmentsForDoctor(user, searchTerm);
-//        } else if(roleService.findUserRole(user, "ROLE_STAFF")) {
-//            //hospital staff
-//            appointments = appointmentService.getAllAppointmentsForStaff(user, searchTerm);
-//        } else 
-        if(roleService.findUserRole(user, RoleMapping.PATIENT) || roleService.findUserRole(user, RoleMapping.DOCTOR)) {
-            appointments = appointmentService.getAllFutureAppointmentsForPatientAndDoctor(user);
+        if(roleService.findUserRole(user, RoleMapping.HOSPITAL_STAFF)) {
+            //hospital staff
+            appointments = appointmentService.getAllFutureAppointments(user);
+        } else if(roleService.findUserRole(user, RoleMapping.DOCTOR)) {
+        	appointments = appointmentService.getAllFutureAppointmentsForDoctor(user);
+        }else if(roleService.findUserRole(user, RoleMapping.PATIENT)) {
+            appointments = appointmentService.getAllFutureAppointmentsForPatient(user);
         } else {
             ResponseEntity.status(HttpStatus.FORBIDDEN).body("User is not privileged for this access");
         }
@@ -84,12 +100,13 @@ public class AppointmentController {
     	UserDetails userDetails = (UserDetails)authentication.getPrincipal();
         User user = userService.getUseEntityrByEmailId(userDetails.getUsername());
         List<?> appointments = null;
-//        if(roleService.findUserRole(user, "ROLE_DOCTOR")) {
-//            appointments = appointmentService.getAllAppointmentsForDoctor(user, searchTerm);
-//        }
-//        else 
-         if(roleService.findUserRole(user, RoleMapping.PATIENT) || roleService.findUserRole(user, RoleMapping.DOCTOR)) {
-            appointments = appointmentService.getAllPastAppointmentsForPatientAndDoctor(user);
+        if (roleService.findUserRole(user, RoleMapping.HOSPITAL_STAFF)) {
+        	appointments = appointmentService.getAllPastAppointments(user);
+        }else 
+        if(roleService.findUserRole(user, RoleMapping.DOCTOR)) {
+        	appointments = appointmentService.getAllPastAppointmentsForDoctor(user);
+        } else if(roleService.findUserRole(user, RoleMapping.PATIENT)) { 
+            appointments = appointmentService.getAllPastAppointmentsForPatient(user);
         } else {
             ResponseEntity.status(HttpStatus.FORBIDDEN).body("User is not privileged for this access");
         }
@@ -101,7 +118,7 @@ public class AppointmentController {
     
     @CrossOrigin
     @RequestMapping(value="/bookAppointment", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('PATIENT')")
+//    @PreAuthorize("hasRole('PATIENT')")
     public ResponseEntity<String> bookAppointment(Authentication authentication, @RequestBody AppointmentRequestDTO request) {
     	UserDetails userDetails = (UserDetails)authentication.getPrincipal();
       User user = userService.getUseEntityrByEmailId(userDetails.getUsername());
@@ -110,9 +127,15 @@ public class AppointmentController {
     
     @CrossOrigin
     @PostMapping("/cancelAppointment")
-    @PreAuthorize("hasRole('PATIENT')")
+//    @PreAuthorize("hasRole('PATIENT')")
     public ResponseEntity<String> cancelAppointment(Authentication authentication, @RequestParam long appointmentId){
     	return appointmentService.cancelAppointment(appointmentId);
+    }
+    
+    @CrossOrigin
+    @PostMapping("/updateAppointment")
+    public ResponseEntity<String> updateAppointment(@RequestBody UpdateAppointmentRequestDTO updateAppointmentRequestDTO){
+    	return appointmentService.updateAppointment(updateAppointmentRequestDTO);
     }
     
 //    //This method should only be allowed with role as patient

@@ -53,6 +53,12 @@ public class User implements UserDetails {
     @Column
     private String password;
     
+	@Column
+    private Boolean locked = false;
+    
+    @Column
+    private Boolean enabled = false;
+    
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "USER_ROLES",
             joinColumns = {
@@ -123,13 +129,6 @@ public class User implements UserDetails {
 	public void setPolicies(Set<Insurance_Policies> policies) {
 		this.policies = policies;
 	}
-
-
-	@Column
-    private Boolean locked = false;
-    
-    @Column
-    private Boolean enabled = false;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -5,10 +5,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -20,12 +24,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.cse545.hospitalSystem.enums.AppointmentType;
+import com.cse545.hospitalSystem.enums.RoleMapping;
 import com.cse545.hospitalSystem.models.Appointment;
 import com.cse545.hospitalSystem.models.GenericStatus;
 import com.cse545.hospitalSystem.models.User;
 import com.cse545.hospitalSystem.models.ReqAndResp.AppointmentRequestDTO;
 import com.cse545.hospitalSystem.models.ReqAndResp.AppointmentResponseDTO;
 import com.cse545.hospitalSystem.models.ReqAndResp.AppointmentSearchRequest;
+import com.cse545.hospitalSystem.models.ReqAndResp.UpdateAppointmentRequestDTO;
 import com.cse545.hospitalSystem.repositories.AppointmentRepository;
 import com.cse545.hospitalSystem.repositories.UserRepository;
 
@@ -92,57 +98,64 @@ public class AppointmentService {
         return appointmentRepo.findAll();
     }
     
-    public List<AppointmentResponseDTO> getAllFutureAppointmentsForPatientAndDoctor(User user) {
-    	System.out.println(DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH));
+    public List<AppointmentResponseDTO> ConvertAppointmentsToAppointmentsResponseDTOs(List<Appointment> appointments) {
     	List<AppointmentResponseDTO> appointmentResponseDTOs = new ArrayList<>();
-    	appointmentRepo.findAllFutureAppointmentsByuserId(user.getId(), DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH)).forEach(appointment -> {
+    	
+    	appointments.forEach(appointment -> {
     		AppointmentResponseDTO appointmentResponseDTO = new AppointmentResponseDTO();
     		appointmentResponseDTO.setAppointment(appointment);
     		if(appointment.getDoctor() != null) {
     			appointmentResponseDTO.setDoctorFirstName(appointment.getDoctor().getFirstName());
     			appointmentResponseDTO.setDoctorLastName(appointment.getDoctor().getLastName());
+    			appointmentResponseDTO.setDoctorId(appointment.getDoctor().getId());
     		}
     		if(appointment.getStaff() != null) {
     			appointmentResponseDTO.setStaffFirstName(appointment.getStaff().getFirstName());
     			appointmentResponseDTO.setStaffLastName(appointment.getStaff().getLastName());
+    			appointmentResponseDTO.setStaffId(appointment.getStaff().getId());
     		}
     		if(appointment.getPatient() != null) {
     			appointmentResponseDTO.setPatientFirstName(appointment.getPatient().getFirstName());
     			appointmentResponseDTO.setPatientLastName(appointment.getPatient().getLastName());
+    			appointmentResponseDTO.setPatientId(appointment.getPatient().getId());
     		}
     		appointmentResponseDTOs.add(appointmentResponseDTO);   		
     	});
     	return appointmentResponseDTOs;
+    	
+    }
+    
+    // for patient
+    public List<AppointmentResponseDTO> getAllFutureAppointmentsForPatient(User user) {
+    	return ConvertAppointmentsToAppointmentsResponseDTOs(appointmentRepo.findAllFutureAppointmentsByuserIdForPatient(user.getId(), DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH)));
+    }
+    
+    // for  patient
+    public List<AppointmentResponseDTO> getAllPastAppointmentsForPatient(User user) {
+    	return ConvertAppointmentsToAppointmentsResponseDTOs(appointmentRepo.findAllPastAppointmentsByuserIdForPatient(user.getId(), DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH)));
+    }
+    
+    // for doctor
+    public List<AppointmentResponseDTO> getAllFutureAppointmentsForDoctor(User user) {
+    	return ConvertAppointmentsToAppointmentsResponseDTOs(appointmentRepo.findAllFutureAppointmentsByuserIdForDoctor(user.getId(), DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH)));
+    }
+    
+    // for doctor	
+    public List<AppointmentResponseDTO> getAllPastAppointmentsForDoctor(User user) {
+    	return ConvertAppointmentsToAppointmentsResponseDTOs(appointmentRepo.findAllPastAppointmentsByuserIdForDoctor(user.getId(), DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH)));
     }
     
     
-    public List<AppointmentResponseDTO> getAllPastAppointmentsForPatientAndDoctor(User user) {
-    	System.out.println(DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH));
-    	List<AppointmentResponseDTO> appointmentResponseDTOs = new ArrayList<>();
-    	appointmentRepo.findAllPastAppointmentsByuserId(user.getId(), DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH)).forEach(appointment -> {
-    		AppointmentResponseDTO appointmentResponseDTO = new AppointmentResponseDTO();
-    		appointmentResponseDTO.setAppointment(appointment);
-    		if(appointment.getDoctor() != null) {
-    			appointmentResponseDTO.setDoctorFirstName(appointment.getDoctor().getFirstName());
-    			appointmentResponseDTO.setDoctorLastName(appointment.getDoctor().getLastName());
-    		}
-    		if(appointment.getStaff() != null) {
-    			appointmentResponseDTO.setStaffFirstName(appointment.getStaff().getFirstName());
-    			appointmentResponseDTO.setStaffLastName(appointment.getStaff().getLastName());
-    		}
-    		if(appointment.getPatient() != null) {
-    			appointmentResponseDTO.setPatientFirstName(appointment.getPatient().getFirstName());
-    			appointmentResponseDTO.setPatientLastName(appointment.getPatient().getLastName());
-    		}
-    		appointmentResponseDTOs.add(appointmentResponseDTO);   		
-    	});
-    	return appointmentResponseDTOs;
+    // for hospital staff
+    public List<AppointmentResponseDTO> getAllPastAppointments(User user) {
+    	return ConvertAppointmentsToAppointmentsResponseDTOs(appointmentRepo.findAllPastAppointmentsForHospitalStaff(DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH)));
     }
     
-    public List<Appointment> getAllAppointmentsForPatientWithStatus(long patientId, GenericStatus status){
-        return appointmentRepo.findAllByPatientIdAndStatus(patientId, status);
+    // for hospital staff
+    public List<AppointmentResponseDTO> getAllFutureAppointments(User user) {
+    	return ConvertAppointmentsToAppointmentsResponseDTOs(appointmentRepo.findAllFutureAppointmentsForHospitalStaff(DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH)));
     }
-    
+   
     
     public Appointment getAppointmentById(long appointmentId) {
         Optional<Appointment> appointmentOptional = appointmentRepo.findById(appointmentId);
@@ -316,17 +329,49 @@ public class AppointmentService {
 //        return null;
 //    }
 
-	public ResponseEntity<List<String>> getDoctorsAvailability(Long doctorId, String date, AppointmentType type) {
+	public List<String> getDoctorAvailability(Long doctorId, String date, AppointmentType type) {
 		List<String> availableTimes = create30minSlots(date, type);
 		if(type.equals(AppointmentType.SPECIFIC) && doctorId != null) {
-			List<String> bookedTimes = appointmentRepo.findAllTimesOfDoctor(doctorId, date);
+			List<String> bookedTimes;
+			bookedTimes = appointmentRepo.findAllTimesOfDoctor(doctorId, date);
 			
 			bookedTimes.forEach(time -> {
 				availableTimes.remove(time);
 			});
 		}
 			
-		return ResponseEntity.ok(availableTimes);
+		return availableTimes;
 	}
+
+	// not efficient
+	public Map<String, List<String>> getAllDoctorsAvailability( String date,
+			AppointmentType appointmentType) {
+		List<User> doctors = userRepo.searchByRole(RoleMapping.DOCTOR.name());
+		Map<String, List<String>> doctorsSlots = new HashMap<>();
+		doctors.forEach(doctor -> {
+			doctorsSlots.put(doctor.getId()+", "+doctor.getFirstName() + " " + doctor.getLastName(), this.getDoctorAvailability(doctor.getId(), date, appointmentType));
+		});
+		return doctorsSlots;
+	}
+
+	public ResponseEntity<String> updateAppointment(UpdateAppointmentRequestDTO updateAppointmentRequestDTO) {
+		appointmentRepo.updateAppointment(updateAppointmentRequestDTO.getStaffId(), updateAppointmentRequestDTO.getDoctorId(), updateAppointmentRequestDTO.getStaffNote(), updateAppointmentRequestDTO.getAppointmentId());
+		return ResponseEntity.ok("Success!");
+	}
+
+	// not efficient
+	public Map<Long, String> getAllAvailableDoctorsForaTimeSlot(String date, AppointmentType appointmentType, String startTime) {
+		List<User> doctors = userRepo.searchByRole(RoleMapping.DOCTOR.name());
+		Map<Long, String> resdoctors = new HashMap<>();
+		Set<Long> bookeddoctors = appointmentRepo.findAllTimesOfDoctorGivenTimeSlot(date, startTime);
+		doctors.forEach(doctor -> {
+			if(!bookeddoctors.contains(doctor.getId())) {
+				resdoctors.put(doctor.getId(), doctor.getFirstName() + " " + doctor.getLastName());
+			}
+		});
+		return resdoctors;
+	}
+
+	
 
 }

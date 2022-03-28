@@ -44,7 +44,7 @@ public class UsersController{
 
 	@CrossOrigin
 	@RequestMapping(value="/getUserById", method = RequestMethod.GET)
-	@PreAuthorize("hasRole('ADMIN')")
+//	@PreAuthorize("hasRole('ADMIN')")
 	public User getUserById(@RequestParam(name = "userId") Long userId) {
 		return userService.getUserById(userId);
 	}
