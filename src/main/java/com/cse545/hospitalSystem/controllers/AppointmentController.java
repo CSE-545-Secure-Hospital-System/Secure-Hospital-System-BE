@@ -55,7 +55,7 @@ public class AppointmentController {
     // this method should only be allowed with role as staff or doctor
     @CrossOrigin
     @RequestMapping(value="/getAllFutureAppointments", method = RequestMethod.GET)
-    public ResponseEntity<?>  getAllAppointments(Authentication authentication, @RequestParam String searchTerm) {
+    public ResponseEntity<?>  getAllFutureAppointments(Authentication authentication, @RequestParam String searchTerm) {
         //need to change role to constant values
     	UserDetails userDetails = (UserDetails)authentication.getPrincipal();
         User user = userService.getUseEntityrByEmailId(userDetails.getUsername());
@@ -66,8 +66,8 @@ public class AppointmentController {
 //            //hospital staff
 //            appointments = appointmentService.getAllAppointmentsForStaff(user, searchTerm);
 //        } else 
-        if(roleService.findUserRole(user, RoleMapping.PATIENT)) {
-            appointments = appointmentService.getAllFutureAppointmentsForPatient(user);
+        if(roleService.findUserRole(user, RoleMapping.PATIENT) || roleService.findUserRole(user, RoleMapping.DOCTOR)) {
+            appointments = appointmentService.getAllFutureAppointmentsForPatientAndDoctor(user);
         } else {
             ResponseEntity.status(HttpStatus.FORBIDDEN).body("User is not privileged for this access");
         }
@@ -76,18 +76,28 @@ public class AppointmentController {
         return ResponseEntity.ok().body(appointments);
     }
     
-    //this method should only be allowed with role as patient
-//    @RequestMapping(value="/createSpecificAppointment", method = RequestMethod.POST)
-//    @PreAuthorize("hasRole('PATIENT')")
-//    public ResponseEntity<?>  createSpecificAppointment(Authentication authentication, @RequestBody SpecificAppointmentRequestDTO request) {
-//        User user = (User)authentication.getPrincipal();
-//        Appointment appointment = appointmentService.createSpecificAppointment(user, request);
-//        if(appointment == null) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Appointment was not able "
-//                    + "to be created due to a bad request");
+    
+    @CrossOrigin
+    @RequestMapping(value="/getAllPastAppointments", method = RequestMethod.GET)
+    public ResponseEntity<?>  getAllPastAppointments(Authentication authentication, @RequestParam String searchTerm) {
+        //need to change role to constant values
+    	UserDetails userDetails = (UserDetails)authentication.getPrincipal();
+        User user = userService.getUseEntityrByEmailId(userDetails.getUsername());
+        List<?> appointments = null;
+//        if(roleService.findUserRole(user, "ROLE_DOCTOR")) {
+//            appointments = appointmentService.getAllAppointmentsForDoctor(user, searchTerm);
 //        }
-//        return ResponseEntity.status(HttpStatus.OK).body(appointment);
-//    }
+//        else 
+         if(roleService.findUserRole(user, RoleMapping.PATIENT) || roleService.findUserRole(user, RoleMapping.DOCTOR)) {
+            appointments = appointmentService.getAllPastAppointmentsForPatientAndDoctor(user);
+        } else {
+            ResponseEntity.status(HttpStatus.FORBIDDEN).body("User is not privileged for this access");
+        }
+       
+        
+        return ResponseEntity.ok().body(appointments);
+    }
+    
     
     @CrossOrigin
     @RequestMapping(value="/bookAppointment", method = RequestMethod.POST)
@@ -96,6 +106,13 @@ public class AppointmentController {
     	UserDetails userDetails = (UserDetails)authentication.getPrincipal();
       User user = userService.getUseEntityrByEmailId(userDetails.getUsername());
     	return appointmentService.createAppointment(user, request);
+    }
+    
+    @CrossOrigin
+    @PostMapping("/cancelAppointment")
+    @PreAuthorize("hasRole('PATIENT')")
+    public ResponseEntity<String> cancelAppointment(Authentication authentication, @RequestParam long appointmentId){
+    	return appointmentService.cancelAppointment(appointmentId);
     }
     
 //    //This method should only be allowed with role as patient
