@@ -1,13 +1,20 @@
 package com.cse545.hospitalSystem.models;
 
 import java.util.Date;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -54,8 +61,26 @@ public class Appointment {
     private GenericStatus status;
     
     private Double fees;
+    
+    private String staffNote;
+    
+    @OneToOne(targetEntity = Diagnosis.class)
+    @JsonIgnore
+    private Diagnosis diagnoses;
+    
+	public Diagnosis getDiagnoses() {
+		return diagnoses;
+	}
 
-    public User getPatient() {
+	public void setDiagnoses(Diagnosis diagnoses) {
+		this.diagnoses = diagnoses;
+	}
+
+	public void setDiagnoisis(Diagnosis diagnoisis) {
+		this.diagnoses = diagnoisis;
+	}
+
+	public User getPatient() {
         return patient;
     }
 
@@ -126,8 +151,13 @@ public class Appointment {
 	public void setAppointmentType(AppointmentType appointmentType) {
 		this.appointmentType = appointmentType;
 	}
-    
-    
-    
+
+	public String getStaffNote() {
+		return staffNote;
+	}
+
+	public void setStaffNote(String staffNote) {
+		this.staffNote = staffNote;
+	}
 
 }

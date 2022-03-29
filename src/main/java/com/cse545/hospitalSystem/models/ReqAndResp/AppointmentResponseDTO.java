@@ -7,6 +7,34 @@ public class AppointmentResponseDTO {
 	private Appointment appointment;
 	
 	private String doctorFirstName, doctorLastName, patientLastName, patientFirstName, staffFirstName, staffLastName;
+	
+	private long patientId, staffId, doctorId;
+	
+	
+
+	public long getPatientId() {
+		return patientId;
+	}
+
+	public void setPatientId(long patientId) {
+		this.patientId = patientId;
+	}
+
+	public long getStaffId() {
+		return staffId;
+	}
+
+	public void setStaffId(long staffId) {
+		this.staffId = staffId;
+	}
+
+	public long getDoctorId() {
+		return doctorId;
+	}
+
+	public void setDoctorId(long doctorId) {
+		this.doctorId = doctorId;
+	}
 
 	public Appointment getAppointment() {
 		return appointment;

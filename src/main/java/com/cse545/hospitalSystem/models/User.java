@@ -54,6 +54,10 @@ public class User implements UserDetails {
     @Column
     private String password;
     
+	@Column
+    private Boolean locked = false;
+    
+    
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "USER_ROLES",
             joinColumns = {
@@ -91,6 +95,17 @@ public class User implements UserDetails {
     @JoinColumn(name = "APPOINTMENT_ID") })
     private Set<Appointment> appointments;
     
+    @Column(name = "account_non_locked")
+    private boolean accountNonLocked=true;
+    
+    @Column
+    private Boolean enabled = false;
+    
+    @Column(name = "failed_attempt")
+    private int failedAttempt=0;
+
+    @Column(name = "lock_time")
+    private Date lockTime;
     
     public void addAppointment(Appointment a) {
     	appointments.add(a);
@@ -124,21 +139,7 @@ public class User implements UserDetails {
 	public void setPolicies(Set<Insurance_Policies> policies) {
 		this.policies = policies;
 	}
-
-
-	@Column(name = "account_non_locked")
-    private boolean accountNonLocked=true;
-    
-    @Column
-    private Boolean enabled = false;
-    
-    @Column(name = "failed_attempt")
-    private int failedAttempt=0;
-
-    @Column(name = "lock_time")
-    private Date lockTime;
-
-    @Override
+	
     public Collection<? extends GrantedAuthority> getAuthorities() {
     	Set<SimpleGrantedAuthority> authorities = new HashSet<>();
     	roles.forEach(role -> {
@@ -263,10 +264,6 @@ public class User implements UserDetails {
 
     public void setAccountNonLocked(boolean b) {
         this.accountNonLocked = b;
-    }
-    
-   
-
-    
+    } 
 
 }
