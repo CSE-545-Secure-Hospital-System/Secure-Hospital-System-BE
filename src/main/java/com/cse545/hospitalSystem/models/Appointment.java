@@ -64,24 +64,19 @@ public class Appointment {
     
     private String staffNote;
     
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "APPOINTMENTS_DIAGNOSIS",
-    joinColumns = {
-    @JoinColumn(name = "USER_ID")
-    },
-    inverseJoinColumns = {
-    @JoinColumn(name = "DIAGNOSIS_ID") })
-    private Set<Diagnosis> diagnoses;
+    @OneToOne(targetEntity = Diagnosis.class)
+    @JsonIgnore
+    private Diagnosis diagnoses;
     
-	public Set<Diagnosis> getDiagnoses() {
+	public Diagnosis getDiagnoses() {
 		return diagnoses;
 	}
 
-	public void setDiagnoses(Set<Diagnosis> diagnoses) {
+	public void setDiagnoses(Diagnosis diagnoses) {
 		this.diagnoses = diagnoses;
 	}
 
-	public void setDiagnoisis(Set<Diagnosis> diagnoisis) {
+	public void setDiagnoisis(Diagnosis diagnoisis) {
 		this.diagnoses = diagnoisis;
 	}
 
@@ -164,12 +159,5 @@ public class Appointment {
 	public void setStaffNote(String staffNote) {
 		this.staffNote = staffNote;
 	}
-
-
-	
-	
-    
-    
-    
 
 }
