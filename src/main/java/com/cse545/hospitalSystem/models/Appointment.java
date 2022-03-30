@@ -65,7 +65,6 @@ public class Appointment {
     private String staffNote;
     
     @OneToOne(targetEntity = Diagnosis.class)
-    @JsonIgnore
     private Diagnosis diagnoses;
     
 	public Diagnosis getDiagnoses() {

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.cse545.hospitalSystem.models.LabTest;
 
 @Repository
-public interface labTestRepository extends JpaRepository<LabTest, Long>{
+public interface LabTestRepository extends JpaRepository<LabTest, Long>{
 	
 	LabTest findByLabTestName( String labTestName);
 

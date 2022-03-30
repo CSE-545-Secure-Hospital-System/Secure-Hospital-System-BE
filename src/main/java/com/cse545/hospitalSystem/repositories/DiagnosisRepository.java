@@ -11,8 +11,6 @@ import com.cse545.hospitalSystem.models.Diagnosis;
 @Repository
 public interface DiagnosisRepository extends JpaRepository<Diagnosis, Long> {
 
-//	public List<Diagnosis> findByPatientId(long patientId);
-	
-	
+	public List<Diagnosis> findByPatient(long patient);
 
 }

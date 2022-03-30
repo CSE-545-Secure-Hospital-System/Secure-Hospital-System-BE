@@ -97,6 +97,16 @@ public class User implements UserDetails {
     private Set<Appointment> appointments;
     
     
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "USER_DIAGNOSIS",
+    joinColumns = {
+    @JoinColumn(name = "USER_ID")
+    },
+    inverseJoinColumns = {
+    @JoinColumn(name = "DIAGNOSIS_ID") })
+    private Set<Diagnosis> diagnoses;
+    
+    
     public void addAppointment(Appointment a) {
     	appointments.add(a);
     }
@@ -244,8 +254,17 @@ public class User implements UserDetails {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	public Set<Diagnosis> getDiagnoses() {
+		return diagnoses;
+	}
+
+	public void setDiagnoses(Set<Diagnosis> diagnoses) {
+		this.diagnoses = diagnoses;
+	}
     
-    
-    
+    public void addDiagnosis(Diagnosis diagnosis) {
+    	this.diagnoses.add(diagnosis);
+    }
 
 }

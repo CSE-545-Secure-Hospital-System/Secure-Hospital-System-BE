@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -136,6 +137,13 @@ public class AppointmentController {
     @PostMapping("/updateAppointment")
     public ResponseEntity<String> updateAppointment(@RequestBody UpdateAppointmentRequestDTO updateAppointmentRequestDTO){
     	return appointmentService.updateAppointment(updateAppointmentRequestDTO);
+    }
+    
+    
+    @CrossOrigin
+    @GetMapping("/getAllAppointments")
+    public ResponseEntity<List<Appointment>> getAllAppointments(){
+    	return appointmentService.getAllAppointments();
     }
     
 //    //This method should only be allowed with role as patient

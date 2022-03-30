@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import com.cse545.hospitalSystem.enums.AppointmentType;
 import com.cse545.hospitalSystem.enums.RoleMapping;
 import com.cse545.hospitalSystem.models.Appointment;
+import com.cse545.hospitalSystem.models.Diagnosis;
 import com.cse545.hospitalSystem.models.GenericStatus;
 import com.cse545.hospitalSystem.models.User;
 import com.cse545.hospitalSystem.models.ReqAndResp.AppointmentRequestDTO;
@@ -94,8 +95,8 @@ public class AppointmentService {
     	return timesList;
     }
 
-    public List<Appointment> getAllAppointments() {
-        return appointmentRepo.findAll();
+    public ResponseEntity<List<Appointment>> getAllAppointments() {
+        return ResponseEntity.ok(appointmentRepo.findAll());
     }
     
     public List<AppointmentResponseDTO> ConvertAppointmentsToAppointmentsResponseDTOs(List<Appointment> appointments) {
@@ -168,14 +169,20 @@ public class AppointmentService {
     public ResponseEntity<String> createAppointment(User patient, AppointmentRequestDTO appointmentRequest) {
         Appointment appointment = new Appointment();
         appointment.setAppointmentType(appointmentRequest.getAppointmentType());
-        appointment.setStatus(GenericStatus.REQUESTED);
+        appointment.setDiagnoses(null);
+        
         Optional<User> doctor = null;
         if(appointmentRequest.getAppointmentType().equals(AppointmentType.SPECIFIC) && appointmentRequest.getDoctorId() != null) {
+        	appointment.setStatus(GenericStatus.APPROVED);
         	doctor = userRepo.findById(appointmentRequest.getDoctorId());
             if(!doctor.isPresent()) {
                 return null;
             }
             appointment.setDoctor(doctor.get());
+        }
+        
+        if(appointmentRequest.getAppointmentType().equals(AppointmentType.GENERAL)) {
+        	appointment.setStatus(GenericStatus.REQUESTED);
         }
         
         appointment.setPatient(patient);
@@ -187,7 +194,6 @@ public class AppointmentService {
             startDate = new SimpleDateFormat("yyyy-MM-dd").parse(appointmentRequest.getDate());
             appointment.setStartTime(appointmentRequest.getStartTime());
             appointment.setDate(startDate);
-            appointment.setStatus(GenericStatus.REQUESTED);
             appointment.setFees(100.0);
             
             Appointment appointmt = appointmentRepo.save(appointment);

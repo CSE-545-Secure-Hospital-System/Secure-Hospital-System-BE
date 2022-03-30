@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cse545.hospitalSystem.models.LabTest;
-import com.cse545.hospitalSystem.repositories.labTestRepository;
+import com.cse545.hospitalSystem.repositories.LabTestRepository;
 
 @RestController
 @RequestMapping("/api/lab")
 public class LabTestController {
 	
 	@Autowired
-	private labTestRepository labTestRepo;
+	private LabTestRepository labTestRepo;
 	
 	@CrossOrigin
 	@PostMapping("/createLabTest")
