@@ -232,7 +232,19 @@ public class UserService implements UserDetailsService {
 		return null;
 	}
 
+	@SuppressWarnings("rawtypes")
 	public ResponseEntity<List<User>> getAllUserByRole(String role) {
+		List<User> users;
+		if(role.equals(RoleMapping.ADMIN.name())) {
+			users = userRepo.findUsersExceptADMIN();
+		}else {
+			users = userRepo.searchByRole("PATIENT");
+		}
+		
+		return ResponseEntity.ok(users);
+	}
+	
+	public ResponseEntity<List<User>> getAllPatientUsers(String role) {
 		List<User> users = userRepo.searchByRole(role);
 		return new ResponseEntity(users, HttpStatus.OK);
 	}
@@ -247,6 +259,7 @@ public class UserService implements UserDetailsService {
         userRepo.save(user.get());
         return true;
 	}
+
   
     
 }

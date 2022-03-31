@@ -75,7 +75,7 @@ public class UsersController{
 	
 	@CrossOrigin
 	@RequestMapping(value="/getAllUsersBysearchTerm", method = RequestMethod.GET)
-	public ResponseEntity<Set<User>> getAllUsers(@RequestParam(required = false) String searchTerm){
+	public ResponseEntity<Set<User>> getAllUsers(@RequestParam(required = false) String searchTerm, @RequestParam(required = false) String role){
 		return userService.getAllUser(searchTerm);
 	}
 	

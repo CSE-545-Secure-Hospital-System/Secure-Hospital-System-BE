@@ -1,6 +1,7 @@
 package com.cse545.hospitalSystem.models;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -48,6 +49,9 @@ public class User implements UserDetails {
 
     @Column
     private String phone;
+    
+    @Column
+    private Date dob;
     
     //TODO handle password encryption and constraints later
     @Column
@@ -266,5 +270,15 @@ public class User implements UserDetails {
     public void addDiagnosis(Diagnosis diagnosis) {
     	this.diagnoses.add(diagnosis);
     }
+
+	public Date getDob() {
+		return dob;
+	}
+
+	public void setDob(Date dob) {
+		this.dob = dob;
+	}
+    
+    
 
 }
