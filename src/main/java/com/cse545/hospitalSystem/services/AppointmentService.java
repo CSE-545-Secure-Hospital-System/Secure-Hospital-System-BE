@@ -380,6 +380,7 @@ public class AppointmentService {
 
 	public ResponseEntity<String> completeAppointment(long appointmentId) {
 		appointmentRepo.completeAppointment(appointmentId);
+		
 		return ResponseEntity.ok("Success!");
 	}
 
