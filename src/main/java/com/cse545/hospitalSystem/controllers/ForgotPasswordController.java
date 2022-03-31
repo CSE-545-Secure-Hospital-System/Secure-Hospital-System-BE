@@ -43,7 +43,10 @@ public class ForgotPasswordController {
         if(!verified) {
             return new ResponseEntity("wrong otp try again", HttpStatus.BAD_REQUEST);
         }
-        userService.setNewPassword(newPasswordRequesDTO.getEmail(), newPasswordRequesDTO.getPassword());
+        boolean passwordGenerated = userService.setNewPassword(newPasswordRequesDTO.getEmail(), newPasswordRequesDTO.getPassword());
+        if(!passwordGenerated) {
+            return new ResponseEntity("Password not generated, check if user exists", HttpStatus.UNAUTHORIZED);
+        }
         return new ResponseEntity("new password generated, login again", HttpStatus.OK);
     }
 
