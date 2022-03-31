@@ -57,6 +57,9 @@ public class Appointment {
     @Temporal(TemporalType.DATE)
     private Date date;
     
+    @OneToOne(targetEntity = Bill.class)
+    private Bill bill;
+
     //enum
     private GenericStatus status;
     
@@ -158,5 +161,13 @@ public class Appointment {
 	public void setStaffNote(String staffNote) {
 		this.staffNote = staffNote;
 	}
+	
+	public Bill getBill() {
+        return bill;
+    }
+
+    public void setBill(Bill bill) {
+        this.bill = bill;
+    }
 
 }
