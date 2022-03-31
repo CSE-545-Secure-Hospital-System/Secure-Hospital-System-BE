@@ -78,7 +78,7 @@ public class AppointmentController {
     	UserDetails userDetails = (UserDetails)authentication.getPrincipal();
         User user = userService.getUseEntityrByEmailId(userDetails.getUsername());
         List<?> appointments = null;
-        if(roleService.findUserRole(user, RoleMapping.HOSPITAL_STAFF)) {
+        if(roleService.findUserRole(user, RoleMapping.HOSPITAL_STAFF)  || roleService.findUserRole(user, RoleMapping.ADMIN)) {
             //hospital staff
             appointments = appointmentService.getAllFutureAppointments(user);
         } else if(roleService.findUserRole(user, RoleMapping.DOCTOR)) {
@@ -101,7 +101,7 @@ public class AppointmentController {
     	UserDetails userDetails = (UserDetails)authentication.getPrincipal();
         User user = userService.getUseEntityrByEmailId(userDetails.getUsername());
         List<?> appointments = null;
-        if (roleService.findUserRole(user, RoleMapping.HOSPITAL_STAFF)) {
+        if (roleService.findUserRole(user, RoleMapping.HOSPITAL_STAFF) || roleService.findUserRole(user, RoleMapping.ADMIN)) {
         	appointments = appointmentService.getAllPastAppointments(user);
         }else 
         if(roleService.findUserRole(user, RoleMapping.DOCTOR)) {
