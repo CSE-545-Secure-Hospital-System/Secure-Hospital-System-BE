@@ -59,6 +59,9 @@ public class Appointment {
     
     @OneToOne(targetEntity = Bill.class)
     private Bill bill;
+    
+    @OneToOne(targetEntity = Transaction.class)
+    private Transaction transaction;
 
     //enum
     private GenericStatus status;
@@ -168,6 +171,14 @@ public class Appointment {
 
     public void setBill(Bill bill) {
         this.bill = bill;
+    }
+    
+    public Transaction getTransaction() {
+        return transaction;
+    }
+
+    public void setTransaction(Transaction transaction) {
+        this.transaction = transaction;
     }
 
 }

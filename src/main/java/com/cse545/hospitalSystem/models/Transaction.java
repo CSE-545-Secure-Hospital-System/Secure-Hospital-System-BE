@@ -25,6 +25,39 @@ public class Transaction {
     @OneToOne(targetEntity = Bill.class)
     private Bill bill;
     
+    @OneToOne(targetEntity = Appointment.class)
+    private Appointment appointment;
+    
     private TransactionStatus transactionStatus;
+
+    public Bill getBill() {
+        return bill;
+    }
+
+    public void setBill(Bill bill) {
+        this.bill = bill;
+    }
+
+    public Appointment getAppointment() {
+        return appointment;
+    }
+
+    public void setAppointment(Appointment appointment) {
+        this.appointment = appointment;
+    }
+
+    public TransactionStatus getTransactionStatus() {
+        return transactionStatus;
+    }
+
+    public void setTransactionStatus(TransactionStatus transactionStatus) {
+        this.transactionStatus = transactionStatus;
+    }
+
+    public long getId() {
+        return id;
+    }
+    
+    
 
 }

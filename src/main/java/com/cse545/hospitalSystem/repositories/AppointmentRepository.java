@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.cse545.hospitalSystem.enums.AppointmentStatus;
 import com.cse545.hospitalSystem.models.Appointment;
 import com.cse545.hospitalSystem.models.GenericStatus;
+import com.cse545.hospitalSystem.models.Transaction;
 import com.cse545.hospitalSystem.models.User;
 import com.cse545.hospitalSystem.models.ReqAndResp.AppointmentResponseDTO;
 
@@ -93,12 +94,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     @Query(value = "Update Appointment u SET u.status = 3 WHERE u.id = ?1")
 	public int completeAppointment(long appointmentId);
 
-	
-    
-    
-    
-    
-
+    public Transaction findByAppointment(Appointment appointment);
 
 
 }
