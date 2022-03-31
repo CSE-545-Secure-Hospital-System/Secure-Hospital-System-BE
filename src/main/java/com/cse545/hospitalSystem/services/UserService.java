@@ -236,6 +236,17 @@ public class UserService implements UserDetailsService {
 		List<User> users = userRepo.searchByRole(role);
 		return new ResponseEntity(users, HttpStatus.OK);
 	}
+	
+	public boolean setNewPassword(String email, String password) {
+	 // encrypting the password
+	    Optional<User> user = userRepo.findByEmail(email);
+	    if(!user.isPresent()) return false;
+        String encodedPassword = bCryptPasswordEncoder
+                .encode(password);     
+        user.get().setPassword(encodedPassword);
+        userRepo.save(user.get());
+        return true;
+	}
   
     
 }
