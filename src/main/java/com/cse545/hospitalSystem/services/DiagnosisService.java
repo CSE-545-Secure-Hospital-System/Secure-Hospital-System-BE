@@ -46,7 +46,7 @@ public class DiagnosisService {
 		try {
 		Diagnosis d = new Diagnosis();
 		Appointment ap = appointmentRepo.findById(diagnosisCreateRequestDTO.getAppointmentId()).get();
-		ap.setStatus(GenericStatus.COMPLETED);
+		ap.setStatus(GenericStatus.PENDING);
 		User doctor = userRepo.findById(diagnosisCreateRequestDTO.getDoctorId()).get();
 		User patient = userRepo.findById(diagnosisCreateRequestDTO.getPatientId()).get();
 		d.setDiagnosis_info(diagnosisCreateRequestDTO.getDiagnosis_info());

@@ -36,4 +36,5 @@ public class DiagnosisController {
 	public ResponseEntity<List<Diagnosis>> getDiagnosisByUserId(@RequestParam long patientId){
 		return diagnosisService.getAllDiagnosisById(patientId);
 	}
+	
 }

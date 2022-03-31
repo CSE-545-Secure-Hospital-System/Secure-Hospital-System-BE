@@ -146,6 +146,13 @@ public class AppointmentController {
     	return appointmentService.getAllAppointments();
     }
     
+	@CrossOrigin
+	@PostMapping("/completeAppointment")
+//	@PreAuthorize("hasRole('DOCTOR') hasRole('ADMIN')")
+	public ResponseEntity<String> completeAppointment(@RequestParam long appointmentId){
+		return appointmentService.completeAppointment(appointmentId);
+	}
+    
 //    //This method should only be allowed with role as patient
 //    @RequestMapping(value="/createGeneralAppointment", method = RequestMethod.POST)
 //    @PreAuthorize("hasRole('PATIENT')")
