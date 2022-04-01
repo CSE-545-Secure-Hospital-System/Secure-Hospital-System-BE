@@ -1,6 +1,7 @@
 package com.cse545.hospitalSystem.models;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,18 +16,23 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Table(name = "users")
 public class User implements UserDetails {
     
-    public User() {}
+    private Date dob;
+
+
+	public User() {}
     
     public User(String firstName,
             String lastName,
             String email,
             String password,
-            Set<Role> roles) {
+            Set<Role> roles,
+            Date dob) {
                  this.firstName = firstName;
                  this.lastName = lastName;
                  this.email = email;
                  this.password = password;
                  this.roles = roles;
+                 this.dob = dob;
                 }
 
 	@Id
@@ -209,6 +215,14 @@ public class User implements UserDetails {
 
 	public void setSessionId(String sessionId) {
 		this.sessionId = sessionId;
+	}
+
+	public Date getDob() {
+		return dob;
+	}
+
+	public void setDob(Date dob) {
+		this.dob = dob;
 	}
 
 	public String getEmail() {
