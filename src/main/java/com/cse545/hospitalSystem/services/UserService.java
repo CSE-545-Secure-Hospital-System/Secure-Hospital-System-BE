@@ -233,7 +233,11 @@ public class UserService implements UserDetailsService {
 	}
 
 	public ResponseEntity<List<User>> getAllUserByRole(String role) {
-		List<User> users = userRepo.searchByRole(role);
+		List<User> users;
+		if(role != null && role.length() > 0)
+			users = userRepo.searchByRole(role);
+		else
+			users = userRepo.findALLExecptAdmins();
 		return new ResponseEntity(users, HttpStatus.OK);
 	}
 	
