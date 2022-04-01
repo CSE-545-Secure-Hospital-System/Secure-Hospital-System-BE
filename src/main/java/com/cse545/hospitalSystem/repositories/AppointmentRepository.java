@@ -2,7 +2,6 @@ package com.cse545.hospitalSystem.repositories;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -94,6 +93,12 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     @Query(value = "Update Appointment u SET u.status = 3 WHERE u.id = ?1")
 	public int completeAppointment(long appointmentId);
 
-    public Optional<Appointment> findByAppointment(Long appointmentId);
+	
+    
+    
+    
+    
+
+
 
 }

@@ -135,7 +135,7 @@ public class AppointmentController {
     
     @CrossOrigin
     @PostMapping("/updateAppointment")
-    public ResponseEntity<?> updateAppointment(@RequestBody UpdateAppointmentRequestDTO updateAppointmentRequestDTO){
+    public ResponseEntity<String> updateAppointment(@RequestBody UpdateAppointmentRequestDTO updateAppointmentRequestDTO){
     	return appointmentService.updateAppointment(updateAppointmentRequestDTO);
     }
     

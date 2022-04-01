@@ -360,11 +360,9 @@ public class AppointmentService {
 		return doctorsSlots;
 	}
 
-	public ResponseEntity<?> updateAppointment(UpdateAppointmentRequestDTO updateAppointmentRequestDTO) {
+	public ResponseEntity<String> updateAppointment(UpdateAppointmentRequestDTO updateAppointmentRequestDTO) {
 		appointmentRepo.updateAppointment(updateAppointmentRequestDTO.getStaffId(), updateAppointmentRequestDTO.getDoctorId(), updateAppointmentRequestDTO.getStaffNote(), updateAppointmentRequestDTO.getAppointmentId());
-		Optional<Appointment> optional = appointmentRepo.findByAppointment(updateAppointmentRequestDTO.getAppointmentId());
-		
-		return new ResponseEntity<Appointment>(optional.get(),HttpStatus.OK);
+		return ResponseEntity.ok("Success!");
 	}
 
 	// not efficient
