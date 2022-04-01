@@ -3,6 +3,7 @@ package com.cse545.hospitalSystem.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +29,8 @@ public class ForgotPasswordController {
     @Autowired
     private UserService userService;
     
-    @GetMapping("/forgotpassword")
+    @CrossOrigin
+    @PostMapping("/forgotpassword")
     public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequestDTO forgotPasswordRequestDTO) {
         Integer otp = otpService.generateOTP(forgotPasswordRequestDTO.getEmail());
         emailService.sendOtpEmail(forgotPasswordRequestDTO.getEmail(), otp.toString());
@@ -36,6 +38,7 @@ public class ForgotPasswordController {
         return new ResponseEntity(otp, HttpStatus.OK);
     }
     
+    @CrossOrigin
     @PostMapping("/forgotpassword/confirmotp")
     public ResponseEntity<?> confirmOtpForForgotPassword(@RequestBody NewPasswordRequestDTO newPasswordRequesDTO) {
         //should be redirect instead of otp
