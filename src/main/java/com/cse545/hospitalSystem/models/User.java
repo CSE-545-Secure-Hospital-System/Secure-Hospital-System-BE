@@ -115,14 +115,14 @@ public class User implements UserDetails {
     @JoinColumn(name = "BILL_ID") })
     private Set<Bill> bills;
     
-//    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-//    @JoinTable(name = "USER_TRANSACTION",
-//    joinColumns = {
-//    @JoinColumn(name = "USER_ID")
-//    },
-//    inverseJoinColumns = {
-//    @JoinColumn(name = "TRANSACTION_ID") })
-//    private Set<Transaction> transactions;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "USER_TRANSACTION",
+    joinColumns = {
+    @JoinColumn(name = "USER_ID")
+    },
+    inverseJoinColumns = {
+    @JoinColumn(name = "TRANSACTION_ID") })
+    private Set<Transaction> transactions;
     
     
     public void addAppointment(Appointment a) {
