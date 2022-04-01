@@ -25,6 +25,14 @@ public class Transaction {
     @OneToOne(targetEntity = Bill.class)
     private Bill bill;
     
+    @JsonIgnore
+    @ManyToOne(targetEntity = User.class)
+    private User patient;
+    
+    @JsonIgnore
+    @ManyToOne(targetEntity = User.class)
+    private User staff;
+    
     @OneToOne(targetEntity = Appointment.class)
     private Appointment appointment;
     
