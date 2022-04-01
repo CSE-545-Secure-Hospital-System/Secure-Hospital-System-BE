@@ -35,17 +35,14 @@ public class Appointment {
     
     private AppointmentType appointmentType;
     
-    @JsonIgnore
     @ManyToOne(targetEntity = User.class)
     private User patient;
     
     @ManyToOne(targetEntity = User.class)
-    @JsonIgnore
     private User doctor;
     
     //staff who decides
     @ManyToOne(targetEntity = User.class)
-    @JsonIgnore
     private User staff;
     
     @Column(name = "startTime")
