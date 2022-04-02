@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "coverages", uniqueConstraints = @UniqueConstraint( columnNames = { "coverageName" }))
@@ -17,8 +18,10 @@ public class Coverage {
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
 	
+	@NotNull
 	private String coverageName;
 	
+	@NotNull
 	private String description;
 
 	public String getDescription() {

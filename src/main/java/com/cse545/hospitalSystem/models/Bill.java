@@ -25,6 +25,7 @@ public class Bill {
     
     @JsonIgnore
     @ManyToOne(targetEntity = User.class)
+    @NotNull
     private User patient;
     
     @ManyToOne(targetEntity = User.class)
