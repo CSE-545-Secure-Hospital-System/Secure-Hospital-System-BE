@@ -15,6 +15,7 @@ import com.cse545.hospitalSystem.models.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     
+//	@Query(value="SELECT * from users u where u.email = ?1", nativeQuery = true)
     Optional<User> findByEmail(String email);
 
     @Transactional

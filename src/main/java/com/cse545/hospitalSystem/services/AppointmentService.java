@@ -148,7 +148,12 @@ public class AppointmentService {
     
     // for doctor
     public List<AppointmentResponseDTO> getAllFutureAppointmentsForDoctor(User user) {
+    	try {
     	return ConvertAppointmentsToAppointmentsResponseDTOs(appointmentRepo.findAllFutureAppointmentsByuserIdForDoctor(user.getId(), DateUtils.truncate(new Date(), java.util.Calendar.DAY_OF_MONTH)));
+    	}catch(Exception e) {
+    		System.out.println(e.getMessage());
+    	}
+    	return null;
     }
     
     // for doctor	
@@ -394,8 +399,8 @@ public class AppointmentService {
 		if(completed > 0) {
 		    Appointment appointment = appointmentRepo.findById(appointmentId).get();
 		    Bill bill = billService.generateBill(appointment);
-		    Transaction transaction = transactionService.generateTransaction(bill, appointment);
-		    Bill savedBill = billService.getBillById(bill.getId());
+//		    Transaction transaction = transactionService.generateTransaction(bill, appointment);
+//		    Bill savedBill = billService.getBillById(bill.getId());
 		}
 		return ResponseEntity.ok("Success!");
 	}

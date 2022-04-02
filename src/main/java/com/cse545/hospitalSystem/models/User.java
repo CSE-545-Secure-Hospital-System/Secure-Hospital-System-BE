@@ -26,13 +26,16 @@ public class User implements UserDetails {
             String email,
             String password,
             Set<Role> roles,
-            Date dob) {
+            Date dob,
+            String phone
+            ) {
                  this.firstName = firstName;
                  this.lastName = lastName;
                  this.email = email;
                  this.password = password;
                  this.roles = roles;
                  this.dob = dob;
+                 this.phone = phone;
                 }
 
 	@Id
@@ -146,6 +149,14 @@ public class User implements UserDetails {
     @JoinColumn(name = "TRANSACTION_ID") })
     private Set<Transaction> transactions;
     
+    public void addBill(Bill b) {
+    	this.bills.add(b);
+    }
+    
+    public void addTransaction(Transaction t) {
+    	this.transactions.add(t);
+    }
+  
     
     public void addAppointment(Appointment a) {
     	appointments.add(a);
@@ -334,5 +345,24 @@ public class User implements UserDetails {
     public void setBills(Set<Bill> bills) {
         this.bills = bills;
     }
+
+	public Boolean getLocked() {
+		return locked;
+	}
+
+	public void setLocked(Boolean locked) {
+		this.locked = locked;
+	}
+
+	public Set<Transaction> getTransactions() {
+		return transactions;
+	}
+
+	public void setTransactions(Set<Transaction> transactions) {
+		this.transactions = transactions;
+	}
+    
+    
+	
 
 }

@@ -11,15 +11,31 @@ public class RegistrationRequest {
     private String password;
     private Set<String> roles;
     private Date dob;
+    private String phoneNumber;
     
-    public RegistrationRequest(String firstName, String lastName, String email, String password, Set<String> roles, Date dob) {
+    public RegistrationRequest(String firstName, String lastName, String email, String password, Set<String> roles, Date dob, String phoneNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.roles = roles;
+        this.phoneNumber = phoneNumber;
         this.dob = dob;
     }
+    
+    
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+
 
 	public String getFirstName() {
 		return firstName;

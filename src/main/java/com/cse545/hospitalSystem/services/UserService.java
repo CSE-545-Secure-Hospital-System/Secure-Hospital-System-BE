@@ -178,7 +178,6 @@ public class UserService implements UserDetailsService {
 		Optional<User> user = userRepo.findById(userId);
 		if(user.isPresent()) {
 			logger.info("getUserById API Call - Fetching the user - {}", user.get().getEmail());
-			user.get().setPassword(null);
 		}else {
 			throw new IllegalStateException("User does not exist");
 		}

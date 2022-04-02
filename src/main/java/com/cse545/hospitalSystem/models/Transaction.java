@@ -8,13 +8,14 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import com.cse545.hospitalSystem.enums.TransactionStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "transaction")
+@Table(name = "transaction", uniqueConstraints = @UniqueConstraint( columnNames = { "appointment_appointment_id" }))
 public class Transaction {
     
     @Id
@@ -65,6 +66,24 @@ public class Transaction {
     public long getId() {
         return id;
     }
+
+	public User getPatient() {
+		return patient;
+	}
+
+	public void setPatient(User patient) {
+		this.patient = patient;
+	}
+
+	public User getStaff() {
+		return staff;
+	}
+
+	public void setStaff(User staff) {
+		this.staff = staff;
+	}
+    
+    
     
     
 

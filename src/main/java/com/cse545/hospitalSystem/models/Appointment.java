@@ -58,9 +58,11 @@ public class Appointment {
     @Temporal(TemporalType.DATE)
     private Date date;
     
+    @JsonIgnore
     @OneToOne(targetEntity = Bill.class)
     private Bill bill;
     
+    @JsonIgnore
     @OneToOne(targetEntity = Transaction.class)
     private Transaction transaction;
 
@@ -181,5 +183,7 @@ public class Appointment {
     public void setTransaction(Transaction transaction) {
         this.transaction = transaction;
     }
+    
+    
 
 }

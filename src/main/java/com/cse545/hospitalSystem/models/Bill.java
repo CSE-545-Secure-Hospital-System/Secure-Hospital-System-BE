@@ -10,6 +10,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.cse545.hospitalSystem.enums.BillStatus;
+import com.cse545.hospitalSystem.enums.TransactionStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -37,14 +39,29 @@ public class Bill {
     @JsonIgnore
     private User staff;
     
-    @OneToOne(targetEntity = User.class)
+    @NotNull
+    @OneToOne(targetEntity = Appointment.class)
     private Appointment appointment;
     
     @Column(name = "billGeneratedTime")
     @NotNull
     private String billGeneratedTime;
+    
+    @NotNull
+    @Column
+    private BillStatus billStatus;
+    
+    
 
-    public Double getFee() {
+    public BillStatus getBillStatus() {
+		return billStatus;
+	}
+
+	public void setBillStatus(BillStatus billStatus) {
+		this.billStatus = billStatus;
+	}
+
+	public Double getFee() {
         return fee;
     }
 
@@ -87,7 +104,16 @@ public class Bill {
     public long getId() {
         return id;
     }
+
+	public Appointment getAppointment() {
+		return appointment;
+	}
+
+	public void setAppointment(Appointment appointment) {
+		this.appointment = appointment;
+	}
     
+	
     
 
 }
