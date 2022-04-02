@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -17,6 +18,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class LabResult {
 	
 	@Id
+	@NotBlank
     @Column(name = "labResult_id")
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
@@ -39,9 +41,11 @@ public class LabResult {
 	private LabResultStatus labResultStatus;
 	
 	@Column
+	@NotBlank
 	private String labStaffNotes;
 	
 	@Column
+	@NotBlank
 	private String result;
 	
     @ManyToOne(targetEntity = LabTest.class)

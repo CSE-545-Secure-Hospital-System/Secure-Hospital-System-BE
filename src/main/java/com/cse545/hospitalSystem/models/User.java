@@ -66,8 +66,6 @@ public class User implements UserDetails {
 	@Column
     private Boolean locked = false;
     
-    @Column
-    private Boolean enabled = false;
     
     @NotNull
     private Date dob;
@@ -109,6 +107,17 @@ public class User implements UserDetails {
     @JoinColumn(name = "APPOINTMENT_ID") })
     private Set<Appointment> appointments;
     
+    @Column(name = "account_non_locked")
+    private boolean accountNonLocked=true;
+    
+    @Column
+    private Boolean enabled = false;
+    
+    @Column(name = "failed_attempt")
+    private int failedAttempt=0;
+
+    @Column(name = "lock_time")
+    private Date lockTime;
     
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "USER_DIAGNOSIS",
@@ -118,6 +127,24 @@ public class User implements UserDetails {
     inverseJoinColumns = {
     @JoinColumn(name = "DIAGNOSIS_ID") })
     private Set<Diagnosis> diagnoses;
+    
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "USER_BILL",
+    joinColumns = {
+    @JoinColumn(name = "USER_ID")
+    },
+    inverseJoinColumns = {
+    @JoinColumn(name = "BILL_ID") })
+    private Set<Bill> bills;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "USER_TRANSACTION",
+    joinColumns = {
+    @JoinColumn(name = "USER_ID")
+    },
+    inverseJoinColumns = {
+    @JoinColumn(name = "TRANSACTION_ID") })
+    private Set<Transaction> transactions;
     
     
     public void addAppointment(Appointment a) {
@@ -152,8 +179,7 @@ public class User implements UserDetails {
 	public void setPolicies(Set<Insurance_Policies> policies) {
 		this.policies = policies;
 	}
-
-    @Override
+	
     public Collection<? extends GrantedAuthority> getAuthorities() {
     	Set<SimpleGrantedAuthority> authorities = new HashSet<>();
     	roles.forEach(role -> {
@@ -179,9 +205,9 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return !locked;
+        return accountNonLocked;
     }
-
+    
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
@@ -256,14 +282,6 @@ public class User implements UserDetails {
 		this.roles = roles;
 	}
 
-	public Boolean getLocked() {
-		return locked;
-	}
-
-	public void setLocked(Boolean locked) {
-		this.locked = locked;
-	}
-
 	public Boolean getEnabled() {
 		return enabled;
 	}
@@ -284,8 +302,37 @@ public class User implements UserDetails {
 		this.diagnoses = diagnoses;
 	}
     
+
+	public int getFailedAttempt() {
+        return failedAttempt;
+    }
+
+    public void setFailedAttempt(int failedAttempt) {
+        this.failedAttempt = failedAttempt;
+    }
+
+    public Date getLockTime() {
+        return lockTime;
+    }
+
+    public void setLockTime(Date lockTime) {
+        this.lockTime = lockTime;
+    }
+
+    public void setAccountNonLocked(boolean b) {
+        this.accountNonLocked = b;
+    } 
+
     public void addDiagnosis(Diagnosis diagnosis) {
     	this.diagnoses.add(diagnosis);
+    }
+    
+    public Set<Bill> getBills() {
+        return bills;
+    }
+
+    public void setBills(Set<Bill> bills) {
+        this.bills = bills;
     }
 
 }
