@@ -14,10 +14,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.cse545.hospitalSystem.services.UserService;
@@ -102,5 +99,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
     public JwtAuthenticationFilter authenticationTokenFilterBean() throws Exception {
         return new JwtAuthenticationFilter();
     }
+    
+    @Autowired
+    private CustomLoginFailureHandler loginFailureHandler;
+     
+    @Autowired
+    private CustomLoginSuccessHandler loginSuccessHandler;
 
 }

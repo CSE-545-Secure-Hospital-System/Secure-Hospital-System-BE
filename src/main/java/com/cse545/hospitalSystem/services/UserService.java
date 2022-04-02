@@ -2,11 +2,14 @@ package com.cse545.hospitalSystem.services;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+
+import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +41,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 @Service
+@Transactional
 public class UserService implements UserDetailsService {
+    
+    public static final int MAX_FAILED_ATTEMPTS = 3;
+    
+    private static final long LOCK_TIME_DURATION =  60 * 15 * 1000; // 15 minutes
     
     @Autowired
     private UserRepository userRepo;
@@ -116,6 +124,7 @@ public class UserService implements UserDetailsService {
         }
         User user = optionalUser.get();
         user.setEnabled(true);
+        user.setAccountNonLocked(true);
         userRepo.save(user);
         return;
     }
@@ -264,6 +273,39 @@ public class UserService implements UserDetailsService {
         userRepo.save(user.get());
         return true;
 	}
+	
+	public void increaseFailedAttempts(User user) {
+        int newFailAttempts = user.getFailedAttempt() + 1;
+        userRepo.updateFailedAttempts(newFailAttempts, user.getId());
+    }
+     
+    public void resetFailedAttempts(Long userId) {
+        userRepo.updateFailedAttempts(0, userId);
+    }
+     
+    public void lock(User user) {
+        user.setAccountNonLocked(false);
+        user.setLockTime(new Date());
+         
+        userRepo.save(user);
+    }
+     
+    public boolean unlockWhenTimeExpired(User user) {
+        long lockTimeInMillis = user.getLockTime().getTime();
+        long currentTimeInMillis = System.currentTimeMillis();
+         
+        if (lockTimeInMillis + LOCK_TIME_DURATION < currentTimeInMillis) {
+            user.setAccountNonLocked(true);
+            user.setLockTime(null);
+            user.setFailedAttempt(0);
+             
+            userRepo.save(user);
+             
+            return true;
+        }
+         
+        return false;
+    }
   
     
 }
