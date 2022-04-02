@@ -37,6 +37,7 @@ public class Appointment {
     
     @JsonIgnore
     @ManyToOne(targetEntity = User.class)
+    @NotNull
     private User patient;
     
     @ManyToOne(targetEntity = User.class)

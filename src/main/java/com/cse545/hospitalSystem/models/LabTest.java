@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
@@ -20,10 +21,13 @@ public class LabTest {
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 	
+	@Column
+	@NotNull
 	private String labTestName;
 	
 	private String labTestDescription;
 	
+	@NotNull
 	private Double labTestCost;
 
 	public LabTest( String labTestName, String labTestDescription, Double labTestCost) {

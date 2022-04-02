@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,7 +17,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Table(name = "users")
 public class User implements UserDetails {
     
-    private Date dob;
 
 
 	public User() {}
@@ -41,6 +41,7 @@ public class User implements UserDetails {
     private long id;
 
     @Column
+    @NotNull
     private String firstName;
     
     @Column
@@ -50,13 +51,16 @@ public class User implements UserDetails {
     private String sessionId;
 
     @Column
+    @NotNull
     private String email;
 
     @Column
+    @NotNull
     private String phone;
     
     //TODO handle password encryption and constraints later
     @Column
+    @NotNull
     private String password;
     
 	@Column
@@ -64,6 +68,9 @@ public class User implements UserDetails {
     
     @Column
     private Boolean enabled = false;
+    
+    @NotNull
+    private Date dob;
     
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "USER_ROLES",
