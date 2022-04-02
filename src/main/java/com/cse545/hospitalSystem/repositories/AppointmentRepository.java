@@ -5,12 +5,15 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.cse545.hospitalSystem.enums.AppointmentStatus;
 import com.cse545.hospitalSystem.models.Appointment;
 import com.cse545.hospitalSystem.models.GenericStatus;
+import com.cse545.hospitalSystem.models.Transaction;
 import com.cse545.hospitalSystem.models.User;
 import com.cse545.hospitalSystem.models.ReqAndResp.AppointmentResponseDTO;
 
@@ -80,15 +83,16 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     public List<Appointment> findAllFutureAppointmentsForHospitalStaff(Date date);
     
     // update Appointment
-    @Query(value = "Update Appointment u SET u.doctor_user_id = ?2, u.staff_user_id = ?1, u.staff_note = ?3 WHERE u.appointment_id = ?4", nativeQuery = true)
+    @Transactional
+    @Modifying
+    @Query(value = "Update Appointment u SET u.doctor_user_id = ?2, u.status = 1, u.staff_user_id = ?1, u.staff_note = ?3 WHERE u.appointment_id = ?4", nativeQuery = true)
     public int updateAppointment(long hospitalStaffId, long doctorId, String staffNote, long appointmentId);
 
-	
-    
-    
-    
-    
-
+    // for completing the appointment by doctor
+    @Transactional
+    @Modifying
+    @Query(value = "Update Appointment u SET u.status = 3 WHERE u.id = ?1")
+	public int completeAppointment(long appointmentId);
 
 
 }

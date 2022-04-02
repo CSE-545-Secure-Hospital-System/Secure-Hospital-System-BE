@@ -47,6 +47,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
             "/swagger-ui/**",
             "/api/auth/**",
             "/api/auth/login",
+            "/api/auth/forgotpassword",
             "/api/auth/register",
             "/api/auth/confirm",
             "/api/admin/getAllUsers",
@@ -56,7 +57,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
             "/api/logs/**",
             "/api/lab/**",
             "/api/appointment/**",
-            "/api/diagnosis/**"
+            "/api/diagnosis/**",
+            "/api/labResults/**",
+            "/api/labResults/updateLabReportByPatientId"
             // other public endpoints of your API may be appended to this array
     };
 

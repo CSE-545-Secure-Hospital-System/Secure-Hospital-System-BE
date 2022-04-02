@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -23,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class LabResult {
 	
 	@Id
+	@NotBlank
     @Column(name = "labResult_id")
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
@@ -39,23 +41,21 @@ public class LabResult {
     @ManyToOne(targetEntity = User.class)
 	private User doctor;
 	
-	@JsonIgnore
-    @ManyToOne(targetEntity = Diagnosis.class)
-	private Diagnosis diagnosis;
+//	@JsonIgnore
+//    @ManyToOne(targetEntity = Diagnosis.class)
+//	private Diagnosis diagnosis;
 	
 	@Column
 	private LabResultStatus labResultStatus;
 	
 	@Column
-	private double cost;
-	
-	@Column
+	@NotBlank
 	private String labStaffNotes;
 	
 	@Column
+	@NotBlank
 	private String result;
 	
-	@JsonIgnore
     @ManyToOne(targetEntity = LabTest.class)
 	private LabTest labtests;
 
@@ -91,13 +91,13 @@ public class LabResult {
 		this.doctor = doctor;
 	}
 
-	public Diagnosis getDiagnosis() {
-		return diagnosis;
-	}
-
-	public void setDiagnosis(Diagnosis diagnosis) {
-		this.diagnosis = diagnosis;
-	}
+//	public Diagnosis getDiagnosis() {
+//		return diagnosis;
+//	}
+//
+//	public void setDiagnosis(Diagnosis diagnosis) {
+//		this.diagnosis = diagnosis;
+//	}
 
 	public LabResultStatus getLabResultStatus() {
 		return labResultStatus;
@@ -105,14 +105,6 @@ public class LabResult {
 
 	public void setLabResultStatus(LabResultStatus labResultStatus) {
 		this.labResultStatus = labResultStatus;
-	}
-
-	public double getCost() {
-		return cost;
-	}
-
-	public void setCost(double cost) {
-		this.cost = cost;
 	}
 
 	public String getLabStaffNotes() {

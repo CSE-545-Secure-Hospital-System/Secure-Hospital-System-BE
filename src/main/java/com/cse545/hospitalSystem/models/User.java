@@ -16,18 +16,23 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Table(name = "users")
 public class User implements UserDetails {
     
-    public User() {}
+    private Date dob;
+
+
+	public User() {}
     
     public User(String firstName,
             String lastName,
             String email,
             String password,
-            Set<Role> roles) {
+            Set<Role> roles,
+            Date dob) {
                  this.firstName = firstName;
                  this.lastName = lastName;
                  this.email = email;
                  this.password = password;
                  this.roles = roles;
+                 this.dob = dob;
                 }
 
 	@Id
@@ -106,6 +111,34 @@ public class User implements UserDetails {
 
     @Column(name = "lock_time")
     private Date lockTime;
+    
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "USER_DIAGNOSIS",
+    joinColumns = {
+    @JoinColumn(name = "USER_ID")
+    },
+    inverseJoinColumns = {
+    @JoinColumn(name = "DIAGNOSIS_ID") })
+    private Set<Diagnosis> diagnoses;
+    
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "USER_BILL",
+    joinColumns = {
+    @JoinColumn(name = "USER_ID")
+    },
+    inverseJoinColumns = {
+    @JoinColumn(name = "BILL_ID") })
+    private Set<Bill> bills;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "USER_TRANSACTION",
+    joinColumns = {
+    @JoinColumn(name = "USER_ID")
+    },
+    inverseJoinColumns = {
+    @JoinColumn(name = "TRANSACTION_ID") })
+    private Set<Transaction> transactions;
+    
     
     public void addAppointment(Appointment a) {
     	appointments.add(a);
@@ -210,6 +243,14 @@ public class User implements UserDetails {
 		this.sessionId = sessionId;
 	}
 
+	public Date getDob() {
+		return dob;
+	}
+
+	public void setDob(Date dob) {
+		this.dob = dob;
+	}
+
 	public String getEmail() {
 		return email;
 	}
@@ -245,7 +286,16 @@ public class User implements UserDetails {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	public Set<Diagnosis> getDiagnoses() {
+		return diagnoses;
+	}
+
+	public void setDiagnoses(Set<Diagnosis> diagnoses) {
+		this.diagnoses = diagnoses;
+	}
     
+
 	public int getFailedAttempt() {
         return failedAttempt;
     }
@@ -265,5 +315,17 @@ public class User implements UserDetails {
     public void setAccountNonLocked(boolean b) {
         this.accountNonLocked = b;
     } 
+
+    public void addDiagnosis(Diagnosis diagnosis) {
+    	this.diagnoses.add(diagnosis);
+    }
+    
+    public Set<Bill> getBills() {
+        return bills;
+    }
+
+    public void setBills(Set<Bill> bills) {
+        this.bills = bills;
+    }
 
 }

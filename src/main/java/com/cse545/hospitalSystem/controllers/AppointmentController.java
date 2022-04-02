@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -77,7 +78,7 @@ public class AppointmentController {
     	UserDetails userDetails = (UserDetails)authentication.getPrincipal();
         User user = userService.getUseEntityrByEmailId(userDetails.getUsername());
         List<?> appointments = null;
-        if(roleService.findUserRole(user, RoleMapping.HOSPITAL_STAFF)) {
+        if(roleService.findUserRole(user, RoleMapping.HOSPITAL_STAFF) || roleService.findUserRole(user, RoleMapping.ADMIN) ) {
             //hospital staff
             appointments = appointmentService.getAllFutureAppointments(user);
         } else if(roleService.findUserRole(user, RoleMapping.DOCTOR)) {
@@ -100,7 +101,7 @@ public class AppointmentController {
     	UserDetails userDetails = (UserDetails)authentication.getPrincipal();
         User user = userService.getUseEntityrByEmailId(userDetails.getUsername());
         List<?> appointments = null;
-        if (roleService.findUserRole(user, RoleMapping.HOSPITAL_STAFF)) {
+        if (roleService.findUserRole(user, RoleMapping.HOSPITAL_STAFF) || roleService.findUserRole(user, RoleMapping.ADMIN)) {
         	appointments = appointmentService.getAllPastAppointments(user);
         }else 
         if(roleService.findUserRole(user, RoleMapping.DOCTOR)) {
@@ -137,6 +138,20 @@ public class AppointmentController {
     public ResponseEntity<String> updateAppointment(@RequestBody UpdateAppointmentRequestDTO updateAppointmentRequestDTO){
     	return appointmentService.updateAppointment(updateAppointmentRequestDTO);
     }
+    
+    
+    @CrossOrigin
+    @GetMapping("/getAllAppointments")
+    public ResponseEntity<List<Appointment>> getAllAppointments(){
+    	return appointmentService.getAllAppointments();
+    }
+    
+	@CrossOrigin
+	@PostMapping("/completeAppointment")
+//	@PreAuthorize("hasRole('DOCTOR') hasRole('ADMIN')")
+	public ResponseEntity<String> completeAppointment(@RequestParam long appointmentId){
+		return appointmentService.completeAppointment(appointmentId);
+	}
     
 //    //This method should only be allowed with role as patient
 //    @RequestMapping(value="/createGeneralAppointment", method = RequestMethod.POST)

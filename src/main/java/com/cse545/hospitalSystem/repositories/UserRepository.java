@@ -24,11 +24,20 @@ public interface UserRepository extends JpaRepository<User, Long> {
     int enableUser(String email);
     
     
-    @Query("SELECT u FROM User u JOIN u.roles r WHERE u.lastName LIKE %?1% OR u.firstName LIKE %?1% OR u.email LIKE %?1% or u.id LIKE %?1% OR r.role LIKE %?1%")
-    List<User> searchByTerm(String searchTerm);
+//    @Query("SELECT u FROM User u JOIN u.roles r WHERE u.lastName LIKE %?1% OR u.firstName LIKE %?1% OR u.email LIKE %?1% or u.id LIKE %?1% OR r.role LIKE %?1%")
+//    List<User> searchByTerm(String searchTerm);
     
-    @Query("SELECT u FROM User u JOIN u.roles r WHERE r.role = ?1 and u.enabled = 1")
+    @Query("SELECT u FROM User u JOIN u.roles r WHERE r.role = ?1 and r.role != 'ADMIN'")
     List<User> searchByRole(String role);
+
+    @Query("SELECT u FROM User u JOIN u.roles r WHERE r.role != 'ADMIN'")
+	List<User> findALLExecptAdmins();
+
+    @Query("SELECT u FROM User u JOIN u.roles r WHERE (u.lastName LIKE %?2% OR u.firstName LIKE %?2% OR u.email LIKE %?2% or u.id LIKE %?2% OR r.role LIKE %?2%) AND r.role = ?1 AND r.role != 'ADMIN'")
+	List<User> searchByRoleAndTerm(String role, String searchTerm);
+    
+    @Query("SELECT u FROM User u JOIN u.roles r WHERE (u.lastName LIKE %?1% OR u.firstName LIKE %?1% OR u.email LIKE %?1% or u.id LIKE %?1% OR r.role LIKE %?1%) AND r.role != 'ADMIN'")
+	List<User> searchByRoleAdminAndTerm(String searchTerm);
     
 //    @Query("SELECT u.firstName, u.lastName, u.email,  FROM User u JOIN u.appointments a WHERE u.id LIKE %?1% OR u.firstName LIKE %?1% OR u.email LIKE %?1% or u.id LIKE %?1% OR r.role LIKE %?1%")
 //	public void searchByTermWithAppointments(long user_id, String searchTerm);
