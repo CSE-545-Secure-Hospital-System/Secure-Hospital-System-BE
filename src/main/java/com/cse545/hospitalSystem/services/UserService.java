@@ -128,21 +128,41 @@ public class UserService implements UserDetailsService {
     	return user;
     }
 
-	public ResponseEntity<Set<User>> getAllUser(String searchTerm) {
-		Set<User> users = new HashSet<>();
-		if((searchTerm == null) || (searchTerm != null && searchTerm.length() == 0)) {
-			List<User> allUsers = userRepo.findAll();
-			for (User x : allUsers)
-	            users.add(x);
-			return ResponseEntity.ok(users);
+//	public ResponseEntity<Set<User>> getAllUser(String searchTerm) {
+//		Set<User> users = new HashSet<>();
+//		if((searchTerm == null) || (searchTerm != null && searchTerm.length() == 0)) {
+//			List<User> allUsers = userRepo.findAll();
+//			for (User x : allUsers)
+//	            users.add(x);
+//			return ResponseEntity.ok(users);
+//		}
+//		String[] terms = searchTerm.split(" ");
+//		for(int i = 0; i < terms.length; i++) {
+//			userRepo.searchByTerm(terms[i]).forEach((user) -> {
+//				users.add(user);
+//			});
+//		}
+//		return ResponseEntity.ok(users);
+//	}
+	
+	public ResponseEntity<List<User>> getAllUserByRole(String role, String searchTerm) {
+		List<User> users;
+		if(role != null && role.length() > 0) {
+			if((searchTerm == null) || (searchTerm != null && searchTerm.length() == 0)) {
+				users = userRepo.searchByRole(role);
+			}else {
+				users = userRepo.searchByRoleAndTerm(role, searchTerm);
+			}
+		}else {
+			if((searchTerm == null) || (searchTerm != null && searchTerm.length() == 0)) {
+				users = userRepo.findALLExecptAdmins();
+			}else {
+				users = userRepo.searchByRoleAdminAndTerm( searchTerm);
+			}
+			
 		}
-		String[] terms = searchTerm.split(" ");
-		for(int i = 0; i < terms.length; i++) {
-			userRepo.searchByTerm(terms[i]).forEach((user) -> {
-				users.add(user);
-			});
-		}
-		return ResponseEntity.ok(users);
+			
+		return new ResponseEntity(users, HttpStatus.OK);
 	}
 
 	public User getUserById(Long userId) {
@@ -232,14 +252,7 @@ public class UserService implements UserDetailsService {
 		return null;
 	}
 
-	public ResponseEntity<List<User>> getAllUserByRole(String role) {
-		List<User> users;
-		if(role != null && role.length() > 0)
-			users = userRepo.searchByRole(role);
-		else
-			users = userRepo.findALLExecptAdmins();
-		return new ResponseEntity(users, HttpStatus.OK);
-	}
+
 	
 	public boolean setNewPassword(String email, String password) {
 	 // encrypting the password

@@ -26,8 +26,12 @@ public class LabTestController {
 	@CrossOrigin
 	@PostMapping("/createLabTest")
 	private ResponseEntity<String> createLabTest(@RequestBody LabTest labTest){
-		labTestRepo.save(labTest);
-		return ResponseEntity.ok("Sucess");
+		try {
+			labTestRepo.save(labTest);
+		} catch(Exception e) {
+			return ResponseEntity.ok("Cannot save! Duplicate testName is not allowed");
+		}
+		return ResponseEntity.ok("Lab Test successfully recorded!");
 	}
 	
 	

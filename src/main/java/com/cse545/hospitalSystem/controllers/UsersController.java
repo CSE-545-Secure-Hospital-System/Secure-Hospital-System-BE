@@ -73,16 +73,16 @@ public class UsersController{
 		return userService.activateAccount(emailId);
 	}
 	
-	@CrossOrigin
-	@RequestMapping(value="/getAllUsersBysearchTerm", method = RequestMethod.GET)
-	public ResponseEntity<Set<User>> getAllUsers(@RequestParam(required = false) String searchTerm){
-		return userService.getAllUser(searchTerm);
-	}
-	
+//	@CrossOrigin
+//	@RequestMapping(value="/getAllUsersBysearchTerm", method = RequestMethod.GET)
+//	public ResponseEntity<Set<User>> getAllUsers(@RequestParam(required = false) String searchTerm){
+//		return userService.getAllUser(searchTerm);
+//	}
+//	
 	@CrossOrigin
 	@RequestMapping(value="/getAllUsersByRole", method = RequestMethod.GET)
-	public ResponseEntity<List<User>> getAllUsersByRole(@RequestParam(required = false) String role){
-		return userService.getAllUserByRole(role);
+	public ResponseEntity<List<User>> getAllUsersByRole(@RequestParam(required = false) String role, @RequestParam(required = false) String searchTerm){
+		return userService.getAllUserByRole(role, searchTerm);
 	}
 	
 	@CrossOrigin
