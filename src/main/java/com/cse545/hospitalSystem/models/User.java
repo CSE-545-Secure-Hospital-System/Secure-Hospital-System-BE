@@ -112,6 +112,24 @@ public class User implements UserDetails {
     @JoinColumn(name = "DIAGNOSIS_ID") })
     private Set<Diagnosis> diagnoses;
     
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "USER_BILL",
+    joinColumns = {
+    @JoinColumn(name = "USER_ID")
+    },
+    inverseJoinColumns = {
+    @JoinColumn(name = "BILL_ID") })
+    private Set<Bill> bills;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "USER_TRANSACTION",
+    joinColumns = {
+    @JoinColumn(name = "USER_ID")
+    },
+    inverseJoinColumns = {
+    @JoinColumn(name = "TRANSACTION_ID") })
+    private Set<Transaction> transactions;
+    
     
     public void addAppointment(Appointment a) {
     	appointments.add(a);
@@ -279,6 +297,14 @@ public class User implements UserDetails {
     
     public void addDiagnosis(Diagnosis diagnosis) {
     	this.diagnoses.add(diagnosis);
+    }
+    
+    public Set<Bill> getBills() {
+        return bills;
+    }
+
+    public void setBills(Set<Bill> bills) {
+        this.bills = bills;
     }
 
 }
