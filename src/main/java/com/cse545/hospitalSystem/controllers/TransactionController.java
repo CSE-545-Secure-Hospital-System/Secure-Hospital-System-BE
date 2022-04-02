@@ -1,6 +1,7 @@
 package com.cse545.hospitalSystem.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,9 +34,16 @@ public class TransactionController {
         return new ResponseEntity<List<Transaction>>(transactions, HttpStatus.OK);
     }
     
-    @RequestMapping(value="/updateTransactionStatus/{transactionId}", method = RequestMethod.GET)
-    public ResponseEntity<List<Transaction>> updateTransactionStatus(@RequestParam(name = "transactionId") Long transactionId) {
-        transactionService.updateTransactionStatus(transactionId, TransactionStatus.COMPLETED);
+    @RequestMapping(value="/getTransaction/{transactionId}", method = RequestMethod.GET)
+    public ResponseEntity<Transaction> getTransactions(@RequestParam(name = "transactionId") Long transactionId) {
+        Optional<Transaction> optional = transactionRepo.findById(transactionId);
+        Transaction transaction = optional.get();
+        return new ResponseEntity<Transaction>(transaction, HttpStatus.OK);
+    }
+    
+    @RequestMapping(value="/updateTransactionStatus/{transactionId}", method = RequestMethod.POST)
+    public ResponseEntity<List<Transaction>> updateTransactionStatus(@RequestParam(name = "transactionId") Long transactionId, TransactionStatus status) {
+        transactionService.updateTransactionStatus(transactionId, status);
         List<Transaction> transactions = transactionRepo.findAll();
         return new ResponseEntity<List<Transaction>>(transactions, HttpStatus.OK);
     }

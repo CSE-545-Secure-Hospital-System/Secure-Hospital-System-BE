@@ -114,7 +114,7 @@ public class User implements UserDetails {
     inverseJoinColumns = {
     @JoinColumn(name = "BILL_ID") })
     private Set<Bill> bills;
-    
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "USER_TRANSACTION",
     joinColumns = {
@@ -283,6 +283,14 @@ public class User implements UserDetails {
     
     public void addDiagnosis(Diagnosis diagnosis) {
     	this.diagnoses.add(diagnosis);
+    }
+    
+    public Set<Bill> getBills() {
+        return bills;
+    }
+
+    public void setBills(Set<Bill> bills) {
+        this.bills = bills;
     }
 
 }

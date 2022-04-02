@@ -43,4 +43,8 @@ public class BillService {
         
     }
 
+    public Bill getBillById(long id) {
+        return billRepo.findById(id).get();
+    }
+
 }

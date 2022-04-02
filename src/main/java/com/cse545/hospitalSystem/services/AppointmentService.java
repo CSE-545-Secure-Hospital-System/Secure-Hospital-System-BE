@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.transaction.Transactional;
+
 import org.apache.commons.lang3.time.DateUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +28,10 @@ import org.springframework.stereotype.Service;
 import com.cse545.hospitalSystem.enums.AppointmentType;
 import com.cse545.hospitalSystem.enums.RoleMapping;
 import com.cse545.hospitalSystem.models.Appointment;
+import com.cse545.hospitalSystem.models.Bill;
 import com.cse545.hospitalSystem.models.Diagnosis;
 import com.cse545.hospitalSystem.models.GenericStatus;
+import com.cse545.hospitalSystem.models.Transaction;
 import com.cse545.hospitalSystem.models.User;
 import com.cse545.hospitalSystem.models.ReqAndResp.AppointmentRequestDTO;
 import com.cse545.hospitalSystem.models.ReqAndResp.AppointmentResponseDTO;
@@ -44,6 +48,12 @@ public class AppointmentService {
     
     @Autowired
     private UserRepository userRepo;
+    
+    @Autowired
+    private TransactionService transactionService;
+    
+    @Autowired
+    private BillService billService;
     
     public List<String> create30minSlots(String date, AppointmentType type){
     	int interval = 30; //minutes interval
@@ -378,8 +388,15 @@ public class AppointmentService {
 		return resdoctors;
 	}
 
+	@Transactional
 	public ResponseEntity<String> completeAppointment(long appointmentId) {
-		appointmentRepo.completeAppointment(appointmentId);
+		int completed = appointmentRepo.completeAppointment(appointmentId);
+		if(completed > 0) {
+		    Appointment appointment = appointmentRepo.findById(appointmentId).get();
+		    Bill bill = billService.generateBill(appointment);
+		    Transaction transaction = transactionService.generateTransaction(bill, appointment);
+		    Bill savedBill = billService.getBillById(bill.getId());
+		}
 		return ResponseEntity.ok("Success!");
 	}
 

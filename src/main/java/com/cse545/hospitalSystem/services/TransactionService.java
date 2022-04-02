@@ -25,13 +25,10 @@ public class TransactionService {
         Transaction transaction = new Transaction();
         transaction.setBill(bill);
         transaction.setAppointment(appointment);
-        transaction.setTransactionStatus(TransactionStatus.IN_PROGRESS);
+        transaction.setTransactionStatus(TransactionStatus.PENDING);
         return transactionRepo.save(transaction);
     }
     
-    public Transaction getTransaction(Appointment appointment) {
-        return appointmentRepo.findByAppointment(appointment);
-    }
     
     public Transaction updateTransactionStatusByAppointment(Appointment appointment, TransactionStatus status) {
         Transaction transaction = appointment.getTransaction();
@@ -45,5 +42,6 @@ public class TransactionService {
         optional.get().setTransactionStatus(status);
         return transactionRepo.save(optional.get());
     }
+
 
 }
