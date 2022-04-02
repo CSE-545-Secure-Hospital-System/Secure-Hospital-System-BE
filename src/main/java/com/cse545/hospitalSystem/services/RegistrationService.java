@@ -64,7 +64,7 @@ public class RegistrationService {
         
         // keep in DB
         String token = userService.signUpUser(new User(request.getFirstName(), request.getLastName(),
-                request.getEmail(), request.getPassword(), roles));
+                request.getEmail(), request.getPassword(), roles, request.getDob()));
         
         String link = HospitalSystemConstants.URL + token;
         

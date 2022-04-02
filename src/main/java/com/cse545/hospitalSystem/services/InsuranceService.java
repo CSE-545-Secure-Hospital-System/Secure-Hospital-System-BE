@@ -16,9 +16,13 @@ import com.cse545.hospitalSystem.config.LoggerConfig;
 import com.cse545.hospitalSystem.enums.PolicyTypes;
 import com.cse545.hospitalSystem.models.Coverage;
 import com.cse545.hospitalSystem.models.Insurance_Policies;
+import com.cse545.hospitalSystem.models.User;
 import com.cse545.hospitalSystem.models.ReqAndResp.Policy;
 import com.cse545.hospitalSystem.repositories.CoveragesRepository;
-import com.cse545.hospitalSystem.repositories.InsuranacePoliciesRepo;import net.bytebuddy.implementation.bind.annotation.Super.Instantiation;
+import com.cse545.hospitalSystem.repositories.InsuranacePoliciesRepo;
+import com.cse545.hospitalSystem.repositories.UserRepository;
+
+import net.bytebuddy.implementation.bind.annotation.Super.Instantiation;
 
 @Service
 public class InsuranceService {
@@ -28,6 +32,12 @@ public class InsuranceService {
 	
 	@Autowired
 	private CoveragesRepository coveragesRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
+	private InsuranacePoliciesRepo insuranacePoliciesRepo;
 	
 	
 	public static org.slf4j.Logger logger = LoggerFactory.getLogger(LoggerConfig.class);
@@ -68,6 +78,19 @@ public class InsuranceService {
 	public ResponseEntity<List<Insurance_Policies>> getAllPolicies() {
 		List<Insurance_Policies> policies = insurancePoliciesRepo.findAll();
 		return new ResponseEntity<List<Insurance_Policies>>(policies, HttpStatus.OK);
+	}
+
+	public ResponseEntity<String> addPolicyToUser(long patientId, long policyId) {
+		User patient = userRepository.findById(patientId).get();
+		Insurance_Policies policy = insuranacePoliciesRepo.findById(policyId).get();
+		for (Insurance_Policies p : patient.getPolicies()) {
+			if(policy.getId() == p.getId()) {
+				return ResponseEntity.ok("Already this policy is Taken!");
+			}
+		}
+		patient.addPolicy(policy);
+		userRepository.save(patient);
+		return ResponseEntity.ok("Congratuation Policy is taken!");
 	}
 
 

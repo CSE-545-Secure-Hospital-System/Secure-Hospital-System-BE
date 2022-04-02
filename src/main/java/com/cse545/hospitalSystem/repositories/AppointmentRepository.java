@@ -85,7 +85,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     // update Appointment
     @Transactional
     @Modifying
-    @Query(value = "Update Appointment u SET u.doctor_user_id = ?2, u.staff_user_id = ?1, u.staff_note = ?3 WHERE u.appointment_id = ?4", nativeQuery = true)
+    @Query(value = "Update Appointment u SET u.doctor_user_id = ?2, u.status = 1, u.staff_user_id = ?1, u.staff_note = ?3 WHERE u.appointment_id = ?4", nativeQuery = true)
     public int updateAppointment(long hospitalStaffId, long doctorId, String staffNote, long appointmentId);
 
     // for completing the appointment by doctor
