@@ -82,8 +82,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
         .and()
         .exceptionHandling().authenticationEntryPoint(unauthorizedEntryPoint).and()
         .sessionManagement()
-        .invalidSessionUrl("/login")
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+        .invalidSessionUrl("/login");
         
         http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
     }
