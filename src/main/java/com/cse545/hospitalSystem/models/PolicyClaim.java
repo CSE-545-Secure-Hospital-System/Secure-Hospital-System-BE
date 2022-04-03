@@ -5,7 +5,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.cse545.hospitalSystem.enums.TransactionStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 
@@ -19,11 +25,18 @@ public class PolicyClaim {
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 	
-	private Long policy_id;
+	private Long policyId;
 	
-	private int amountRequired;
+	private Long PatientId;
 	
-	private GenericStatus Status;
+	private Long appointmentId;
+	
+	private Double amountRequired;
+	
+	private TransactionStatus Status;
+
+	public PolicyClaim() {
+	}
 
 	public Long getId() {
 		return id;
@@ -33,42 +46,56 @@ public class PolicyClaim {
 		this.id = id;
 	}
 
-	public Long getPolicy_id() {
-		return policy_id;
+	public Long getPolicyId() {
+		return policyId;
 	}
 
-	public void setPolicy_id(Long policy_id) {
-		this.policy_id = policy_id;
+	public void setPolicyId(Long policyId) {
+		this.policyId = policyId;
 	}
 
-	public int getAmountRequired() {
+	public Long getPatientId() {
+		return PatientId;
+	}
+
+	public void setPatientId(Long patientId) {
+		PatientId = patientId;
+	}
+
+	public Long getAppointmentId() {
+		return appointmentId;
+	}
+
+	public void setAppointmentId(Long appointmentId) {
+		this.appointmentId = appointmentId;
+	}
+
+	public Double getAmountRequired() {
 		return amountRequired;
 	}
 
-	public void setAmountRequired(int amountRequired) {
+	public void setAmountRequired(Double amountRequired) {
 		this.amountRequired = amountRequired;
 	}
 
-	public GenericStatus getStatus() {
+	public TransactionStatus getStatus() {
 		return Status;
 	}
 
-	public void setStatus(GenericStatus status) {
+	public void setStatus(TransactionStatus status) {
 		Status = status;
 	}
 
-	public PolicyClaim(Long policy_id, int amountRequired, GenericStatus status) {
+	public PolicyClaim(Long policyId, Long patientId, Long appointmentId, Double amountRequired,
+			TransactionStatus status) {
 		super();
-		this.policy_id = policy_id;
+		this.policyId = policyId;
+		PatientId = patientId;
+		this.appointmentId = appointmentId;
 		this.amountRequired = amountRequired;
 		Status = status;
 	}
 
-	public PolicyClaim() {
-	}
-
-	
-	
 	
 	
 }

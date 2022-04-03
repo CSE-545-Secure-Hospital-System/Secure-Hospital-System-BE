@@ -4,6 +4,9 @@ public enum GenericStatus {
     REQUESTED,
     APPROVED,
     PENDING,
+    DIAGNOSIED,
+    CLAIM_RAISED,
+    PAYMENT_AUTHORIZED,
     COMPLETED,
     CANCELED
 }

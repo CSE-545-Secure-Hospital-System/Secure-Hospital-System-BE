@@ -59,7 +59,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
             "/api/appointment/**",
             "/api/diagnosis/**",
             "/api/labResults/**",
-            "/api/labResults/updateLabReportByPatientId"
+            "/api/transaction/createTransaction",
+            "/api/labResults/updateLabReportByPatientId",
+            "/api/claims/**"
             // other public endpoints of your API may be appended to this array
     };
 

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.cse545.hospitalSystem.enums.TransactionStatus;
 import com.cse545.hospitalSystem.models.Appointment;
 import com.cse545.hospitalSystem.models.Bill;
+import com.cse545.hospitalSystem.models.GenericStatus;
 import com.cse545.hospitalSystem.models.Transaction;
 import com.cse545.hospitalSystem.models.User;
 import com.cse545.hospitalSystem.models.ReqAndResp.TransactionCreateUpdateRequest;
@@ -58,7 +59,7 @@ public class TransactionService {
 	public ResponseEntity<String> createTransaction(TransactionCreateUpdateRequest transactionCreateUpdateRequest) {
 		if(transactionCreateUpdateRequest.getAppointmentId()!=null) {
 			Transaction t1 = transactionRepo.findByAppointmentById(transactionCreateUpdateRequest.getAppointmentId());
-			if(t1!=null && t1.getTransactionStatus().equals(TransactionStatus.APPROVED)) {
+			if(t1!=null) {
 				return ResponseEntity.ok("Bill paid already!");
 			}else {
 				try {
@@ -67,12 +68,14 @@ public class TransactionService {
 				User patient = userRepository.findById(transactionCreateUpdateRequest.getPatientId()).get();
 				Bill b = billRepository.findByAppointmentId(transactionCreateUpdateRequest.getAppointmentId()).get();
 				t2.setAppointment(a);
+				t2.setTransactionStatus(TransactionStatus.PENDING);
 				t2.setBill(b);
 				t2.setPatient(patient);
 				transactionRepo.save(t2);
 				patient.addTransaction(t2);
 				userRepository.save(patient);
 				a.setTransaction(t2);
+				a.setStatus(GenericStatus.PAYMENT_AUTHORIZED);
 				appointmentRepo.save(a);
 				} catch (Exception e) {
 					return ResponseEntity.ok("Some error has occured!");

@@ -23,6 +23,7 @@ public class Transaction {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
     
+    @JsonIgnore
     @OneToOne(targetEntity = Bill.class)
     private Bill bill;
     
@@ -34,6 +35,7 @@ public class Transaction {
     @ManyToOne(targetEntity = User.class)
     private User staff;
     
+    @JsonIgnore
     @OneToOne(targetEntity = Appointment.class)
     private Appointment appointment;
     

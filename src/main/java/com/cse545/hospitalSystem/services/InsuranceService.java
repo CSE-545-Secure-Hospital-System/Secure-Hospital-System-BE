@@ -93,5 +93,10 @@ public class InsuranceService {
 		return ResponseEntity.ok("Congratuation Policy is taken!");
 	}
 
+	public ResponseEntity<Set<Insurance_Policies>> getAllPoliciesByuserId(Long patientId) {
+		User patient = userRepository.findById(patientId).get();
+		return ResponseEntity.ok(patient.getPolicies());
+	}
+
 
 }

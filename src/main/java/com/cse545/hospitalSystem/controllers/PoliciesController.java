@@ -1,6 +1,7 @@
 package com.cse545.hospitalSystem.controllers;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +40,12 @@ public class PoliciesController {
 	@GetMapping("/getAllPolicies")
 	public ResponseEntity<List<Insurance_Policies>> getAllPolicies(){
 		return insuranceService.getAllPolicies();
+	}
+	
+	@CrossOrigin
+	@GetMapping("/getAllPoliciesByuserId")
+	public ResponseEntity<Set<Insurance_Policies>> getAllPoliciesByuserId(@RequestParam Long patientId){
+		return insuranceService.getAllPoliciesByuserId(patientId);
 	}
 	
 	

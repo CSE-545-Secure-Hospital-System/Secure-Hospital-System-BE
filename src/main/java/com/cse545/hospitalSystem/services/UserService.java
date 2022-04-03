@@ -174,14 +174,14 @@ public class UserService implements UserDetailsService {
 		return new ResponseEntity(users, HttpStatus.OK);
 	}
 
-	public User getUserById(Long userId) {
+	public ResponseEntity<User> getUserById(Long userId) {
 		Optional<User> user = userRepo.findById(userId);
 		if(user.isPresent()) {
 			logger.info("getUserById API Call - Fetching the user - {}", user.get().getEmail());
 		}else {
 			throw new IllegalStateException("User does not exist");
 		}
-		return user.get();
+		return ResponseEntity.ok(user.get());
 	}
 
 	public ResponseEntity<User> getUserByEmailId(String emailId) {

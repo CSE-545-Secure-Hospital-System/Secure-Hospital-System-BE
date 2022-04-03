@@ -16,9 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
-    
-
-
+   
 	public User() {}
     
     public User(String firstName,
@@ -151,6 +149,10 @@ public class User implements UserDetails {
     
     public void addBill(Bill b) {
     	this.bills.add(b);
+    }
+    
+    public void addClaim(PolicyClaim claim) {
+    	this.claims.add(claim);
     }
     
     public void addTransaction(Transaction t) {
