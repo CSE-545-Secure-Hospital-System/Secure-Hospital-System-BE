@@ -1,5 +1,7 @@
 package com.cse545.hospitalSystem.models;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -40,7 +42,6 @@ public class Bill {
     private User staff;
     
     @NotNull
-    @JsonIgnore
     @OneToOne(targetEntity = Appointment.class)
     private Appointment appointment;
     
@@ -51,10 +52,8 @@ public class Bill {
     @NotNull
     @Column
     private BillStatus billStatus;
-    
-    
 
-    public BillStatus getBillStatus() {
+	public BillStatus getBillStatus() {
 		return billStatus;
 	}
 

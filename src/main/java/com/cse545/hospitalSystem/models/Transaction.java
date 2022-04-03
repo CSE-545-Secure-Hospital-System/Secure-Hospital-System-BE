@@ -1,5 +1,7 @@
 package com.cse545.hospitalSystem.models;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -36,12 +38,28 @@ public class Transaction {
     private User staff;
     
     @JsonIgnore
-    @OneToOne(targetEntity = Appointment.class)
+    @OneToOne(targetEntity = PolicyClaim.class)
+    private PolicyClaim claim;
+    
+    @JsonIgnore
+    @ManyToOne(targetEntity = Appointment.class)
     private Appointment appointment;
+    
+    @Column(name = "transactionCompletionTime")
+    @NotNull
+    private String transactionCompletionTime;
     
     private TransactionStatus transactionStatus;
 
-    public Bill getBill() {
+	public PolicyClaim getClaim() {
+		return claim;
+	}
+
+	public void setClaim(PolicyClaim claim) {
+		this.claim = claim;
+	}
+
+	public Bill getBill() {
         return bill;
     }
 
@@ -83,6 +101,14 @@ public class Transaction {
 
 	public void setStaff(User staff) {
 		this.staff = staff;
+	}
+
+	public String getTransactionCompletionTime() {
+		return transactionCompletionTime;
+	}
+
+	public void setTransactionCompletionTime(String transactionCompletionTime) {
+		this.transactionCompletionTime = transactionCompletionTime;
 	}
     
     

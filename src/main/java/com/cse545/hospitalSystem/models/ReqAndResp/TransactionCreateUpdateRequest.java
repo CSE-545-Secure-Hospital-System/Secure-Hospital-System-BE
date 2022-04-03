@@ -9,6 +9,16 @@ public class TransactionCreateUpdateRequest {
 	private Long patientId, staffId;
 	
 	private TransactionStatus transactionStatus;
+	
+	private Long claimId;
+
+	public Long getClaimId() {
+		return claimId;
+	}
+
+	public void setClaimId(Long claimId) {
+		this.claimId = claimId;
+	}
 
 	public Long getAppointmentId() {
 		return appointmentId;

@@ -19,6 +19,7 @@ import com.cse545.hospitalSystem.models.PolicyClaim;
 import com.cse545.hospitalSystem.models.User;
 import com.cse545.hospitalSystem.models.ReqAndResp.ClaimCreateRequestDTO;
 import com.cse545.hospitalSystem.models.ReqAndResp.PolicyClaimsRespDTO;
+import com.cse545.hospitalSystem.models.ReqAndResp.TransactionCreateUpdateRequest;
 import com.cse545.hospitalSystem.repositories.AppointmentRepository;
 import com.cse545.hospitalSystem.repositories.ClaimRepository;
 import com.cse545.hospitalSystem.repositories.InsuranacePoliciesRepo;
@@ -38,6 +39,9 @@ public class ClaimService {
 	
 	@Autowired
 	private InsuranacePoliciesRepo insuranacePoliciesRepo;
+	
+	@Autowired
+	private TransactionService transactionService;
 
 	@Transactional
 	public ResponseEntity<String> createClaim(ClaimCreateRequestDTO claimCreateRequestDTO) {
@@ -78,7 +82,7 @@ public class ClaimService {
 			p.setAmountRequired(claim.getAmountRequired());
 			p.setAppointmentId(claim.getAppointmentId());
 			p.setClaimId(claim.getId());
-			p.setPatientId(claim.getPolicyId());
+			p.setPatientId(claim.getPatientId());
 			p.setPolicy(insuranacePoliciesRepo.findById(claim.getPolicyId()).get());
 			User patient = userRepository.findById(claim.getPatientId()).get();
 			p.setPatientName(patient.getFirstName() + " " + patient.getLastName());
@@ -86,6 +90,48 @@ public class ClaimService {
 			pres.add(p);
 		});
 		return ResponseEntity.ok(pres);
+	}
+
+	@Transactional
+	public ResponseEntity<String> approveClaim(Long claimId) {
+		PolicyClaim c = claimRepository.findById(claimId).get();
+		try {
+		if(c.getStatus().equals(TransactionStatus.APPROVED)) {
+			return ResponseEntity.ok("Already Approved!");
+		}else {
+			c.setStatus(TransactionStatus.APPROVED);
+			claimRepository.save(c);
+			TransactionCreateUpdateRequest t = new TransactionCreateUpdateRequest();
+			t.setAppointmentId(c.getAppointmentId());
+			t.setPatientId(c.getPatientId());
+			t.setTransactionStatus(TransactionStatus.PENDING);
+			t.setClaimId(claimId);
+			transactionService.createTransaction(t);
+		}} catch (Exception e) {
+			return ResponseEntity.ok("Error Occurred!");
+		}
+		return ResponseEntity.ok("Approved!");
+	}
+
+	@Transactional
+	public ResponseEntity<String> rejectClaim(Long claimId) {
+		PolicyClaim c = claimRepository.findById(claimId).get();
+		try {
+		if(c.getStatus().equals(TransactionStatus.REJECTED)) {
+			return ResponseEntity.ok("Already Rejected!");
+		}else {
+			c.setStatus(TransactionStatus.REJECTED);
+			claimRepository.save(c);
+			TransactionCreateUpdateRequest t = new TransactionCreateUpdateRequest();
+			t.setAppointmentId(c.getAppointmentId());
+			t.setPatientId(c.getPatientId());
+			t.setTransactionStatus(TransactionStatus.PENDING);
+			t.setClaimId(claimId);
+			transactionService.createTransaction(t);
+		}} catch (Exception e) {
+			return ResponseEntity.ok("Error Occurred!");
+		}
+		return ResponseEntity.ok("Rejected!");
 	}
 	
 
