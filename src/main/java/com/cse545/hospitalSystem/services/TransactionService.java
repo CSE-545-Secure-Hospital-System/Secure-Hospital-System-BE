@@ -108,9 +108,13 @@ public class TransactionService {
 	}
 
 
-	public ResponseEntity<List<TransactionRespDTO>> getAllTransactions() {
-		List<Transaction> t = transactionRepo.findAll();
-
+	public ResponseEntity<List<TransactionRespDTO>> getAllTransactions(Long patientId) {
+		List<Transaction> t;
+		if(patientId!= null) {
+			t = transactionRepo.findTransactionsByPatientId(patientId);
+		}else {
+			t = transactionRepo.findAll();
+		}
 		List<TransactionRespDTO> t1 = new ArrayList<>();
 		t.forEach(tran -> {
 			TransactionRespDTO te = new TransactionRespDTO();

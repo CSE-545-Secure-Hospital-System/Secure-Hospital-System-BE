@@ -7,15 +7,18 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.cse545.hospitalSystem.enums.TransactionStatus;
 import com.cse545.hospitalSystem.models.Appointment;
 import com.cse545.hospitalSystem.models.Bill;
 import com.cse545.hospitalSystem.models.Transaction;
 import com.cse545.hospitalSystem.models.User;
+import com.cse545.hospitalSystem.models.ReqAndResp.BillResponseDTO;
 import com.cse545.hospitalSystem.repositories.AppointmentRepository;
 import com.cse545.hospitalSystem.repositories.BillRepository;
 import com.cse545.hospitalSystem.repositories.TransactionRepository;
@@ -23,6 +26,8 @@ import com.cse545.hospitalSystem.repositories.UserRepository;
 import com.cse545.hospitalSystem.services.BillService;
 import com.cse545.hospitalSystem.services.TransactionService;
 
+@RestController
+@RequestMapping("/api/bills")
 public class BillController {
     
     @Autowired
@@ -37,18 +42,10 @@ public class BillController {
     @Autowired
     private BillService billService;
     
-    @RequestMapping(value="/getAllBills/{patientId}", method = RequestMethod.GET)
-    public ResponseEntity<List<Bill>> getAllBillsForPatient(@RequestParam(name = "patientId") Long patientId) {
-        Optional<User> optionalPatient = userRepo.findById(patientId);
-        List<Bill> bills = null;
-        if(!optionalPatient.isPresent()) {
-            return new ResponseEntity<List<Bill>>(bills, HttpStatus.OK);
-        }
-        bills = new ArrayList<>();
-        for (Bill b : optionalPatient.get().getBills()){
-            bills.add(b);
-        }
-        return new ResponseEntity<List<Bill>>(bills, HttpStatus.OK);
+    @CrossOrigin
+    @RequestMapping(value="/getAllBills", method = RequestMethod.GET)
+    public ResponseEntity<List<BillResponseDTO>> getAllBillsForPatient(@RequestParam(name = "patientId") Long patientId) {
+        return billService.getAllBills(patientId);
     }
     
     @RequestMapping(value="/getBill/{appointmentId}", method = RequestMethod.GET)

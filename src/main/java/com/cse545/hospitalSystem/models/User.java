@@ -12,6 +12,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 @Table(name = "users")
@@ -120,6 +122,7 @@ public class User implements UserDetails {
     @Column(name = "lock_time")
     private Date lockTime;
     
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "USER_DIAGNOSIS",
     joinColumns = {
@@ -129,6 +132,7 @@ public class User implements UserDetails {
     @JoinColumn(name = "DIAGNOSIS_ID") })
     private Set<Diagnosis> diagnoses;
     
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "USER_BILL",
     joinColumns = {
@@ -138,6 +142,7 @@ public class User implements UserDetails {
     @JoinColumn(name = "BILL_ID") })
     private Set<Bill> bills;
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "USER_TRANSACTION",
     joinColumns = {

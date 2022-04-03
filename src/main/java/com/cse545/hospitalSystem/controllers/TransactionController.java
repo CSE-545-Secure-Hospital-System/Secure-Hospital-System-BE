@@ -35,8 +35,8 @@ public class TransactionController {
     
     @CrossOrigin
     @RequestMapping(value="/getAllTransactions", method = RequestMethod.GET)
-    public ResponseEntity<List<TransactionRespDTO>> getAllTransactions() {
-        return transactionService.getAllTransactions();
+    public ResponseEntity<List<TransactionRespDTO>> getAllTransactions(@RequestParam(required = false) Long patientId ) {
+        return transactionService.getAllTransactions(patientId);
     }
     
     @CrossOrigin

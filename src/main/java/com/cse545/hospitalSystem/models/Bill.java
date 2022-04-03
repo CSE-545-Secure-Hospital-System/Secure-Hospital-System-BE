@@ -42,6 +42,7 @@ public class Bill {
     private User staff;
     
     @NotNull
+    @JsonIgnore
     @OneToOne(targetEntity = Appointment.class)
     private Appointment appointment;
     

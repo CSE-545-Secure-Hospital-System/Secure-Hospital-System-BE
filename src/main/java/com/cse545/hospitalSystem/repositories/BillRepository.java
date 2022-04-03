@@ -13,6 +13,7 @@ import com.cse545.hospitalSystem.models.Transaction;
 @Repository
 public interface BillRepository extends JpaRepository<Bill, Long> {
 
+	@Query(value = "SELECT * FROM bill b WHERE b.patient_user_id = ?1", nativeQuery = true)
     List<Bill> findByPatientId(Long patientId);
 
     @Query(value = "SELECT * FROM bill b WHERE b.appointment_appointment_id = ?1", nativeQuery = true)
