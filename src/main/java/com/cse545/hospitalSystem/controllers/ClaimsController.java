@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,26 +28,30 @@ public class ClaimsController {
 	
 	@CrossOrigin
 	@PostMapping("/createClaim")
-	private ResponseEntity<String> createClaim(@RequestBody ClaimCreateRequestDTO claimCreateRequestDTO){
+	@PreAuthorize("hasAnyRole('PATIENT')")
+	public ResponseEntity<String> createClaim(@RequestBody ClaimCreateRequestDTO claimCreateRequestDTO){
 		return claimService.createClaim(claimCreateRequestDTO);
 	}
 	
 	@CrossOrigin
 	@GetMapping("/getAllClaims")
-	private ResponseEntity<List<PolicyClaimsRespDTO>> getAllClaims(){
+	@PreAuthorize("hasAnyRole('ADMIN', 'INSURANCE_STAFF')")
+	public ResponseEntity<List<PolicyClaimsRespDTO>> getAllClaims(){
 		return claimService.getAllClaims();
 	}
 
 	
 	@CrossOrigin
 	@GetMapping("/approveClaim")
-	private ResponseEntity<String> approveClaim(@RequestParam Long claimId){
+	@PreAuthorize("hasAnyRole('ADMIN', 'INSURANCE_STAFF')")
+	public ResponseEntity<String> approveClaim(@RequestParam Long claimId){
 		return claimService.approveClaim(claimId);
 	}
 	
 	@CrossOrigin
 	@GetMapping("/rejectClaim")
-	private ResponseEntity<String> rejectClaim(@RequestParam Long claimId){
+	@PreAuthorize("hasAnyRole('ADMIN', 'INSURANCE_STAFF')")
+	public ResponseEntity<String> rejectClaim(@RequestParam Long claimId){
 		return claimService.rejectClaim(claimId);
 	}
 }

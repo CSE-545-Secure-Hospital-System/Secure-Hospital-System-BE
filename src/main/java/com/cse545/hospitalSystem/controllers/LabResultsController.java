@@ -29,19 +29,21 @@ public class LabResultsController {
 	
 	@CrossOrigin
 	@GetMapping("/getAllLabReportsByPatientId")
+    @PreAuthorize("hasAnyRole('PATIENT', 'LAB_STAFF', 'DOCTOR', 'INSURANCE_STAFF', 'ADMIN', 'HOSPITAL_STAFF')")
 	public ResponseEntity<LabReportsResponse> getAllLabReportsByPatientId(@RequestParam long patientId){
 		return labResultsService.getAllLabReportsByPatientId(patientId);
 	}
 	
 	@CrossOrigin
 	@GetMapping("/getAllLabReports")
+    @PreAuthorize("hasAnyRole('LAB_STAFF', 'ADMIN', 'DOCTOR')")
 	public ResponseEntity<LabReportsResponse> getAllLabReportsByPatientId(){
 		return labResultsService.getAllLabReports();
 	}
 	
 	@CrossOrigin
 	@PostMapping("/updateLabReportByPatientId")
-//	@PreAuthorize("hasRole('LAB_STAFF')")
+	@PreAuthorize("hasRole('LAB_STAFF', 'ADMIN')")
 	public ResponseEntity<String> updateLabReportByPatientId(@RequestBody UpdateLabTestRequest updateLabTestRequest){
 		return labResultsService.updateLabReport(updateLabTestRequest);
 	}

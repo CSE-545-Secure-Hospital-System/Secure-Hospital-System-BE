@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +27,7 @@ public class PoliciesController {
 	
 	@CrossOrigin
 	@PostMapping("/createPolicy")
+	@PreAuthorize("hasAnyRole( 'INSURANCE_STAFF', 'ADMIN')")
 	public ResponseEntity<String> createPolicy(@RequestBody Policy insurancePolicy){
 		return insuranceService.createPolicy(insurancePolicy);
 	}
@@ -38,6 +40,7 @@ public class PoliciesController {
 	
 	@CrossOrigin
 	@GetMapping("/getAllPolicies")
+	@PreAuthorize("hasAnyRole('PATIENT', 'INSURANCE_STAFF', 'ADMIN')")
 	public ResponseEntity<List<Insurance_Policies>> getAllPolicies(){
 		return insuranceService.getAllPolicies();
 	}
@@ -51,6 +54,7 @@ public class PoliciesController {
 	
 	@CrossOrigin
 	@PostMapping("/addPolicyToUser")
+	@PreAuthorize("hasAnyRole('PATIENT')")
 	public ResponseEntity<String> addPolicyToUser(@RequestParam long patientId, @RequestParam long policyId){
 		return insuranceService.addPolicyToUser(patientId, policyId);
 	}

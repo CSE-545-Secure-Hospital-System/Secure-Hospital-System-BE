@@ -37,7 +37,7 @@ public class EmailService {
     }
 
     @Async
-    public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
+    public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml){
         logger.info("Inside emailservice send email");
         JavaMailSender javaMailsender = getJavaMailSender();
         MimeMessage mimeMessage = javaMailsender.createMimeMessage();

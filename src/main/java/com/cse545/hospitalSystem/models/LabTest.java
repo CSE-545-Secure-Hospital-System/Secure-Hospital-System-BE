@@ -14,7 +14,6 @@ import lombok.Data;
 
 @Entity
 @Table(name = "labTests", uniqueConstraints = @UniqueConstraint( columnNames = { "labTestName" }))
-@Data
 public class LabTest {
 
 	@Id
@@ -24,7 +23,6 @@ public class LabTest {
     private Long id;
 	
 	@Column
-	@NotNull
 	@NotBlank
 	private String labTestName;
 	
@@ -32,7 +30,6 @@ public class LabTest {
 	@Column
 	private String labTestDescription;
 	
-	@NotNull
 	@NotBlank
 	@Column
 	private Double labTestCost;

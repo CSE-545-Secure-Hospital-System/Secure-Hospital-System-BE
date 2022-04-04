@@ -44,31 +44,35 @@ public class UsersController{
 
 	@CrossOrigin
 	@RequestMapping(value="/getUserById", method = RequestMethod.GET)
-//	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasAnyRole('PATIENT', 'ADMIN', 'LAB_STAFF', 'DOCTOR', 'INSURANCE_STAFF', 'HOSPITAL_STAFF')")
 	public ResponseEntity<User> getUserById(@RequestParam(name = "userId") Long userId) {
 		return userService.getUserById(userId);
 	}
 	
 	@CrossOrigin
 	@RequestMapping(value="/getUserByEmailId", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('PATIENT', 'LAB_STAFF', 'ADMIN', 'INSURANCE_STAFF', 'DOCTOR', 'HOSPITAL_STAFF')")
 	public ResponseEntity<User> getUserByEmailId(@RequestParam(name = "emailId") String emailId) {
 		return userService.getUserByEmailId(emailId);
 	}
 	
 	@CrossOrigin
 	@PostMapping(value="/updateUserByEmailId")
+	@PreAuthorize("hasAnyRole('PATIENT', 'LAB_STAFF', 'ADMIN', 'INSURANCE_STAFF', 'DOCTOR', 'HOSPITAL_STAFF')")
 	public ResponseEntity<String> updateUserByEmailId(@RequestBody UserReq user){
 		return userService.updateUserByEmailId(user);
 	}
 	
 	@CrossOrigin
 	@PostMapping(value = "/blockAccountByEmailId")
+	@PreAuthorize("hasAnyRole('ADMIN', 'HOSPITAL_STAFF')")
 	public ResponseEntity<String> deleteuser(@RequestParam(name = "emailId") String emailId){
 		return userService.deleteUser(emailId);
 	}
 	
 	@CrossOrigin
 	@PostMapping(value = "/activateAccountByEmailId")
+	@PreAuthorize("hasAnyRole('ADMIN', 'HOSPITAL_STAFF')")
 	public ResponseEntity<String> activiteAccount(@RequestParam(name = "emailId") String emailId){
 		return userService.activateAccount(emailId);
 	}
@@ -81,6 +85,7 @@ public class UsersController{
 //	
 	@CrossOrigin
 	@RequestMapping(value="/getAllUsersByRole", method = RequestMethod.GET)
+	@PreAuthorize("hasAnyRole('ADMIN', 'PATIENT','LAB_STAFF', 'INSURANCE_STAFF', 'HOSPITAL_STAFF', 'DOCTOR')")
 	public ResponseEntity<List<User>> getAllUsersByRole(@RequestParam(required = false) String role, @RequestParam(required = false) String searchTerm){
 		return userService.getAllUserByRole(role, searchTerm);
 	}

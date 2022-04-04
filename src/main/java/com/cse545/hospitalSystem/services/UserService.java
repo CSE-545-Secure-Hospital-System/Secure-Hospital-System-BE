@@ -92,7 +92,7 @@ public class UserService implements UserDetailsService {
     	// DB - email existence check
         
         if(isUserAlreadyExist(user.getEmail()).isPresent()) {
-            throw new IllegalStateException("Email already exists");
+            return null;
         }
         
         // encrypting the password

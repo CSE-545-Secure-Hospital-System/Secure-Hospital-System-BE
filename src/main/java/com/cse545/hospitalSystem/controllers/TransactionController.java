@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,24 +36,28 @@ public class TransactionController {
     
     @CrossOrigin
     @RequestMapping(value="/getAllTransactions", method = RequestMethod.GET)
+    @PreAuthorize("hasAnyRole('PATIENT', 'LAB_STAFF', 'DOCTOR', 'INSURANCE_STAFF', 'ADMIN', 'HOSPITAL_STAFF')")
     public ResponseEntity<List<TransactionRespDTO>> getAllTransactions(@RequestParam(required = false) Long patientId ) {
         return transactionService.getAllTransactions(patientId);
     }
     
     @CrossOrigin
     @PostMapping("/createTransaction")
+    @PreAuthorize("hasAnyRole('PATIENT')")
     public ResponseEntity<String> createTransaction(@RequestBody TransactionCreateUpdateRequest transactionCreateUpdateRequest){
     	return transactionService.createTransaction(transactionCreateUpdateRequest);
     }
     
     @CrossOrigin
     @RequestMapping(value="/approveTransaction", method = RequestMethod.POST)
+    @PreAuthorize("hasAnyRole('HOSPITAL_STAFF', 'ADMIN')")
     public ResponseEntity<String> approveTransaction(@RequestParam Long staffId, @RequestParam Long transactionId, @RequestParam Long appointmentId) {
         return transactionService.approveTransaction(staffId, transactionId, appointmentId);
     }
     
     @CrossOrigin
     @RequestMapping(value="/cancelTransaction", method = RequestMethod.POST)
+    @PreAuthorize("hasAnyRole('ADMIN', 'HOSPITAL_STAFF')")
     public ResponseEntity<String> cancelTransaction(@RequestParam Long staffId, @RequestParam Long transactionId, @RequestParam Long appointmentId) {
         return transactionService.cancelTransaction(staffId, transactionId, appointmentId);
     }

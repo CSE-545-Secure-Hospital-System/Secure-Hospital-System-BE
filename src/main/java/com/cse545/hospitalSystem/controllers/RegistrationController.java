@@ -3,6 +3,7 @@ package com.cse545.hospitalSystem.controllers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,7 +28,7 @@ public class RegistrationController {
     
     @CrossOrigin
     @RequestMapping(value="/register", method = RequestMethod.POST)
-    public String register(@RequestBody RegistrationRequest request) {
+    public ResponseEntity<String> register(@RequestBody RegistrationRequest request) {
         logger.info("inside registration controller register method");
         return registrationService.register(request);
     }

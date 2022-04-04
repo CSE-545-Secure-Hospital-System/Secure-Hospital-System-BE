@@ -26,7 +26,7 @@ public class DiagnosisController {
 
 	@CrossOrigin
 	@PostMapping("/createDiagnosis")
-//	@PreAuthorize("hasRole('DOCTOR')")
+	@PreAuthorize("hasRole('DOCTOR')")
 	public ResponseEntity<String> createDiagnosis(@RequestBody DiagnosisCreateRequestDTO diagnosis){
 		return diagnosisService.createDiagnosis(diagnosis);
 	}

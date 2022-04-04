@@ -52,12 +52,14 @@ public class AppointmentController {
     
     @CrossOrigin
     @PostMapping(value = "/getAvailableSlotsOfDoctor")
+    @PreAuthorize("hasAnyRole('PATIENT')")
     public ResponseEntity<List<String>> getAvailableSlotsOfDoctor(@RequestBody TimingsRequestDTO timingRequestDTO){
     	return ResponseEntity.ok(appointmentService.getDoctorAvailability(timingRequestDTO.getDoctorId(), timingRequestDTO.getDate(), timingRequestDTO.getAppointmentType()));
     }
     
     @CrossOrigin
     @PostMapping(value = "/getAllAvailableSlotOfDoctors")
+    @PreAuthorize("hasAnyRole('PATIENT')")
     public ResponseEntity<Map<String, List<String>>> getDoctorsAvailability(@RequestBody AllDoctorsTimingRequest allDoctorsTimingRequest){
     	if(allDoctorsTimingRequest.getStartTime() == null)
     		return ResponseEntity.ok(appointmentService.getAllDoctorsAvailability(allDoctorsTimingRequest.getDate(), allDoctorsTimingRequest.getAppointmentType()));
@@ -73,6 +75,7 @@ public class AppointmentController {
     // this method should only be allowed with role as staff or doctor
     @CrossOrigin
     @RequestMapping(value="/getAllFutureAppointments", method = RequestMethod.GET)
+    @PreAuthorize("hasAnyRole('ADMIN', 'HOSPITAL_STAFF', 'PATIENT', 'DOCTOR')")
     public ResponseEntity<?>  getAllFutureAppointments(Authentication authentication, @RequestParam String searchTerm) {
         //need to change role to constant values
     	UserDetails userDetails = (UserDetails)authentication.getPrincipal();
@@ -96,6 +99,7 @@ public class AppointmentController {
     
     @CrossOrigin
     @RequestMapping(value="/getAllPastAppointments", method = RequestMethod.GET)
+    @PreAuthorize("hasAnyRole('ADMIN', 'HOSPITAL_STAFF','PATIENT', 'DOCTOR')")
     public ResponseEntity<?>  getAllPastAppointments(Authentication authentication, @RequestParam String searchTerm) {
         //need to change role to constant values
     	UserDetails userDetails = (UserDetails)authentication.getPrincipal();
@@ -119,7 +123,7 @@ public class AppointmentController {
     
     @CrossOrigin
     @RequestMapping(value="/bookAppointment", method = RequestMethod.POST)
-//    @PreAuthorize("hasRole('PATIENT')")
+    @PreAuthorize("hasAnyRole('PATIENT')")
     public ResponseEntity<String> bookAppointment(Authentication authentication, @RequestBody AppointmentRequestDTO request) {
     	UserDetails userDetails = (UserDetails)authentication.getPrincipal();
       User user = userService.getUseEntityrByEmailId(userDetails.getUsername());
@@ -128,13 +132,14 @@ public class AppointmentController {
     
     @CrossOrigin
     @PostMapping("/cancelAppointment")
-//    @PreAuthorize("hasRole('PATIENT')")
+    @PreAuthorize("hasAnyRole('PATIENT', 'HOSPITAL_STAFF')")
     public ResponseEntity<String> cancelAppointment(Authentication authentication, @RequestParam long appointmentId){
     	return appointmentService.cancelAppointment(appointmentId);
     }
     
     @CrossOrigin
     @PostMapping("/updateAppointment")
+    @PreAuthorize("hasAnyRole('HOSPITAL_STAFF', 'ADMIN')")
     public ResponseEntity<String> updateAppointment(@RequestBody UpdateAppointmentRequestDTO updateAppointmentRequestDTO){
     	return appointmentService.updateAppointment(updateAppointmentRequestDTO);
     }

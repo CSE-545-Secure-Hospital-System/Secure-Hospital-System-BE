@@ -8,6 +8,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,16 +42,17 @@ public class RegistrationService {
     private ConfirmationTokenService confirmationTokenService;
     
     @Transactional
-    public String register(RegistrationRequest request) {
+    public ResponseEntity<String> register(RegistrationRequest request) {
     	
         logger.info("inside registration service, register method");
         
         boolean isValidEmail = emailValidator.test(request.getEmail());
         
         if(!isValidEmail) {
-            throw new IllegalStateException("Email is not valid");
+            return ResponseEntity.ok("Email is not valid");
         }
         // getting the roles
+        boolean isRoleValid = true;
         Set<Role> roles = new HashSet<>();
         logger.info("request has : {}", request.getRoles().toString());
         request.getRoles().forEach(role -> {
@@ -62,21 +64,33 @@ public class RegistrationService {
         	}
         });
         
+        if(!isRoleValid) {
+        	return ResponseEntity.ok("Role is not valid");
+        }
+        
         // keep in DB
         String token = userService.signUpUser(new User(request.getFirstName(), request.getLastName(),
                 request.getEmail(), request.getPassword(), roles, request.getDob(), request.getPhoneNumber()));
         
+        if(token == null) {
+        	return ResponseEntity.ok("Email Already exists in the system, please use a different one");
+        }
+        
         String link = HospitalSystemConstants.URL + token;
         
+        try {
         // sending Email
         emailService.sendEmail(request.getEmail(),
         		HospitalSystemConstants.subject,
                 buildEmail(request.getFirstName(), link),
                 false,
                 true);
+        } catch(Exception e) {
+        	return ResponseEntity.ok("Unable to send Email!");
+        }
         
         // returning token
-        return token;
+        return ResponseEntity.ok(token);
     }
     
     @Transactional
