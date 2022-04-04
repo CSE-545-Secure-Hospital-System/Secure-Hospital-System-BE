@@ -104,14 +104,14 @@ public class LoginController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final String token = jwtTokenProvider.generateToken(authentication);
         return ResponseEntity.ok(new AuthToken(token));
-        } catch(AuthenticationException e) {
+        } catch(Exception e) {
             String newExceptionMessage = e.getMessage();
             try {
                 failureHandler.onAuthenticationFailure(e, loginRequestDTO);
-            } catch(LockedException ex) {
-                newExceptionMessage = newExceptionMessage + ":" + ex.getMessage();
+            } catch(Exception ex) {
+                newExceptionMessage = newExceptionMessage + "-" + ex.getMessage();
             }
-            return new ResponseEntity(newExceptionMessage, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity(new AuthToken(null, newExceptionMessage), HttpStatus.UNAUTHORIZED);
             
         }
         

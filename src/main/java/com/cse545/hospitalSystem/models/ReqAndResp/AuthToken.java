@@ -5,10 +5,25 @@ import java.util.List;
 public class AuthToken {
 	
 	private String token;
-	private String firstName;
-	private String lastName;
+	private String message;
+	
+	
 
-    public AuthToken(){
+    public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public AuthToken(String token, String message) {
+		super();
+		this.token = token;
+		this.message = message;
+	}
+
+	public AuthToken(){
 
     }
 

@@ -74,8 +74,10 @@ public class TransactionService {
 	public ResponseEntity<String> createTransaction(TransactionCreateUpdateRequest transactionCreateUpdateRequest) {
 		if(transactionCreateUpdateRequest.getAppointmentId()!=null) {
 			Transaction t1 = transactionRepo.findByAppointmentById(transactionCreateUpdateRequest.getAppointmentId());
-			if(t1!=null) {
+			if(t1!=null && t1.getTransactionStatus().equals(TransactionStatus.APPROVED)) {
 				return ResponseEntity.ok("Bill paid already!");
+			} else if(t1!=null && t1.getTransactionStatus().equals(TransactionStatus.PENDING)) {
+				return ResponseEntity.ok("Transaction already Authorized! Pleae Wait for approval.");
 			}else {
 				try {
 				Transaction t2 = new Transaction();
@@ -149,6 +151,9 @@ public class TransactionService {
 			Appointment a = appointmentRepo.findById(appointmentId).get();
 			Transaction t = transactionRepo.findById(transactionId).get();
 			Bill b = t.getBill();
+			if(b.getBillStatus().equals(BillStatus.SETTLED)) {
+				return ResponseEntity.ok("Already Bill is settled! Can't accept this payment.");
+			}
 			t.setStaff(staff);
 			t.setTransactionStatus(TransactionStatus.APPROVED);
 			b.setBillStatus(BillStatus.SETTLED);

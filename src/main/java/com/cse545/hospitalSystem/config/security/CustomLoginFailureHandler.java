@@ -27,7 +27,7 @@ public class CustomLoginFailureHandler {
     @Autowired
     private UserRepository userRepo;
 
-    public void onAuthenticationFailure(AuthenticationException exception, LoginRequestDTO request) throws IOException, LockedException, ServletException {
+    public void onAuthenticationFailure(Exception exception, LoginRequestDTO request) throws Exception {
 
         String email = request.getEmail();
         Optional<User> userByEmail = userRepo.findByEmail(email);
