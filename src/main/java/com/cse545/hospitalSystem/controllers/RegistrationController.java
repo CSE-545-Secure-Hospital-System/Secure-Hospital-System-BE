@@ -38,5 +38,10 @@ public class RegistrationController {
     public String confirm(@RequestParam("token") String token) {
         return registrationService.confirmToken(token);
     }
+    
+    @GetMapping("/check")
+    public String hello() {
+    	return "Hello, Welcome!";
+    }
 
 }

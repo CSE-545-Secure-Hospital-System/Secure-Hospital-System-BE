@@ -123,6 +123,10 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>SHSBE-1.0</finalName>
 	</build>
+
+
+
 
 </project>
