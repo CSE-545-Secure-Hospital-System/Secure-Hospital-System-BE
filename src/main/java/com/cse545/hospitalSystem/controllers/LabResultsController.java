@@ -43,7 +43,7 @@ public class LabResultsController {
 	
 	@CrossOrigin
 	@PostMapping("/updateLabReportByPatientId")
-	@PreAuthorize("hasRole('LAB_STAFF', 'ADMIN')")
+	@PreAuthorize("hasAnyRole('LAB_STAFF', 'ADMIN')")
 	public ResponseEntity<String> updateLabReportByPatientId(@RequestBody UpdateLabTestRequest updateLabTestRequest){
 		return labResultsService.updateLabReport(updateLabTestRequest);
 	}
