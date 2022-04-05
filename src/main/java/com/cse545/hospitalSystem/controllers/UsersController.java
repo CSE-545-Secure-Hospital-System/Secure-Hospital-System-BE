@@ -57,10 +57,8 @@ public class UsersController{
 	    String userEmail = userDetails.getUsername();
 	    ResponseEntity<User> resp = userService.getUserByEmailId(userEmail);
 	    User user =resp.getBody();
-	    if(roleService.findUserRole(user, RoleMapping.PATIENT)) {
-	        if(user.getId()!=userId) {
-	            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-	        }
+	    if(!checkIfPatientAndValidId(user, userId)) {
+	        return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
 	    }
 	    
 		return userService.getUserById(userId);
@@ -69,13 +67,13 @@ public class UsersController{
 	@CrossOrigin
 	@RequestMapping(value="/getUserByEmailId", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('PATIENT', 'LAB_STAFF', 'ADMIN', 'INSURANCE_STAFF', 'DOCTOR', 'HOSPITAL_STAFF')")
-	public ResponseEntity<User> getUserByEmailId(@RequestParam(name = "emailId") String emailId) {
+	public ResponseEntity<User> getUserByEmailId(@RequestParam(name = "emailId") String emailId, Authentication authentication) {
 	    ResponseEntity<User> resp = userService.getUserByEmailId(emailId);
 	    User user =resp.getBody();
-        if(roleService.findUserRole(user, RoleMapping.PATIENT)) {
-            if(user.getEmail().equals(emailId)) {
-                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-            }
+	    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String userEmail = userDetails.getUsername();
+	    if(!checkIfPatientAndValidEmail(user, userEmail)) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
 		return resp;
 	}
@@ -83,13 +81,13 @@ public class UsersController{
 	@CrossOrigin
 	@PostMapping(value="/updateUserByEmailId")
 	@PreAuthorize("hasAnyRole('PATIENT', 'LAB_STAFF', 'ADMIN', 'INSURANCE_STAFF', 'DOCTOR', 'HOSPITAL_STAFF')")
-	public ResponseEntity<String> updateUserByEmailId(@RequestBody UserReq user){
+	public ResponseEntity<String> updateUserByEmailId(@RequestBody UserReq user, Authentication authentication){
 	    ResponseEntity<User> resp = userService.getUserByEmailId(user.getEmail());
         User userResp =resp.getBody();
-        if(roleService.findUserRole(userResp, RoleMapping.PATIENT)) {
-            if(user.getEmail().equals(userResp.getEmail())) {
-                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-            }
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String userEmail = userDetails.getUsername();
+        if(!checkIfPatientAndValidEmail(userResp, userEmail)) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
 		return userService.updateUserByEmailId(user);
 	}
@@ -126,6 +124,24 @@ public class UsersController{
 	public ResponseEntity<String> createClaim(@RequestBody PolicyClaim policyClaim){
 		return userService.createClaim(policyClaim);
 	}
+	
+	private boolean checkIfPatientAndValidEmail(User user, String email) {
+	    if(roleService.findUserRole(user, RoleMapping.PATIENT)) {
+            if(user.getEmail().equals(email)) {
+                return false;
+            }
+        }
+	    return true;
+	}
+	
+	private boolean checkIfPatientAndValidId(User user, long id) {
+        if(roleService.findUserRole(user, RoleMapping.PATIENT)) {
+            if(user.getId() ==  id) {
+                return false;
+            }
+        }
+        return true;
+    }
 
 	 
 }

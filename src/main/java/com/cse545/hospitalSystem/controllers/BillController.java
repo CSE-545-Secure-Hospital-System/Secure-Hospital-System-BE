@@ -63,10 +63,8 @@ public class BillController {
         String userEmail = userDetails.getUsername();
         ResponseEntity<User> resp = userService.getUserByEmailId(userEmail);
         User user =resp.getBody();
-        if(roleService.findUserRole(user, RoleMapping.PATIENT)) {
-            if(user.getId()!=patientId) {
-                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-            }
+        if(!checkIfPatientAndValidId(user, patientId)) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
         return billService.getAllBills(patientId);
     }
@@ -82,5 +80,24 @@ public class BillController {
         
         return new ResponseEntity<Bill>(appointment.getBill(), HttpStatus.OK);
     }
+    
+    private boolean checkIfPatientAndValidEmail(User user, String email) {
+        if(roleService.findUserRole(user, RoleMapping.PATIENT)) {
+            if(user.getEmail().equals(email)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    private boolean checkIfPatientAndValidId(User user, long id) {
+        if(roleService.findUserRole(user, RoleMapping.PATIENT)) {
+            if(user.getId() ==  id) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
 }
