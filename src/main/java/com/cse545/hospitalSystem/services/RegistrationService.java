@@ -44,7 +44,7 @@ public class RegistrationService {
     @Transactional
     public ResponseEntity<String> register(RegistrationRequest request) {
     	
-        logger.info("inside registration service, register method");
+        //logger.info("inside registration service, register method");
         
         boolean isValidEmail = emailValidator.test(request.getEmail());
         
@@ -54,7 +54,7 @@ public class RegistrationService {
         // getting the roles
         boolean isRoleValid = true;
         Set<Role> roles = new HashSet<>();
-        logger.info("request has : {}", request.getRoles().toString());
+        //logger.info("request has : {}", request.getRoles().toString());
         request.getRoles().forEach(role -> {
         	Optional<Role> r = roleService.findByName(role);
         	if(r.isPresent()) {
@@ -115,7 +115,7 @@ public class RegistrationService {
 //        }
 
         confirmationTokenService.setConfirmedAt(token);
-        logger.info("user is {}",  confirmationToken.getUser().getEmail());
+        //logger.info("user is {}",  confirmationToken.getUser().getEmail());
         userService.enableUser(
                 confirmationToken.getUser().getEmail());
         return "confirmed";

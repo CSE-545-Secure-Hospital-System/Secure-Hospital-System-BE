@@ -42,7 +42,7 @@ public class AuthenticationService extends LoggerConfig{
 //		final UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmailId());
 //		String token = jwtTokenService.generateToken(userDetails);
 //		userJwt.setJwtToken(token);
-		logger.info("user email is {}", user.getEmail());
+		//logger.info("user email is {}", user.getEmail());
 		userRepo.save(user);
 		return new ResponseEntity<String>("ok", HttpStatus.OK);
 	}

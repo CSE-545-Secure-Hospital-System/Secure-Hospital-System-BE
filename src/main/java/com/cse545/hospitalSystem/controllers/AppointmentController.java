@@ -188,7 +188,24 @@ public class AppointmentController {
 //        return ResponseEntity.status(HttpStatus.OK).body(appointment);
 //    }
 //    
+	private boolean checkIfPatientAndValidEmail(User user, String email) {
+        if(roleService.findUserRole(user, RoleMapping.PATIENT)) {
+            if(user.getEmail().equals(email)) {
+                return false;
+            }
+        }
+        return true;
+    }
     
+    private boolean checkIfPatientAndValidId(User user, long id) {
+        if(roleService.findUserRole(user, RoleMapping.PATIENT)) {
+            if(user.getId() ==  id) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     
 
 }

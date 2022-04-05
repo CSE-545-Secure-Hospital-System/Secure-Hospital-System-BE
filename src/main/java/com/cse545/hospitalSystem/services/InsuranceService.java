@@ -67,7 +67,7 @@ public class InsuranceService {
 
 	public ResponseEntity<List<String>> getPolicyTypes() {
 		 PolicyTypes[] policyTypes = PolicyTypes.values();
-		logger.info(policyTypes.toString());
+		//logger.info(policyTypes.toString());
 		List<String> p = new ArrayList<>();
 		for(int i = 0; i < policyTypes.length; i++) {
 			p.add(policyTypes[i].toString());

@@ -29,7 +29,7 @@ public class RegistrationController {
     @CrossOrigin
     @RequestMapping(value="/register", method = RequestMethod.POST)
     public ResponseEntity<String> register(@RequestBody RegistrationRequest request) {
-        logger.info("inside registration controller register method");
+        //logger.info("inside registration controller register method");
         return registrationService.register(request);
     }
     

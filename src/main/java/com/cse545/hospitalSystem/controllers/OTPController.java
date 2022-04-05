@@ -31,7 +31,7 @@ public class OTPController {
     public ResponseEntity<String> getOtp(@RequestParam("email") String email){
         
         int generatedOtp = otpService.generateOTP(email);
-        logger.info("Generated OTP is: " + generatedOtp);
+        //logger.info("Generated OTP is: " + generatedOtp);
         try {
             emailService.sendOtpEmail(email, Integer.toString(generatedOtp));   
         } catch(Exception e) {
@@ -43,14 +43,14 @@ public class OTPController {
     @PostMapping("/confirmotp")
     public ResponseEntity<String> confirmOtp(@RequestParam("email")String email, @RequestParam("otp") String otp) {
        
-       logger.info("inside confirm otp controller");
+       //logger.info("inside confirm otp controller");
        boolean otpConfirmed = otpService.verifyOtp(email, otp);
-       logger.info("is otp confirmed? {}", otpConfirmed);
+       //logger.info("is otp confirmed? {}", otpConfirmed);
        if(!otpConfirmed) {
            return new ResponseEntity<>("invalid otp", HttpStatus.NOT_ACCEPTABLE);
        }
        otpService.clearOTP(email);
-       logger.info("at the end");
+       //logger.info("at the end");
        return new ResponseEntity<>("authenticated", HttpStatus.OK);
     }
     

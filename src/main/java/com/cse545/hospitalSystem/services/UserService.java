@@ -131,9 +131,9 @@ public class UserService implements UserDetailsService {
     
     public Optional<User> isUserAlreadyExist(String email){
     	// DB - email existence check
-    	logger.info("email is {}", email);
+    	//logger.info("email is {}", email);
     	Optional<User> user = userRepo.findByEmail(email);
-        logger.info("user exists? - {}", user.isPresent());
+        //logger.info("user exists? - {}", user.isPresent());
     	return user;
     }
 
@@ -177,7 +177,7 @@ public class UserService implements UserDetailsService {
 	public ResponseEntity<User> getUserById(Long userId) {
 		Optional<User> user = userRepo.findById(userId);
 		if(user.isPresent()) {
-			logger.info("getUserById API Call - Fetching the user - {}", user.get().getEmail());
+			//logger.info("getUserById API Call - Fetching the user - {}", user.get().getEmail());
 		}else {
 			throw new IllegalStateException("User does not exist");
 		}
@@ -187,7 +187,7 @@ public class UserService implements UserDetailsService {
 	public ResponseEntity<User> getUserByEmailId(String emailId) {
 		Optional<User> user = userRepo.findByEmail(emailId);
 		if(user.isPresent()) {
-			logger.info("getUserByEmailId API Call - Fetching the user details - {}", user.get().getEmail());
+			//logger.info("getUserByEmailId API Call - Fetching the user details - {}", user.get().getEmail());
 		}else {
 			throw new IllegalStateException("User does not exist");
 		}

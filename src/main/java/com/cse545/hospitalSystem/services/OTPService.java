@@ -55,7 +55,7 @@ public class OTPService {
     }
 
     public boolean verifyOtp(String email, String otp) {
-        logger.info("email is {} otp is {}", email, otp);
+        //logger.info("email is {} otp is {}", email, otp);
         if(otp==null || otp.length()!=6) {
             return false;
         }
@@ -63,7 +63,7 @@ public class OTPService {
         int otpStored = 0;
         try {
             otpStored = cacheForOTP.get(email);
-            logger.info("otp stored is {}", otpStored);
+            //logger.info("otp stored is {}", otpStored);
         } catch (ExecutionException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
