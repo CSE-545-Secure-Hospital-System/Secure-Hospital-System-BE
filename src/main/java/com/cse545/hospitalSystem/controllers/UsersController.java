@@ -16,6 +16,8 @@ import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,10 +27,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cse545.hospitalSystem.enums.RoleMapping;
 import com.cse545.hospitalSystem.models.PolicyClaim;
 import com.cse545.hospitalSystem.models.User;
 import com.cse545.hospitalSystem.models.ReqAndResp.UserReq;
 import com.cse545.hospitalSystem.services.AuthenticationService;
+import com.cse545.hospitalSystem.services.RoleService;
 import com.cse545.hospitalSystem.services.UserService;
 
 @RestController
@@ -37,6 +41,9 @@ public class UsersController{
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private RoleService roleService;
 	// never add logger here
 	// this added just for testing
 //	Logger logger = LoggerFactory.getLogger(UsersController.class);
@@ -45,7 +52,17 @@ public class UsersController{
 	@CrossOrigin
 	@RequestMapping(value="/getUserById", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('PATIENT', 'ADMIN', 'LAB_STAFF', 'DOCTOR', 'INSURANCE_STAFF', 'HOSPITAL_STAFF')")
-	public ResponseEntity<User> getUserById(@RequestParam(name = "userId") Long userId) {
+	public ResponseEntity<User> getUserById(@RequestParam(name = "userId") Long userId, Authentication authentication) {
+	    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+	    String userEmail = userDetails.getUsername();
+	    ResponseEntity<User> resp = userService.getUserByEmailId(userEmail);
+	    User user =resp.getBody();
+	    if(roleService.findUserRole(user, RoleMapping.PATIENT)) {
+	        if(user.getId()!=userId) {
+	            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+	        }
+	    }
+	    
 		return userService.getUserById(userId);
 	}
 	
@@ -53,13 +70,27 @@ public class UsersController{
 	@RequestMapping(value="/getUserByEmailId", method = RequestMethod.GET)
 	@PreAuthorize("hasAnyRole('PATIENT', 'LAB_STAFF', 'ADMIN', 'INSURANCE_STAFF', 'DOCTOR', 'HOSPITAL_STAFF')")
 	public ResponseEntity<User> getUserByEmailId(@RequestParam(name = "emailId") String emailId) {
-		return userService.getUserByEmailId(emailId);
+	    ResponseEntity<User> resp = userService.getUserByEmailId(emailId);
+	    User user =resp.getBody();
+        if(roleService.findUserRole(user, RoleMapping.PATIENT)) {
+            if(user.getEmail().equals(emailId)) {
+                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            }
+        }
+		return resp;
 	}
 	
 	@CrossOrigin
 	@PostMapping(value="/updateUserByEmailId")
 	@PreAuthorize("hasAnyRole('PATIENT', 'LAB_STAFF', 'ADMIN', 'INSURANCE_STAFF', 'DOCTOR', 'HOSPITAL_STAFF')")
 	public ResponseEntity<String> updateUserByEmailId(@RequestBody UserReq user){
+	    ResponseEntity<User> resp = userService.getUserByEmailId(user.getEmail());
+        User userResp =resp.getBody();
+        if(roleService.findUserRole(userResp, RoleMapping.PATIENT)) {
+            if(user.getEmail().equals(userResp.getEmail())) {
+                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            }
+        }
 		return userService.updateUserByEmailId(user);
 	}
 	
