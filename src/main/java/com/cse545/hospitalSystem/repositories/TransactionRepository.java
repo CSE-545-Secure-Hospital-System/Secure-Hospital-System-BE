@@ -13,10 +13,10 @@ import com.cse545.hospitalSystem.models.Transaction;
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
-	@Query(value = "SELECT * from Transaction t WHERE t.appointment_appointment_id = ?1", nativeQuery = true)
+	@Query(value = "SELECT * from transaction t WHERE t.appointment_appointment_id = ?1", nativeQuery = true)
 	Transaction findByAppointmentById(Long appointmentId);
 	
-	@Query(value = "SELECT * from Transaction t WHERE t.patient_user_id = ?1", nativeQuery = true)
+	@Query(value = "SELECT * from transaction t WHERE t.patient_user_id = ?1", nativeQuery = true)
 	List<Transaction> findTransactionsByPatientId(Long patientId);
 
 
