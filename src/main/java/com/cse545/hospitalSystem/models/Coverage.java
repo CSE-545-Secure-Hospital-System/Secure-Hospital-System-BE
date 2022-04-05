@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -19,9 +20,11 @@ public class Coverage {
     private long id;
 	
 	@NotNull
+	@NotBlank
 	private String coverageName;
 	
 	@NotNull
+	@NotBlank
 	private String description;
 
 	public String getDescription() {
