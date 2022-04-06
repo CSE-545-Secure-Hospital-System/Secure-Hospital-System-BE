@@ -66,7 +66,7 @@ public class OTPService {
             logger.info("otp stored is {}", otpStored);
         } catch (ExecutionException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            return false;
         }
         if(otpEntered!=otpStored) return false;
         

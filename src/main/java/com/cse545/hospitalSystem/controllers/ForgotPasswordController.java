@@ -40,11 +40,11 @@ public class ForgotPasswordController {
     
     @CrossOrigin
     @PostMapping("/forgotpassword/confirmotp")
-    public ResponseEntity<?> confirmOtpForForgotPassword(@RequestBody NewPasswordRequestDTO newPasswordRequesDTO) {
+    public ResponseEntity<String> confirmOtpForForgotPassword(@RequestBody NewPasswordRequestDTO newPasswordRequesDTO) {
         //should be redirect instead of otp
         boolean verified = otpService.verifyOtp(newPasswordRequesDTO.getEmail(), newPasswordRequesDTO.getOtp());
         if(!verified) {
-            return new ResponseEntity("wrong otp try again", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("wrong otp try again or OTP expired!", HttpStatus.BAD_REQUEST);
         }
         boolean passwordGenerated = userService.setNewPassword(newPasswordRequesDTO.getEmail(), newPasswordRequesDTO.getPassword());
         if(!passwordGenerated) {
