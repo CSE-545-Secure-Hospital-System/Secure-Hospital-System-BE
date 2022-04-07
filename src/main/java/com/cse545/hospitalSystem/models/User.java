@@ -70,7 +70,6 @@ public class User implements UserDetails {
     private Boolean locked = false;
     
     
-    @NotNull
     private Date dob;
     
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
